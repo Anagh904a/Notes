@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Notes App</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fdf5d6; /* Light yellow background */
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffd700; /* Sticky note yellow */
+            color: #333;
+            padding: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .top-bar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .menu {
+            position: relative;
+            display: inline-block;
+        }
+        .menu button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #333;
+        }
+        .menu-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #ffd700;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu-content a {
+            color: #333;
+            padding: 5px;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+        .menu-content a:hover {
+            background-color: #ffce00;
+        }
+        .menu:hover .menu-content {
+            display: block;
+        }
+        .container {
+            padding: 20px;
+            display: flex;
+            flex-wrap: column;
+            gap: 10px;
+        }
+        .note {
+    background: #fff89a; /* Sticky note background */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 100%; /* Full width for vertical notes */
+}
+        .note:hover {
+            background: #ffce00;
+        }
+        .add-note {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ffd700;
+            color: #333;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .add-note:hover {
+            background: #ffce00;
+        }
+        #notepad {
+            display: none;
+            position: fixed;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 50px); /* Adjust height */
+            background: #fff89a;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+        #notepad textarea {
+            width: 100%;
+            height: calc(100% - 50px);
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+        #notepad button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            background: #ffd700;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1>My Sticky Notes</h1>
+        <div class="menu">
+            <button>⋮</button>
+            <div class="menu-content">
+                <a onclick="setUniversalPassword()">Set Universal Password</a>
+                <a onclick="changeUniversalPassword()">Change Universal Password</a>
+                <a onclick="removeUniversalPassword()">Remove Universal Password</a>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="notesContainer">
+        <!-- Notes will be displayed here -->
+    </div>
+    <button class="add-note" onclick="startNoteCreation()">+</button>
+
+    <div id="notepad">
+        <textarea id="noteContent" placeholder="Type your note here..."></textarea>
+        <button onclick="saveNote()">Save</button>
+        <button onclick="closeNotepad()" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; float: right;">✖</button>
+    </div>
+
+    <script>
+        const notesContainer = document.getElementById('notesContainer');
+        const notepad = document.getElementById('notepad');
+        const noteContent = document.getElementById('noteContent');
+        let currentNoteIndex = null;
+
+        // Load notes on page load
+        window.onload = function () {
+            renderNotes();
+        };
+
+        function startNoteCreation() {
+            currentNoteIndex = null; // New note
+            noteContent.value = ""; // Clear content
+            notepad.style.display = "block";
+            notesContainer.style.display = "none"; // Hide notes
+        }
+
+        function saveNote() {
+            const content = noteContent.value;
+            let notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+            if (currentNoteIndex !== null) {
+                notes[currentNoteIndex].content = content;
+            } else {
+                const name = prompt("Enter a name for your note:");
+                if (!name) return alert("Name is required!");
+                notes.push({ name, content });
+            }
+
+            localStorage.setItem('notes', JSON.stringify(notes));
+            closeNotepad();
+            renderNotes();
+        }
+
+        function closeNotepad() {
+            notepad.style.display = "none";
+            notesContainer.style.display = "flex"; // Show notes
+        }
+
+        function renderNotes() {
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const universalPassword = localStorage.getItem('universalPassword') || ''; // Ensure this is fetched correctly
+    notesContainer.innerHTML = '';
+    notes.forEach((note, index) => {
+        const noteElement = document.createElement('div');
+        noteElement.className = 'note';
+        noteElement.textContent = `${note.name} - Password: ${universalPassword || "Not set"}`; // Display "Not set" if no password
+        noteElement.onclick = () => editNote(index);
+        notesContainer.appendChild(noteElement);
+    });
+}
+function editNote(index) {
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const note = notes[index];
+    const universalPassword = localStorage.getItem('universalPassword') || ''; // Ensure this is fetched correctly
+    currentNoteIndex = index;
+    noteContent.value = `${note.content}\n\nUniversal Password: ${universalPassword || "Not set"}`; // Display "Not set" if no password
+    notepad.style.display = "block";
+    notesContainer.style.display = "flex"; // Keep notes visible
+}
+
+function closeNotepad() {
+    notepad.style.display = "none";
+    notesContainer.style.display = "flex"; // Show notes
+}
+
+        function setUniversalPassword() {
+            const password = prompt("Set a universal password:");
+            if (password) localStorage.setItem('universalPassword', password);
+        }
+
+        function changeUniversalPassword() {
+            if (verifyPassword()) {
+                const newPassword = prompt("Enter a new universal password:");
+                if (newPassword) localStorage.setItem('universalPassword', newPassword);
+            }
+        }
+
+        function removeUniversalPassword() {
+            if (verifyPassword()) {
+                localStorage.removeItem('universalPassword');
+                alert("Universal password removed.");
+            }
+        }
+
+        function verifyPassword() {
+            const savedPassword = localStorage.getItem('universalPassword');
+            if (!savedPassword) return alert("No universal password set.");
+            const enteredPassword = prompt("Enter the universal password:");
+            return enteredPassword === savedPassword ? true : alert("Incorrect password.");
+        }
+    </script>
+</body>
+</html>
