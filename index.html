@@ -209,11 +209,9 @@
 
 #addMenu {
             display: none; /* Initially hidden */
-            position: fixed;
+            position: absolute;
             top: 50%;
             right: 50%;
-            transform: translate(-50%, -50%); /* Adjust for centering */
-            background: #f0f0f0;
             padding: 10px;
             border-radius: 8px;
             z-index: 1000; /* Ensure it appears above other content */
@@ -316,6 +314,62 @@
     background-color: #0056b3; /* Darker blue on hover */
 }
 
+/* Modal background styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    
+    
+}
+
+/* Modal content styles */
+.modal-content {
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px; /* Padding inside the modal */
+    border: 1px solid #888; /* Border around the modal */
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px; /* Maximum width for larger screens */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+.modal .close:hover,
+.modal .close:focus {
+    color: black; /* Change color on hover */
+    text-decoration: none; /* No underline */
+    cursor: pointer; /* Pointer cursor */
+}
+
+/* Button styles within modal */
+.modal-content button {
+    margin: 10px 5px; /* Margin around buttons */
+    padding: 10px 15px; /* Padding for buttons */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text color */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 1rem; /* Font size for readability */
+}
+
+.modal-content button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Close button styles */
+.modal .close {
+    color: #aaa; /* Close button color */
+    float: right; /* Align to the right */
+    font-size: 28px; /* Font size for close button */
+    font-weight: bold; /* Bold font */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
 #calculator {
     display: none; /* Initially hidden */
     position: fixed; /* Fixed position to overlay on the current content */
@@ -391,13 +445,15 @@
     <div id="listContainer"></div>
     </div>
 
-        <div id="addMenu">
-<h3>Add New..</h3>
-            <button onclick="startNoteCreation()">Note</button>
-<button onclick="closeAddMenu()">Close</button>
-            <button onclick="startListCreation()">List</button>
-
-        </div>
+       
+<div id="addMenu" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <p>Add ...</p>
+        <button onclick="startNoteCreation()">Note</button>
+        <button onclick="startListCreation()">List</button>
+    </div>
+</div>
     
     <div class="action-buttons" id="actionButtons" style="display: none;">
     <button class="delete-button" onclick="deleteSelectedNote()">Delete</button>
@@ -467,6 +523,7 @@
             currentNoteIndex = null; // New note
             noteContent.value = ""; // Clear content
             notepad.style.display = "block";
+            addMenu.style.display = "none"; // Hide add menu
             notesContainer.style.display = "none"; // Hide notes
         }
 
@@ -504,9 +561,13 @@
     });
 }
 
+function closePopup() {
+    document.getElementById('addMenu').style.display = 'none'; // Hide the modal
+}
+
 function showAddMenu() {
-        addMenu.style.display = "block"; // Show the add menu
-    }
+    document.getElementById('addMenu').style.display = 'block'; // Show the modal
+}
 
     function startListCreation() {
         listCreation.style.display = "block"; // Show the list creation section
