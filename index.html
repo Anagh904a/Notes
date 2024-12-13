@@ -168,6 +168,11 @@
     background: #2196f3; /* Blue for exit select mode */
 }
 
+.setPasswordForNote {
+background-color: #2196f3;
+
+}
+
 #credits {
     display: none; /* Initially hidden */
     padding: 20px;
@@ -458,6 +463,7 @@
     <div class="action-buttons" id="actionButtons" style="display: none;">
     <button class="delete-button" onclick="deleteSelectedNote()">Delete</button>
     <button class="exit-select-mode-button" onclick="exitSelectMode()">Exit Select Mode</button>
+    <button class="setPasswordForNote" onclick="setPasswordForNote()">Set Password</button>
     <button class="rename-button" onclick="renameSelectedNote()">Rename</button>
 </div>
 <div id="credits" style="display: none; padding: 20px; background: #fff89a; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);">
@@ -611,6 +617,91 @@ function showAddMenu() {
         listInput.value = ''; // Clear the input field after adding
     }
 
+    let currentListIndex = null; // Define the variable to track the current list index
+    // Function to save a new list
+function saveList() {
+    const listTitle = prompt("Enter a title for the list:");
+    if (listTitle) {
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        const newList = {
+            title: listTitle,
+            items: [] // Initialize with an empty array for list items
+        };
+        notes.push(newList);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        renderNotes(); // Re-render notes to show the new list
+    }
+}
+
+// Function to render notes and lists
+function renderNotes() {
+    const notesContainer = document.getElementById('notesContainer');
+    notesContainer.innerHTML = ''; // Clear existing notes
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    
+    notes.forEach((list, index) => {
+        const listElement = document.createElement('div');
+        listElement.className = 'note';
+        listElement.innerHTML = `<strong>${list.title}</strong>`;
+        
+        // Add functionality to show items in the list
+        list.items.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.innerText = item; // Display each item in the list
+            listElement.appendChild(itemElement);
+        });
+        
+        // Add click event to edit the list
+        listElement.onclick = () => editList(index);
+        
+        notesContainer.appendChild(listElement);
+    });
+}
+
+// Function to edit a list
+function editList(index) {
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const list = notes[index];
+
+    // Show the list editing interface
+    const listCreation = document.getElementById('listCreation');
+    const listInput = document.getElementById('listInput');
+    const listContainer = document.getElementById('listContainer');
+
+    // Clear previous items
+    listContainer.innerHTML = '';
+    listInput.value = ''; // Clear input field
+
+    // Populate the list with existing items
+    list.items.forEach(item => {
+        const listItem = document.createElement('div');
+        listItem.className = 'list-item';
+        listItem.innerText = item;
+        listContainer.appendChild(listItem);
+    });
+
+    // Show the list creation section
+    listCreation.style.display = "block"; // Show the list editing section
+    notepad.style.display = "none"; // Hide notepad if it's open
+    notesContainer.style.display = "none"; // Hide notes
+}
+
+
+
+    
+
+// Function to close the list creation section
+function closeListCreation() {
+    const listCreation = document.getElementById('listCreation');
+    listCreation.style.display = "none"; // Hide the list creation section
+    notesContainer.style.display = "flex"; // Show notes again
+}
+
+// Load notes on page load
+window.onload = function () {
+    renderNotes();
+};
+
 
 
 function appendToResult(value) {
@@ -656,13 +747,13 @@ const passwordInput = document.getElementById('passwordInput');
 const submitPasswordButton = document.getElementById('submitPassword');
 
 function editNote(index) {
-    const savedPassword = localStorage.getItem('universalPassword');
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const note = notes[index];
+
     
-    // If a password is set, open the dialog for password entry
-    if (savedPassword) {
+    
         // Show the password dialog
-        const passwordDialog = document.getElementById('passwordModal');
-        passwordDialog.style.display = 'block'; // Show the password dialog
+        const enteredPassword = prompt("Enter the password to access this note:");
 
         // Handle the password submission
         const submitPasswordButton = document.getElementById('submitPassword');
@@ -670,38 +761,22 @@ function editNote(index) {
             const enteredPassword = document.getElementById('passwordInput').value;
 
             // Verify the entered password
-            if (enteredPassword === savedPassword) {
+            if (enteredPassword === note.password) {
                 // Password is correct, open the note
                 openNoteAfterPasswordVerification(index);
-                closePasswordDialog(); // Close the dialog
+               
             } else {
                 // Password is incorrect
                 alert("Incorrect password. Access denied.");
             }
         };
-    } else {
-        // No password is set, directly open the note
-        openNoteAfterPasswordVerification(index);
-    }
-}
+    } 
+        
 
-// Function to open the note after successful password verification
-function openNoteAfterPasswordVerification(index) {
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    const note = notes[index];
-    
-    currentNoteIndex = index;
-    noteContent.value = note.content;  // Set the content of the note in the textarea
-    notepad.style.display = "block";   // Show the notepad
-    notesContainer.style.display = "none";  // Hide the notes container
-}
 
-// Function to close the password dialog
-function closePasswordDialog() {
-    const passwordDialog = document.getElementById('passwordModal');
-    passwordDialog.style.display = 'none'; // Hide the dialog
-    document.getElementById('passwordInput').value = '';  // Clear the password input field
-}
+
+
+
 
         
 let selectMode = false; // Track whether select mode is enabled
@@ -790,6 +865,25 @@ function exitSelectMode() {
     renderNotes(); // Re-render notes to update the display
 }
 
+function setPasswordForNote() {
+  if (selectedNoteIndex === null) return; // No note selected  
+  
+  const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const selectedList = notes[selectedNoteIndex]; // Assuming selectedNoteIndex points to the selected list
+    const password = prompt("Set a password for this note/list:");
+    
+    if (password && password.trim() !== "") {
+        selectedList.password = password.trim(); // Store the password
+        localStorage.setItem('notes', JSON.stringify(notes));
+        alert("Password set successfully.");
+    } else {
+        alert("Password cannot be empty!");
+    }
+    selectedNoteIndex = null; // Reset selection
+    document.getElementById('actionButtons').style.display = 'none'; // Hide buttons
+    renderNotes(); // Re-render notes
+}
+
 // Close the action buttons when clicking outside
 document.body.onclick = function (e) {
     if (!e.target.classList.contains('note') && !e.target.closest('.action-buttons')) {
@@ -810,50 +904,7 @@ function closeCredits() {
     notesContainer.style.display = 'flex'; // Show notes again
 }
 
-function setUniversalPassword() {
-    const password = prompt("Set a universal password:");
-    if (password && password.trim() !== "") {
-        localStorage.setItem('universalPassword', password.trim());
-        alert("Universal password set successfully.");
-    } else {
-        alert("Password cannot be empty!");
-    }
-}
 
-function changeUniversalPassword() {
-    const savedPassword = localStorage.getItem('universalPassword');
-    if (!savedPassword) {
-        alert("No universal password set.");
-        return;
-    }
-    const enteredPassword = prompt("Enter the current universal password:");
-    if (enteredPassword === savedPassword) {
-        const newPassword = prompt("Enter a new universal password:");
-        if (newPassword && newPassword.trim() !== "") {
-            localStorage.setItem('universalPassword', newPassword.trim());
-            alert("Universal password changed successfully.");
-        } else {
-            alert("Password cannot be empty!");
-        }
-    } else {
-        alert("Incorrect password. Cannot change the universal password.");
-    }
-}
-
-function removeUniversalPassword() {
-    const savedPassword = localStorage.getItem('universalPassword');
-    if (!savedPassword) {
-        alert("No universal password set.");
-        return;
-    }
-    const enteredPassword = prompt("Enter the current universal password:");
-    if (enteredPassword === savedPassword) {
-        localStorage.removeItem('universalPassword');
-        alert("Universal password removed.");
-    } else {
-        alert("Incorrect password. Cannot remove the universal password.");
-    }
-}
 
     </script>
 </body>
