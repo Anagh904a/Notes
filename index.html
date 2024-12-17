@@ -763,7 +763,7 @@ function editNote(index) {
             // Verify the entered password
             if (enteredPassword === note.password) {
                 // Password is correct, open the note
-                openNoteAfterPasswordVerification(index);
+                 NoteAfterPasswordVerification(index);
                
             } else {
                 // Password is incorrect
@@ -809,11 +809,26 @@ function renderNotes() {
 }
 
 function openNoteContent(index) {
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    const note = notes[index];
+    const notes = JSON.parse(localStorage.getItem('notes')) || []; // Retrieve notes from localStorage
+    const selectedNote = notes[index];
+     // Get the selected note // Get the selected note
 
-    // Set the content of the notepad to the selected note's content
-    noteContent.value = note.content; // Assuming note.content holds the note's text
+    // Check if the note has a password
+    if (selectedNote.password) {
+        const enteredPassword = prompt("Enter the password for this note:"); // Prompt for the password
+
+        // Check if the entered password matches the saved password
+        if (enteredPassword !== selectedNote.password) {
+            return alert("Incorrect password! Access denied."); // Alert if the password is incorrect
+        }
+    }
+
+    // If the password is correct or not set, display the note content
+    openNote(selectedNote, index);
+}
+// Function to display the note content
+function openNote(selectedNote, index) {
+    noteContent.value = selectedNote.content; // Set the content of the notepad to the selected note's content
     currentNoteIndex = index; // Store the current note index for editing
     notepad.style.display = "block"; // Show the notepad
     notesContainer.style.display = "none"; // Hide notes while editing
