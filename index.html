@@ -1,926 +1,637 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sticky Notes App</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #fdf5d6; /* Light yellow background */
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #ffd700; /* Sticky note yellow */
-            color: #333;
-            padding: 10px 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .top-bar h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        .menu {
-            position: relative;
-            display: inline-block;
-        }
-        .menu button {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #333;
-        }
-        .menu-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #ffd700;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .menu-content a {
-            color: #333;
-            padding: 5px;
-            text-decoration: none;
-            display: block;
-            cursor: pointer;
-        }
-        .menu-content a:hover {
-            background-color: #ffce00;
-        }
-        .menu:hover .menu-content {
-            display: block;
-        }
-        .container {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            
-        }
-        .note {
-    background: #fff89a; /* Sticky note background */
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    font-size: 1.1rem;
-    cursor: pointer;
-    width: 100%; /* Full width for vertical notes */
-    overflow: auto;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ColorNotes Inspired Notes App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f3f3;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      background-color: #ffa500;
+      color: white;
+      padding: 10px;
+      margin: 0;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      background-color: #ffa500;
+      color: white;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #ff8c00;
+    }
+    textarea {
+      width: 90%;
+      height: 150px;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+    }
+    input[type="password"] {
+      padding: 5px;
+      margin: 10px 0;
+      width: 80%;
+    }
+    .container {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .note {
+      background: #fffacd;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid #ffa500;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .hidden {
+      display: none;
+    }
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #ffa500;
+      color: white;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .nav-button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .add-button {
+      background-color: white;
+      color: #ffa500;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 30px;
+      line-height: 60px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      position: relative;
+      bottom: 20px;
+    }
+    .add-button:hover {
+      background-color: #ff8c00;
+      color: white;
+    }
+
+    /* Password Modal */
+    #passwordModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+    }
+    #passwordModal input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #passwordModal button {
+      width: 100%;
+      padding: 10px;
+    }
+
+    #addListSection {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 20px; /* Add some space above the section */
 }
-        .note:hover {
-            background: #ffce00;
-        }
-        .add-note {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #ffd700;
-            color: #333;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 2rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .add-note:hover {
-            background: #ffce00;
-        }
-        #notepad {
-            display: none;
-            position: fixed;
-            top: 50px;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 50px); /* Adjust height */
-            background: #fff89a;
-            padding: 20px;
-            box-sizing: border-box;
-            overflow: auto;
-        }
-        #notepad textarea {
+
+.input-field {
     width: 100%;
-    height: calc(100% - 50px);
-    border: none;
-    outline: none;
     padding: 10px;
-    border-radius: 5px;
-    font: inherit; /* Inherit font style from the parent */
-}
-  
-        
-        #notepad button {
-            margin-top: 10px;
-            padding: 10px 15px;
-            border: none;
-            background: #ffd700;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        /* Highlight selected note */
-.note.selected {
-    border: 2px solid #ff6347; /* Tomato border to indicate selection */
-    background: #ffebcd; /* Lighter background for selection */
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-/* Action buttons for selected notes */
-.action-buttons {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 10;
-}
-
-.action-buttons button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
+button {
+    padding: 8px 12px;
+    margin: 5px;
     cursor: pointer;
+    border: none;
+    background-color: #ffa500;
     color: white;
+    border-radius: 4px;
 }
 
-.delete-button {
-    background: #ff6347; /* Red for delete */
+button:hover {
+    background-color: #ff8c00;
 }
 
-.rename-button {
-    background: #4caf50; /* Green for rename */
-
-}
-
-.exit-select-mode-button {
-    background: #2196f3; /* Blue for exit select mode */
-}
-
-.setPasswordForNote {
-background-color: #2196f3;
-
-}
-
-#credits {
-    display: none; /* Initially hidden */
-    padding: 20px;
-    background: #fff89a; /* Light yellow background similar to sticky notes */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
-    position: fixed; /* Fixed position to overlay on the current content */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust for centering */
-    z-index: 1000; /* Ensure it appears above other content */
-    width: 80%; /* Responsive width */
-    max-width: 500px; /* Maximum width for larger screens */
-    text-align: center; /* Center text */
-}
-
-#credits h2 {
-    margin-bottom: 15px; /* Space below heading */
-}
-
-#credits p {
-    margin: 5px 0; /* Space between paragraphs */
-    font-size: 1rem; /* Font size for readability */
-}
-
-#credits button {
-    padding: 10px 15px; /* Button padding */
-    border: none; /* Remove border */
-    background: #ff6347; /* Red background for close button */
-    color: white; /* White text color */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 1rem; /* Font size */
-}
-
-#credits button:hover {
-    background: #ff4500; /* Darker red on hover */
-}
-
-#addMenu {
-            display: none; /* Initially hidden */
-            position: absolute;
-            top: 50%;
-            right: 50%;
-            padding: 10px;
-            border-radius: 8px;
-            z-index: 1000; /* Ensure it appears above other content */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        #addMenu button {
-            margin: 5px;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        #addMenu button:hover {
-            background-color: #0056b3;
-        }
-        .close-button {
-            background: none;
-            border: none;
-            color: #ff6347; /* Red color for close icon */
-            font-size: 1.5rem;
-            cursor: pointer;
-            float: right; /* Align to the right */
-        }
-
-        #listContainer {
-            margin-top: 20px;
-        }
-
-        #listInput {
-    width: calc(100% - 110px); /* Adjust width for the input, leaving space for the button */
-    padding: 10px; /* Padding for better touch targets */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 1rem; /* Font size for readability */
-    margin-right: 5px; /* Space between input and button */
-}
-
-/* Add button styles in list creation */
-#listButton {
-    padding: 10px 15px; /* Padding for the button */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
-    background-color: #007bff; /* Blue background color */
-    color: white; /* White text color */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 1rem; /* Font size for readability */
-}
-
-/* Add button hover effect */
-#listButton:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-
-        .list-item {
-    display: flex;
-    align-items: center;
-    margin: 5px 0;
-    padding: 10px;
-    background: #fff; /* White background for list items */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-}
-
-        .list-item.completed {
-            text-decoration: line-through; /* Strikethrough for completed items */
-            color: gray; /* Change color for completed items */
-        }
-
-        .checkbox {
-            margin-right: 10px;
-        }
-
-/* Input field styles in list creation */
-#listinput {
-    width: calc(100% - 110px); /* Adjust width for the input, leaving space for the button */
-    padding: 10px; /* Padding for better touch targets */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 1rem; /* Font size for readability */
-    margin-right: 5px; /* Space between input and button */
-}
-
-/* Add button styles in list creation */
-#listbutton {
-    padding: 10px 15px; /* Padding for the button */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
-    background-color: #007bff; /* Blue background color */
-    color: white; /* White text color */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 1rem; /* Font size for readability */
-}
-
-/* Add button hover effect */
-#listbutton:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-
-/* Modal background styles */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    
+    position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     
 }
 
-/* Modal content styles */
 .modal-content {
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px; /* Padding inside the modal */
-    border: 1px solid #888; /* Border around the modal */
-    width: 80%; /* Could be more or less, depending on screen size */
-    max-width: 500px; /* Maximum width for larger screens */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
 }
 
-.modal .close:hover,
-.modal .close:focus {
-    color: black; /* Change color on hover */
-    text-decoration: none; /* No underline */
-    cursor: pointer; /* Pointer cursor */
-}
 
-/* Button styles within modal */
-.modal-content button {
-    margin: 10px 5px; /* Margin around buttons */
-    padding: 10px 15px; /* Padding for buttons */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
-    background-color: #007bff; /* Blue background */
-    color: white; /* White text color */
-    cursor: pointer; /* Pointer cursor */
-    font-size: 1rem; /* Font size for readability */
-}
-
-.modal-content button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-
-/* Close button styles */
-.modal .close {
-    color: #aaa; /* Close button color */
-    float: right; /* Align to the right */
-    font-size: 28px; /* Font size for close button */
-    font-weight: bold; /* Bold font */
-    cursor: pointer; /* Pointer cursor on hover */
-}
-
-#calculator {
-    display: none; /* Initially hidden */
-    position: fixed; /* Fixed position to overlay on the current content */
-    top: 50px; /* Position below the top bar */
-    left: 0;
-    width: 100%; /* Full width */
-    height: calc(100% - 50px); /* Adjust height */
-    background: #fff89a; /* Light yellow background */
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: auto; /* Allow scrolling if needed */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
-}
-
-#calculator table {
-    width: 100%; /* Full width for the calculator table */
-    margin-top: 20px; /* Space above the table */
-}
-
-#calculator input[type="text"] {
-    width: 100%; /* Full width for the result input */
-    padding: 10px; /* Padding for better touch targets */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 1.5rem; /* Font size for readability */
-}
-
-#calculator input[type="button"] {
-    width: 100%; /* Full width for buttons */
-    padding: 15px; /* Padding for better touch targets */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
-    background: #ffd700; /* Sticky note yellow */
-    color: #333; /* Text color */
-    font-size: 1.2rem; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-}
-
-#calculator input[type="button"]:hover {
-    background: #ffce00; /* Darker yellow on hover */
-}
-    </style>
+  </style>
 </head>
 <body>
-    <div class="top-bar">
-        <h1>My Sticky Notes</h1>
-        <div class="menu">
-            <button>⋮</button>
-            <div class="menu-content">
-                <a onclick="openCalculator()">Calculator</a>
-                <a onclick="enableSelectMode()">Select Notes</a>
-                <a onclick="showCredits()">Credits</a>
-                
-</div>
-        </div>
-    </div>
-    <div class="container" id="notesContainer">
-        <!-- Notes will be displayed here -->
-    </div>
-    <button class="add-note" onclick="showAddMenu()">+</button>
+  <h1>Notes App</h1>
 
-    <div id="notepad">
-        <button onclick="saveNote()">Save Note</button>
-        <button onclick="closeNotepad()" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; float: right;"><-- Back</button>
-        <textarea id="noteContent" placeholder="Type your note here..."></textarea>
-        </div>
+  <div id="notesSection" class="container">
+    <h2>Your Notes</h2>
+    <div id="notesContainer"></div>
+  </div>
 
-        <!-- List Creation Section -->
-<div id="listCreation" style="display: none;">
-    <button id="close-button" onclick="closeListCreation()" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; float: right;"><-- Back</button>
-    <input type="text" id="listInput" placeholder="Enter list item..." />
-    <button id="listButton"onclick="addListItem()">Add</button>
-    <div id="listContainer"></div>
-    </div>
-
-       
-<div id="addMenu" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close" onclick="closePopup()">&times;</span>
-        <p>Add ...</p>
-        <button onclick="startNoteCreation()">Note</button>
-        <button onclick="startListCreation()">List</button>
+  <div id="listsContainer" class="container hidden">
+    <h2>Your Lists</h2>
+    <div id="listsSection">
+        <div id="listsContainerContent"></div>
     </div>
 </div>
-    
-    <div class="action-buttons" id="actionButtons" style="display: none;">
-    <button class="delete-button" onclick="deleteSelectedNote()">Delete</button>
-    <button class="exit-select-mode-button" onclick="exitSelectMode()">Exit Select Mode</button>
-    <button class="setPasswordForNote" onclick="setPasswordForNote()">Set Password</button>
-    <button class="rename-button" onclick="renameSelectedNote()">Rename</button>
-</div>
-<div id="credits" style="display: none; padding: 20px; background: #fff89a; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);">
-    <h2>Credits</h2>
-    <p><strong>Developer:</strong> Anagh</p>
-    <p><strong>Inspired by:</strong> Color Note</p>
-    <p><strong>Version:</strong> 1.0 Public</p>
-    <p>Thanks For Using My App!</p>
-    <button onclick="closeCredits()" style="margin-top: 10px;">Close</button>
-</div>
-
-<div id="calculator" style="display: none;">
-    <button onclick="closeCalculator()" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; float: right;"><-- Back</button>
-    <table id="calcu"> 
-        <tr> 
-            <td colspan="3"> 
-                <input type="text" id="result" readonly> 
-            </td> 
-            <td><input type="button" value="C" onclick="clearCalculator()"></td> 
-        </tr> 
-        <tr> 
-            <td><input type="button" value="1" onclick="appendToResult('1')"></td> 
-            <td><input type="button" value="2" onclick="appendToResult('2')"></td> 
-            <td><input type="button" value="3" onclick="appendToResult('3')"></td> 
-            <td><input type="button" value="/" onclick="appendToResult('/')"></td> 
-        </tr> 
-        <tr> 
-            <td><input type="button" value="4" onclick="appendToResult('4')"></td> 
-            <td><input type="button" value="5" onclick="appendToResult('5')"></td> 
-            <td><input type="button" value="6" onclick="appendToResult('6')"></td> 
-            <td><input type="button" value="*" onclick="appendToResult('*')"></td> 
-        </tr> 
-        <tr> 
-            <td><input type="button" value="7" onclick="appendToResult('7')"></td> 
-            <td><input type="button" value="8" onclick="appendToResult('8')"></td> 
-            <td><input type="button" value="9" onclick="appendToResult('9')"></td> 
-            <td><input type="button" value="-" onclick="appendToResult('-')"></td> 
-        </tr> 
-        <tr> 
-            <td><input type="button" value="0" onclick="appendToResult('0')"></td> 
-            <td><input type="button" value="." onclick="appendToResult('.')"></td> 
-            <td><input type="button" value="=" onclick="calculateResult()"></td> 
-            <td><input type="button" value="+" onclick="appendToResult('+')"></td> 
-        </tr> 
-    </table> 
-</div>
-    <script>
-         const addMenu = document.getElementById('addMenu')
-        const notesContainer = document.getElementById('notesContainer');
-        const notepad = document.getElementById('notepad');
-        const noteContent = document.getElementById('noteContent');
-        const listCreation = document.getElementById('listCreation');
-    const listInput = document.getElementById('listInput');
-    const listContainer = document.getElementById('listContainer');
-        let currentNoteIndex = null;
-
-        // Load notes on page load
-        window.onload = function () {
-            renderNotes();
-        };
-
-        function startNoteCreation() {
-            currentNoteIndex = null; // New note
-            noteContent.value = ""; // Clear content
-            notepad.style.display = "block";
-            addMenu.style.display = "none"; // Hide add menu
-            notesContainer.style.display = "none"; // Hide notes
-        }
-
-        function saveNote() {
-            const content = noteContent.value;
-            let notes = JSON.parse(localStorage.getItem('notes')) || [];
-
-            if (currentNoteIndex !== null) {
-                notes[currentNoteIndex].content = content;
-            } else {
-                const name = prompt("Enter a name for your note:");
-                if (!name) return alert("Name is required!");
-                notes.push({ name, content });
-            }
-
-            localStorage.setItem('notes', JSON.stringify(notes));
-            closeNotepad();
-            renderNotes();
-        }
-
-        function closeNotepad() {
-            notepad.style.display = "none";
-            notesContainer.style.display = "flex"; // Show notes
-        }
-
-        function renderNotes() {
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    notesContainer.innerHTML = '';
-    notes.forEach((note, index) => {
-        const noteElement = document.createElement('div');
-        noteElement.className = 'note';
-        noteElement.textContent = note.name; // Display only the note name
-        noteElement.onclick = () => editNote(index);
-        notesContainer.appendChild(noteElement);
-    });
-}
-
-function closePopup() {
-    document.getElementById('addMenu').style.display = 'none'; // Hide the modal
-}
-
-function showAddMenu() {
-    document.getElementById('addMenu').style.display = 'block'; // Show the modal
-}
-
-    function startListCreation() {
-        listCreation.style.display = "block"; // Show the list creation section
-        notepad.style.display = "none"; // Hide notepad
-        addMenu.style.display = "none"; // Hide add menu
-        notesContainer.style.display = "none"; // Hide notes
-        addMenu.style.display = "none"; // Hide the add menu
-    }
-
-    function closeListCreation() {
-        listCreation.style.display = "none"; // Hide the list creation section
-        listContainer.innerHTML = ''; // Clear the list items
-        listInput.value = ''; // Clear the input field
-        notesContainer.style.display = "flex"; // Show notes again
-    }
-
-    function addListItem() {
-        const itemText = listInput.value.trim();
-        if (itemText === '') {
-            alert("Please enter a valid item."); // Alert if input is empty
-            return;
-        }
-
-        const listItem = document.createElement('div');
-        listItem.className = 'list-item';
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'checkbox';
-        checkbox.onclick = function() {
-            listItem.classList.toggle('completed'); // Toggle completed class on checkbox click
-        };
-
-        const label = document.createElement('span');
-        label.textContent = itemText;
-
-        listItem.appendChild(checkbox);
-        listItem.appendChild(label);
-        listContainer.appendChild(listItem); // Add the new item to the list container
-
-        listInput.value = ''; // Clear the input field after adding
-    }
-
-    let currentListIndex = null; // Define the variable to track the current list index
-    // Function to save a new list
-function saveList() {
-    const listTitle = prompt("Enter a title for the list:");
-    if (listTitle) {
-        const notes = JSON.parse(localStorage.getItem('notes')) || [];
-        const newList = {
-            title: listTitle,
-            items: [] // Initialize with an empty array for list items
-        };
-        notes.push(newList);
-        localStorage.setItem('notes', JSON.stringify(notes));
-        renderNotes(); // Re-render notes to show the new list
-    }
-}
-
-// Function to render notes and lists
-function renderNotes() {
-    const notesContainer = document.getElementById('notesContainer');
-    notesContainer.innerHTML = ''; // Clear existing notes
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    
-    notes.forEach((list, index) => {
-        const listElement = document.createElement('div');
-        listElement.className = 'note';
-        listElement.innerHTML = `<strong>${list.title}</strong>`;
-        
-        // Add functionality to show items in the list
-        list.items.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.innerText = item; // Display each item in the list
-            listElement.appendChild(itemElement);
-        });
-        
-        // Add click event to edit the list
-        listElement.onclick = () => editList(index);
-        
-        notesContainer.appendChild(listElement);
-    });
-}
-
-// Function to edit a list
-function editList(index) {
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    const list = notes[index];
-
-    // Show the list editing interface
-    const listCreation = document.getElementById('listCreation');
-    const listInput = document.getElementById('listInput');
-    const listContainer = document.getElementById('listContainer');
-
-    // Clear previous items
-    listContainer.innerHTML = '';
-    listInput.value = ''; // Clear input field
-
-    // Populate the list with existing items
-    list.items.forEach(item => {
-        const listItem = document.createElement('div');
-        listItem.className = 'list-item';
-        listItem.innerText = item;
-        listContainer.appendChild(listItem);
-    });
-
-    // Show the list creation section
-    listCreation.style.display = "block"; // Show the list editing section
-    notepad.style.display = "none"; // Hide notepad if it's open
-    notesContainer.style.display = "none"; // Hide notes
-}
-
-
-
-    
-
-// Function to close the list creation section
-function closeListCreation() {
-    const listCreation = document.getElementById('listCreation');
-    listCreation.style.display = "none"; // Hide the list creation section
-    notesContainer.style.display = "flex"; // Show notes again
-}
-
-// Load notes on page load
-window.onload = function () {
-    renderNotes();
-};
-
-
-
-function appendToResult(value) {
-    const resultField = document.getElementById('result');
-    resultField.value += value; // Append the clicked button's value to the result field
-}
-
-function clearCalculator() {
-    const resultField = document.getElementById('result');
-    resultField.value = ''; // Clear the result field
-}
-
-function calculateResult() {
-    const resultField = document.getElementById('result');
-    try {
-        const result = eval(resultField.value); // Evaluate the expression in the result field
-        resultField.value = result; // Display the result
-    } catch (error) {
-        alert("Invalid expression. Please enter a valid arithmetic expression.");
-        clearCalculator(); // Clear the calculator if there's an error
-    }
-}
-
-function openCalculator() {
-    // Hide the notes and credits sections when the calculator is opened
-    notesContainer.style.display = "none"; // Hide notes
-    document.getElementById('credits').style.display = 'none'; // Hide credits if visible
-    calculator.style.display = "block"; // Show the calculator
-}
-
-function closeCalculator() {
-    calculator.style.display = "none"; // Hide the calculator
-    notesContainer.style.display = "flex"; // Show the notes again
-}
-
-function closeNotepad() {
-    notepad.style.display = "none";
-    notesContainer.style.display = "flex"; // Show notes
-}
-
-const passwordDialog = document.getElementById('passwordDialog');
-const passwordInput = document.getElementById('passwordInput');
-const submitPasswordButton = document.getElementById('submitPassword');
-
-function editNote(index) {
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    const note = notes[index];
-
-    
-    
-        // Show the password dialog
-        const enteredPassword = prompt("Enter the password to access this note:");
-
-        // Handle the password submission
-        const submitPasswordButton = document.getElementById('submitPassword');
-        submitPasswordButton.onclick = function() {
-            const enteredPassword = document.getElementById('passwordInput').value;
-
-            // Verify the entered password
-            if (enteredPassword === note.password) {
-                // Password is correct, open the note
-                 NoteAfterPasswordVerification(index);
-               
-            } else {
-                // Password is incorrect
-                alert("Incorrect password. Access denied.");
-            }
-        };
-    } 
-        
-
-
-
-
-
-
-        
-let selectMode = false; // Track whether select mode is enabled
-
-function enableSelectMode() {
-    selectMode = true; // Set select mode to true
-    document.getElementById('actionButtons').style.display = 'flex'; // Show action buttons
-    renderNotes(); // Re-render notes to allow selection
-}
-
-function renderNotes() {
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    notesContainer.innerHTML = '';
-    notes.forEach((note, index) => {
-        const noteElement = document.createElement('div');
-        noteElement.className = 'note';
-        noteElement.textContent = note.name; // Display only the note name
-
-        // Single-click to select note
-        noteElement.onclick = (event) => {
-            if (selectMode) {
-                selectNote(noteElement, index); // Call selectNote function
-            } else {
-                openNoteContent(index); // Open note content if not in select mode
-            }
-        };
-
-        notesContainer.appendChild(noteElement);
-    });
-}
-
-function openNoteContent(index) {
-    const notes = JSON.parse(localStorage.getItem('notes')) || []; // Retrieve notes from localStorage
-    const selectedNote = notes[index];
-     // Get the selected note // Get the selected note
-
-    // Check if the note has a password
-    if (selectedNote.password) {
-        const enteredPassword = prompt("Enter the password for this note:"); // Prompt for the password
-
-        // Check if the entered password matches the saved password
-        if (enteredPassword !== selectedNote.password) {
-            return alert("Incorrect password! Access denied."); // Alert if the password is incorrect
-        }
-    }
-
-    // If the password is correct or not set, display the note content
-    openNote(selectedNote, index);
-}
-// Function to display the note content
-function openNote(selectedNote, index) {
-    noteContent.value = selectedNote.content; // Set the content of the notepad to the selected note's content
-    currentNoteIndex = index; // Store the current note index for editing
-    notepad.style.display = "block"; // Show the notepad
-    notesContainer.style.display = "none"; // Hide notes while editing
-}
-
-function selectNote(noteElement, index) {
-    // Highlight the selected note
-    document.querySelectorAll('.note').forEach(note => note.classList.remove('selected'));
-    noteElement.classList.add('selected');
-
-    // Show action buttons
-    const actionButtons = document.getElementById('actionButtons');
-    actionButtons.style.display = 'flex';
-    selectedNoteIndex = index; // Update the selected note index
-}
-
-function deleteSelectedNote() {
-    if (selectedNoteIndex === null) return; // No note selected
-
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    notes.splice(selectedNoteIndex, 1); // Remove the selected note
-    localStorage.setItem('notes', JSON.stringify(notes));
-
-    selectedNoteIndex = null; // Reset selection
-    document.getElementById('actionButtons').style.display = 'none'; // Hide buttons
-    renderNotes(); // Re-render notes
-}
-
-function renameSelectedNote() {
-    if (selectedNoteIndex === null) return; // No note selected
-
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    const newName = prompt("Enter a new name for the note:", notes[selectedNoteIndex].name);
-    if (newName) {
-        notes[selectedNoteIndex].name = newName; // Update the name
-        localStorage.setItem('notes', JSON.stringify(notes));
-
-        selectedNoteIndex = null; // Reset selection
-        document.getElementById('actionButtons').style.display = 'none'; // Hide buttons
-        renderNotes(); // Re-render notes
-    }
-}
-
-function exitSelectMode() {
-    selectMode = false; // Set select mode to false
-    selectedNoteIndex = null; // Reset selected note index
-    document.getElementById('actionButtons').style.display = 'none'; // Hide action buttons
-    document.querySelectorAll('.note').forEach(note => note.classList.remove('selected')); // Remove selection from all notes
-    renderNotes(); // Re-render notes to update the display
-}
-
-function setPasswordForNote() {
-  if (selectedNoteIndex === null) return; // No note selected  
   
-  const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    const selectedList = notes[selectedNoteIndex]; // Assuming selectedNoteIndex points to the selected list
-    const password = prompt("Set a password for this note/list:");
+
+  <!-- Add Note Form -->
+  <div id="addNoteSection" class="container hidden">
+    <h3>Add a New Note</h3>
+    <input id="noteTitle" type="text" placeholder="Enter note title...">
+    <textarea id="noteContent" placeholder="Write your note here..."></textarea>
+    <input type="password" id="notePassword" placeholder="Optional Password">
+    <button onclick="saveNote()">Save Note</button>
+    <button onclick="cancelNote()">Cancel</button>
+  </div>
+
+  <!-- Password Modal -->
+  <div id="passwordModal">
+    <div class="modal-content">
+      <h3>Enter Password</h3>
+      <input type="password" id="passwordInput" placeholder="Password">
+      <button onclick="verifyPassword()">Submit</button>
+      <button onclick="closePasswordModal()">Close</button>
+    </div>
+  </div>
+
+  
+  <!-- Settings Section -->
+  <div id="settings" class="container">
+    <h2>Settings</h2>
+    <h3>Privacy</h3>
+    <label>
+      Sync Data:
+      <input type="checkbox" id="syncDataToggle">
+    </label>
+    <h3>Other Settings</h3>
+    <button onclick="showCredits()">Credits</button>
+    <div id="creditsSection" style="display:none;">
+      <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
+    </div>
+    <h3>Backup/Import</h3>
+    <button onclick="backupNotes()">Backup Notes</button>
+    <input type="file" id="importFile" onchange="prepareImport(event)">
+    <button onclick="importNotes()">Continue Import</button>
+  </div>
+
+<!-- Add Lists Section -->
+<div id="addListSection" class="container">>
+<h3>Add a New List</h3>
+    <input id="listTitle" type="text" placeholder="Enter list title...">
+    <div id="checklistContainer"></div> <!-- Container for checklist items -->
+    <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
+    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
+    <button onclick="saveList()">Save List</button>
+</div>
+</div>
+
+<!-- Add Options Modal -->
+<div id="addOptionsModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Add Options</h3>
+        <button onclick="showAddListSection()">Add List</button>
+        <button onclick="showAddNote()">Add Note</button>
+        <button onclick="closeAddOptions()">Close</button>
+    </div>
+</div>
+  
+  <div class="bottom-nav">
+    <button class="nav-button" onclick="showSection('listsContainer')">Lists</button>
+    <button class="nav-button" onclick="showSection('notesSection')">Notes</button>
+    <div class="add-button" onclick="showAddOptions()">+</div>
+<button class="nav-button" onclick="showSection('settings')">Settings</button>
+<button class="nav-button " onclick="showSection('moreSection')">More</button>
+
+</div>
+
+  <script>
     
-    if (password && password.trim() !== "") {
-        selectedList.password = password.trim(); // Store the password
+    let notes = JSON.parse(localStorage.getItem('notes')) || []; 
+ 
+    function showCredits() {
+      const credits = document.getElementById('creditsSection');
+      credits.style.display = credits.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function backupNotes() {
+      const blob = new Blob([JSON.stringify(notes)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'notes_backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function prepareImport(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const importedNotes = JSON.parse(e.target.result);
+          notes = [...notes, ...importedNotes];
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    function importNotes() {
+      localStorage.setItem('notes', JSON.stringify(notes));
+      displayNotes();
+      alert('Notes imported successfully!');
+    }
+    
+    function showSection(sectionId) {
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+    document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
+}
+
+    function showAddNote() {
+      showSection('addNoteSection');
+      document.getElementById('noteContent').value = "";
+      document.getElementById('noteTitle').value = "";
+      document.getElementById('notePassword').value = "";
+    }
+
+    function cancelNote() {
+      showSection('notesSection');
+    }
+
+    function saveNote() {
+      const title = document.getElementById('noteTitle').value.trim();
+      const content = document.getElementById('noteContent').value.trim();
+      const password = document.getElementById('notePassword').value.trim();
+
+      if (content === "") {
+        alert("Note content cannot be empty!");
+        return;
+      }
+
+      const note = { title, content, password };
+      notes.push(note);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      displayNotes();
+      showSection('notesSection');
+    }
+
+    function displayNotes() {
+      const container = document.getElementById('notesContainer');
+      container.innerHTML = "";
+      notes.forEach((note, index) => {
+        const noteDiv = document.createElement('div');
+        noteDiv.className = "note";
+        noteDiv.innerHTML = `
+          <h4>${note.title}</h4>
+          <p>${note.password ? "(Password Protected Note)" : note.content}</p>
+          <button onclick="openNote(${index})">Open</button>
+          <button onclick="deleteNote(${index})">Delete</button>
+        `;
+        container.appendChild(noteDiv);
+      });
+    }
+
+    function openNote(index) {
+      const note = notes[index];
+      if (note.password) {
+        document.getElementById('passwordModal').style.visibility = 'visible';
+        document.getElementById('passwordInput').value = "";
+        document.getElementById('passwordModal').dataset.noteIndex = index;
+      } else {
+        showNoteContent(note);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+    // Hide all sections initially
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+
+    // Show only the notes section on page load
+    showSection('notesSection'); // Show the notes section
+
+    // Load notes and lists from local storage
+    displayNotes();
+    displayLists();
+});
+
+    function closePasswordModal() {
+    document.getElementById('passwordModal').style.visibility = 'hidden';
+    document.getElementById('passwordInput').value = ""; // Clear the password input field
+}
+
+function showListsSection() {
+    showSection('listsContainer'); // Show the lists container
+    displayLists(); // Refresh the displayed lists
+    document.getElementById('addListSection').classList.add('hidden'); // Ensure add list section is hidden
+}
+
+    function verifyPassword() {
+      const password = document.getElementById('passwordInput').value;
+      const index = document.getElementById('passwordModal').dataset.noteIndex;
+      const note = notes[index];
+
+      if (password === note.password) {
+        document.getElementById('passwordModal').style.visibility = 'hidden';
+        showNoteContent(note);
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+    function showNoteContent(note) {
+      document.getElementById('noteTitle').value = note.title;
+      document.getElementById('noteContent').value = note.content;
+      document.getElementById('notePassword').value = note.password;
+      showSection('addNoteSection');
+    }
+
+    function deleteNote(index) {
+      if (confirm("Are you sure you want to delete this note?")) {
+        notes.splice(index, 1);
         localStorage.setItem('notes', JSON.stringify(notes));
-        alert("Password set successfully.");
-    } else {
-        alert("Password cannot be empty!");
+        displayNotes();
+      }
     }
-    selectedNoteIndex = null; // Reset selection
-    document.getElementById('actionButtons').style.display = 'none'; // Hide buttons
-    renderNotes(); // Re-render notes
+
+    // Function to show the add options modal
+function showAddOptions() {
+    const modal = document.getElementById('addOptionsModal');
+    modal.style.display = 'block'; // Show the modal
+    modal.style.opacity = '1'; // Optional: Add fade-in effect
 }
 
-// Close the action buttons when clicking outside
-document.body.onclick = function (e) {
-    if (!e.target.classList.contains('note') && !e.target.closest('.action-buttons')) {
-        selectedNoteIndex = null;
-        document.getElementById('actionButtons').style.display = 'none';
-        document.querySelectorAll('.note').forEach(note => note.classList.remove('selected'));
+// Function to close the add options modal
+function closeAddOptions() {
+    const modal = document.getElementById('addOptionsModal');
+    modal.style.display = 'none'; // Hide the modal
+    modal.style.opacity = '0'; // Optional: Add fade-out effect
+}
+
+// Function to open a list and pre-fill the add list section
+
+
+// Function to show the add list section
+// Function to show the add list section
+function showAddListSection() {
+    // Hide all sections first
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+
+    // Show the add list section
+    document.getElementById('addListSection').classList.remove('hidden'); // Show the add list section
+    document.getElementById('listTitle').value = ""; // Clear the title input
+    document.getElementById('newItem').value = ""; // Clear the new item input
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+}
+
+// Function to cancel adding a list
+function cancelList() {
+    // Hide the add list section and show the lists section
+    document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
+    showSection('listsContainer'); // Show the lists section
+}
+
+// Function to show a specific section
+function showSection(sectionId) {
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+    document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
+}
+
+
+
+// Function to save a new list
+function saveList() {
+    const title = document.getElementById('listTitle').value.trim();
+
+    if (title === "" || currentItems.length === 0) {
+        alert("List title and items cannot be empty!");
+        return;
     }
-};
 
-function showCredits() {
-    document.getElementById('credits').style.display = 'block';
-    document.getElementById('notepad').style.display = 'none'; // Hide notepad if it's open
-    notesContainer.style.display = 'none'; // Hide notes if they're visible
+    // Check for duplicates
+    const existingListIndex = lists.findIndex(list => list.title === title);
+    if (existingListIndex !== -1) {
+        alert("A list with this title already exists!");
+        return;
+    }
+
+    const list = { title, items: currentItems.slice() }; // Create a new list object
+    lists.push(list);
+    localStorage.setItem('lists', JSON.stringify(lists));
+    displayLists(); // Refresh the displayed lists
+    document.getElementById('listTitle').value = ""; // Clear the title input
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
 }
 
-function closeCredits() {
-    document.getElementById('credits').style.display = 'none';
-    notesContainer.style.display = 'flex'; // Show notes again
+// Function to display lists
+function displayLists() {
+    const container = document.getElementById('listsContainerContent');
+    container.innerHTML = ""; // Clear existing lists
+    lists.forEach((list, index) => {
+        const listDiv = document.createElement('div');
+        listDiv.className = "list";
+        listDiv.innerHTML = `
+           <button onclick="openList(${index})">Open</button>
+            <button onclick="deleteList(${index})">Delete</button>
+        `;
+        container.appendChild(listDiv);
+    });
+}
+
+// Function to open a list and pre-fill the add list section
+function openList(index) {
+    const list = lists[index];
+    document.getElementById('listTitle').value = list.title;
+    currentItems = list.items.slice(); // Copy items to currentItems
+    displayChecklist(); // Display the checklist with items
+    showSection('addListSection'); // Show the add list section
 }
 
 
 
-    </script>
+    const lists = JSON.parse(localStorage.getItem('lists')) || [];
+let currentItems = []; // Array to hold current checklist items
+
+// Function to show the lists section
+function showListsSection() {
+    showSection('listsContainer');
+    displayLists(); // Refresh the displayed lists
+}
+
+// Function to show the add list section
+function showAddListSection() {
+    showSection('addListSection');
+    document.getElementById('listTitle').value = "";
+    document.getElementById('newItem').value = "";
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+}
+
+// Function to add an item to the checklist
+function addItem() {
+    const newItemInput = document.getElementById('newItem');
+    const newItemValue = newItemInput.value.trim();
+
+    if (newItemValue === "") {
+        alert("Item cannot be empty!");
+        return;
+    }
+
+    currentItems.push(newItemValue); // Add the new item to the current items array
+    newItemInput.value = ""; // Clear the input field
+    displayChecklist(); // Update the checklist display
+}
+
+// Function to display the checklist
+function displayChecklist() {
+    const checklistContainer = document.getElementById('checklistContainer');
+    checklistContainer.innerHTML = ""; // Clear existing items
+
+    currentItems.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.innerHTML = `
+            <input type="checkbox" id="item-${index}">
+            <label for="item-${index}">${item}</label>
+            <button onclick="removeItem(${index})">Remove</button>
+        `;
+        checklistContainer.appendChild(itemDiv);
+    });
+}
+
+// Function to remove an item from the checklist
+function removeItem(index) {
+    currentItems.splice(index, 1); // Remove the item from the array
+    displayChecklist(); // Update the checklist display
+}
+
+// Function to save a new list
+function saveList() {
+    const title = document.getElementById('listTitle').value.trim();
+
+    if (title === "" || currentItems.length === 0) {
+        alert("List title and items cannot be empty!");
+        return;
+    }
+
+    const list = { title, items: currentItems.slice() }; // Create a new list object
+    lists.push(list);
+    localStorage.setItem('lists', JSON.stringify(lists));
+    displayLists(); // Refresh the displayed lists
+    document.getElementById('listTitle').value = ""; // Clear the title input
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+}
+
+// Function to display lists
+function displayLists() {
+    const container = document.getElementById('listsContainerContent');
+    container.innerHTML = ""; // Clear existing lists
+    lists.forEach((list, index) => {
+        const listDiv = document.createElement('div');
+        listDiv.className = "note"
+        listDiv.innerHTML = `
+            <h4>${list.title}</h4>
+            <button onclick="openList(${index})">Open</button>
+            <button onclick="deleteList(${index})">Delete</button>
+        `;
+        container.appendChild(listDiv);
+    });
+}
+
+// Function to delete a list
+function deleteList(index) {
+    if (confirm("Are you sure you want to delete this list?")) {
+        lists.splice(index, 1);
+        localStorage.setItem('lists', JSON.stringify(lists));
+        displayLists();
+    }
+}
+
+// Function to cancel adding a list
+function cancelList() {
+    showSection('listsContainer'); // Show the lists section
+}
+
+// Call displayLists on page load
+displayLists();
+displayNotes();
+
+
+
+  </script>
 </body>
 </html>
