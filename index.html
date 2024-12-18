@@ -305,13 +305,11 @@ button:hover {
     }
 
     function importNotes() {
-      if (file) {
+      
       localStorage.setItem('notes', JSON.stringify(notes));
       displayNotes();
       alert('Notes imported successfully!');
-    } else {
-        alert('No file selected')
-    }
+    
     }
     
     function showSection(sectionId) {
