@@ -271,7 +271,7 @@ button:hover {
 </div>
 
   <div id="moreSection" class="container">
-    <p>Thos is an Under-Devlopment Section. This section will include logIn/register fearure and funtional sync option. Stay tunned for updates</p>
+    <p>This is an Under-Devlopment Section. This section will include logIn/register fearure and funtional sync option. Stay tunned for updates</p>
   </div>
   <script>
     
@@ -305,9 +305,13 @@ button:hover {
     }
 
     function importNotes() {
+      if (file) {
       localStorage.setItem('notes', JSON.stringify(notes));
       displayNotes();
       alert('Notes imported successfully!');
+    } else {
+        alert('No file selected')
+    }
     }
     
     function showSection(sectionId) {
