@@ -295,7 +295,7 @@ button:hover {
     function prepareImport(event) {
       const file = event.target.files[0];
       if (file) {
-        const reader = new FileReader();
+      const reader = new FileReader();
         reader.onload = (e) => {
           const importedNotes = JSON.parse(e.target.result);
           notes = [...notes, ...importedNotes];
@@ -305,12 +305,10 @@ button:hover {
     }
 
     function importNotes() {
-      
       localStorage.setItem('notes', JSON.stringify(notes));
       displayNotes();
       alert('Notes imported successfully!');
-    
-    }
+  }
     
     function showSection(sectionId) {
     document.querySelectorAll('.container').forEach(section => {
