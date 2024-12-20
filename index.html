@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,33 +133,41 @@
     }
 
     #addListSection {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    margin-top: 20px; /* Add some space above the section */
+    background-color: #fff; /* White background */
+    padding: 20px; /* Padding around the content */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    margin-top: 20px; /* Space above the section */
 }
 
 .input-field {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside the input */
+    margin: 10px 0; /* Margin above and below */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Rounded corners */
 }
 
 button {
-    padding: 8px 12px;
-    margin: 5px;
-    cursor: pointer;
-    border: none;
-    background-color: #ffa500;
-    color: white;
-    border-radius: 4px;
+    padding: 8px 12px; /* Padding for buttons */
+    margin: 5px; /* Margin around buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    border: none; /* No border */
+    background-color: #ffa500; /* Orange background */
+    color: white; /* White text */
+    border-radius: 4px; /* Rounded corners */
 }
 
 button:hover {
-    background-color: #ff8c00;
+    background-color: #ff8c00; /* Darker orange on hover */
+}
+
+.close-button {
+    background-color: #ff4c4c; /* Red background for close button */
+}
+
+.close-button:hover {
+    background-color: #ff1c1c; /* Darker red on hover */
 }
 
 .modal {
@@ -244,21 +253,24 @@ button:hover {
 <div id="addListSection" class="container">>
 <h3>Add a New List</h3>
     <input id="listTitle" type="text" placeholder="Enter list title...">
+    <div id="checklistContainer"></div> <!-- Container for checklist items -->
     <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
     <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
     <button onclick="saveList()">Save List</button>
-<div id="checklistContainer"></div> <!-- Container for checklist items -->
 </div>
 </div>
 
 <!-- Add Options Modal -->
-<div id="addOptionsModal" class="modal hidden">
-    <div class="modal-content">
-        <h3>Add Options</h3>
-        <button onclick="showAddListSection()">Add List</button>
-        <button onclick="showAddNote()">Add Note</button>
-        <button onclick="closeAddOptions()">Close</button>
-    </div>
+<div id="addListSection" class="container hidden">
+    <h3>Add a New List</h3>
+    <input id="listTitle" type="text" placeholder="Enter list title..." class="input-field">
+    <div id="checklistContainer"></div> <!-- Container for checklist items -->
+    <input id="newItem" type="text" placeholder="Enter item..." class="input-field"> <!-- Input for new item -->
+    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
+    <button onclick="saveList()">Save List</button>
+    <button onclick="cancelList()">Cancel</button>
+    <button onclick="closeAddListSection()" class="close-button">Close</button> <!-- Close button -->
+</div>
 </div>
   
   <div class="bottom-nav">
@@ -270,9 +282,17 @@ button:hover {
 
 </div>
 
-  <div id="moreSection" class="container">
-    <p>This is an Under-Devlopment Section. This section will include logIn/register fearure and funtional sync option. Stay tunned for updates</p>
-  </div>
+<!-- More Section -->
+<div id="moreSection" class="container hidden">
+    <h2>More Features Coming Soon!</h2>
+    <p>This section will include features like:</p>
+    <ul>
+        <li>Sync Feature</li>
+        <li>Login Feature</li>
+    </ul>
+    <p>Stay tuned for updates!</p>
+</div>
+
   <script>
     
     let notes = JSON.parse(localStorage.getItem('notes')) || []; 
@@ -295,7 +315,7 @@ button:hover {
     function prepareImport(event) {
       const file = event.target.files[0];
       if (file) {
-      const reader = new FileReader();
+        const reader = new FileReader();
         reader.onload = (e) => {
           const importedNotes = JSON.parse(e.target.result);
           notes = [...notes, ...importedNotes];
@@ -308,7 +328,7 @@ button:hover {
       localStorage.setItem('notes', JSON.stringify(notes));
       displayNotes();
       alert('Notes imported successfully!');
-  }
+    }
     
     function showSection(sectionId) {
     document.querySelectorAll('.container').forEach(section => {
@@ -421,11 +441,14 @@ function showListsSection() {
       if (confirm("Are you sure you want to delete this note?")) {
         notes.splice(index, 1);
         localStorage.setItem('notes', JSON.stringify(notes));
-        showNoteContent(note);
+        displayNotes();
       }
-        
-          }
     }
+
+    function closeAddListSection() {
+    document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
+    showSection('listsContainer'); // Show the lists section
+}
 
     // Function to show the add options modal
 function showAddOptions() {
