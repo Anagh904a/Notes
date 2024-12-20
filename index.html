@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <title>ColorNotes Inspired Notes App</title>
   <style>
     body {
@@ -71,7 +72,7 @@
       position: fixed;
       bottom: 0;
       width: 100%;
-      height: 60px;
+      height: 55px;
       background-color: #ffa500;
       color: white;
       box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
@@ -237,11 +238,6 @@ button:hover {
   <!-- Settings Section -->
   <div id="settings" class="container">
     <h2>Settings</h2>
-    <h3>Privacy</h3>
-    <label>
-      Sync Data:
-      <input type="checkbox" id="syncDataToggle">
-    </label>
     <h3>Other Settings</h3>
     <button onclick="showCredits()">Credits</button>
     <div id="creditsSection" style="display:none;">
@@ -255,7 +251,7 @@ button:hover {
 
 <!-- Add Lists Section -->
 <div id="addListSection" class="container">>
-<h3>Add a New List</h3>
+<h3>Manage Your List</h3>
     <input id="listTitle" type="text" placeholder="Enter list title...">
     <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
     <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
@@ -269,30 +265,71 @@ button:hover {
 <div id="addOptionsModal" class="modal hidden">
     <div class="modal-content">
         <h3>Add Options</h3>
-        <button onclick="showAddNote()">Add Note</button>
-        <button onclick="showAddListSection()">Add List</button>
-        <button onclick="closeAddOptions()">Close</button>
+        <button onclick="showAddNote()"><i class="fas fa-list"></i>Add Note</button>
+        <button onclick="showAddListSection()"><i class="fas fa-sticky-note"></i>Add List</button>
+        <button onclick="closeAddOptions()"><i class="fas fa-times"></i>Close</button>
     </div>
 </div>
   
-  <div class="bottom-nav">
-    <button class="nav-button" onclick="showSection('listsContainer')">Lists</button>
-    <button class="nav-button" onclick="showSection('notesSection')">Notes</button>
-    <div class="add-button" onclick="showAddOptions()">+</div>
-<button class="nav-button" onclick="showSection('settings')">Settings</button>
-<button class="nav-button " onclick="showSection('moreSection')">More</button>
-
+<!--Botto Navigation Bar-->
+<div class="bottom-nav">
+  <button class="nav-button" onclick="showSection('listsContainer')"><i class="fas fa-list"></i>Lists</button>
+  <button class="nav-button" onclick="showSection('notesSection')"><i class="fas fa-sticky-note"></i> Notes</button>
+  <div class="add-button" onclick="showAddOptions()">+</div>
+  <button class="nav-button" onclick="showSection('settings')"><i class="fas fa-cog"></i> Settings</button>
+  <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-ellipsis-h"></i> More</button>
 </div>
 
 <!-- More Section -->
 <div id="moreSection" class="container hidden">
-    <h2>More Features Coming Soon!</h2>
-    <p>This section will include features like:</p>
+  <h2>More Features</h2>
+  
+  <div class="feature-section">
+      <h3>Sync Data</h3>
+      <p>This feature allows you to sync your notes across all devices. When enabled, your notes will automatically update whenever you make changes.</p>
+      <label>
+          <input type="checkbox" id="syncDataToggle" onchange="toggleSync()">
+          Enable Sync
+      </label>
+      <p>Note: Ensure you are logged in to use the sync feature.</p>
+  </div>
+
+  <div class="feature-section">
+      <h3>User Authentication</h3>
+      <p>Sign in to access your notes from any device. If you don't have an account, you can register here.</p>
+      <button onclick="showSignIn()">Sign In</button>
+      <button onclick="showRegister()">Register</button>
+  </div>
+
+  <div class="feature-section">
+      <h3>User Profile</h3>
+      <p>Manage your account settings, update your profile information, and change your password.</p>
+      <button onclick="showProfile()">View Profile</button>
+  </div>
+
+  <div class="feature-section">
+    <h3>What's New 🚀</h3>
+    <p>We're excited to share the latest updates and improvements in this version:</p>
+    
+    <h4>New Major Elements:</h4>
     <ul>
-        <li>Sync Feature</li>
-        <li>Login Feature</li>
+        <li>✨ Added a new sync option for seamless note syncing across devices.</li>
+        <li>🔑 Introduced login and register features with Google for easy access.</li>
+        <li>👤 Brand new profile section accessible from the More section.</li>
     </ul>
-    <p>Stay tuned for updates!</p>
+
+    <h4>Improvements & Bug Fixes:</h4>
+    <ul>
+        <li>🐞 Fixed duplicate note/list issue after editing.</li>
+        <li>🔒 Changed "Change Password" button to "Manage Password".</li>
+        <li>🖼️ Added icons in the navigation bar for better usability.</li>
+        <li>⏩ Implemented Enter key functions throughout the app for smoother navigation.</li>
+        <li>🚪 Added automatic close feature in all sections for improved user experience.</li>
+        <li>🛠️ Fixed bugs in the add button menu.</li>
+        <li>🔐 Added password requirement when deleting password-protected notes.</li>
+        <li>❌ Removed sync toggle from settings for a cleaner interface.</li>
+    </ul>
+</div>
 </div>
 
   <script>
