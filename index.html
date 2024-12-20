@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -214,9 +213,10 @@ button:hover {
     <h3>Add a New Note</h3>
     <input id="noteTitle" type="text" placeholder="Enter note title...">
     <textarea id="noteContent" placeholder="Write your note here..."></textarea>
-    <input type="password" id="notePassword" placeholder="Optional Password">
+    <button id="changePasswordButton" onclick="togglePasswordInput()">Change Password</button>
+    <input type="password" id="notePassword" placeholder="Enter New Password.." class="hidden">
     <button onclick="saveNote()">Save Note</button>
-    <button onclick="cancelNote()">Cancel</button>
+    <button id="saveNoteButton" onclick="cancelNote()">Cancel</button>
   </div>
 
   <!-- Password Modal -->
@@ -261,16 +261,13 @@ button:hover {
 </div>
 
 <!-- Add Options Modal -->
-<div id="addListSection" class="container hidden">
-    <h3>Add a New List</h3>
-    <input id="listTitle" type="text" placeholder="Enter list title..." class="input-field">
-    <div id="checklistContainer"></div> <!-- Container for checklist items -->
-    <input id="newItem" type="text" placeholder="Enter item..." class="input-field"> <!-- Input for new item -->
-    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
-    <button onclick="saveList()">Save List</button>
-    <button onclick="cancelList()">Cancel</button>
-    <button onclick="closeAddListSection()" class="close-button">Close</button> <!-- Close button -->
-</div>
+<div id="addOptionsModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Add Options</h3>
+        <button onclick="showAddNote()">Add Note</button>
+        <button onclick="showAddListSection()">Add List</button>
+        <button onclick="closeAddOptions()">Close</button>
+    </div>
 </div>
   
   <div class="bottom-nav">
@@ -294,7 +291,7 @@ button:hover {
 </div>
 
   <script>
-    
+    let actionType = null;
     let notes = JSON.parse(localStorage.getItem('notes')) || []; 
  
     function showCredits() {
@@ -325,9 +322,39 @@ button:hover {
     }
 
     function importNotes() {
-      localStorage.setItem('notes', JSON.stringify(notes));
-      displayNotes();
-      alert('Notes imported successfully!');
+        const fileInput = document.getElementById('importFile');
+        if (!fileInput.files.length) {
+            alert("No file selected!");
+            return;
+        }
+
+        localStorage.setItem('notes', JSON.stringify(notes));
+        displayNotes();
+        alert('Notes imported successfully!');
+    }
+
+   // Function to check if there are changes in the note
+   function checkNoteChanges() {
+        const title = document.getElementById('noteTitle').value.trim();
+        const content = document.getElementById('noteContent').value.trim();
+        const saveButton = document.getElementById('saveNoteButton');
+
+        // Enable the save button if there are changes
+        if (title !== "" || content !== "") {
+            saveButton.disabled = false;
+            saveButton.style.backgroundColor = "#ffa500"; // Change to orange when enabled
+            saveButton.style.color = "white"; // Change text color to white for better visibility
+        } else {
+            saveButton.disabled = true;
+            saveButton.style.backgroundColor = "#ccc"; // Grayed out color when disabled
+            saveButton.style.color = "darkgray"; // Change text color to dark gray for better visibility
+        }
+    }
+
+    // Function to toggle the password input field
+    function togglePasswordInput() {
+        const passwordInput = document.getElementById('notePassword');
+        passwordInput.classList.toggle('hidden');
     }
     
     function showSection(sectionId) {
@@ -417,17 +444,26 @@ function showListsSection() {
     document.getElementById('addListSection').classList.add('hidden'); // Ensure add list section is hidden
 }
 
-    function verifyPassword() {
-      const password = document.getElementById('passwordInput').value;
-      const index = document.getElementById('passwordModal').dataset.noteIndex;
-      const note = notes[index];
+function verifyPassword() {
+        const password = document.getElementById('passwordInput').value;
+        const index = document.getElementById('passwordModal').dataset.noteIndex;
+        const note = notes[index];
 
-      if (password === note.password) {
-        document.getElementById('passwordModal').style.visibility = 'hidden';
-        showNoteContent(note);
-      } else {
-        alert("Incorrect password!");
-      }
+        if (password === note.password) {
+            if (actionType === 'delete') {
+                // Delete the note
+                notes.splice(index, 1);
+                localStorage.setItem('notes', JSON.stringify(notes));
+                displayNotes(); // Refresh the notes display
+                closePasswordModal(); // Close the modal
+            } else {
+                // Unlock the note and show its content
+                showNoteContent(note);
+                closePasswordModal(); // Close the modal
+            }
+        } else {
+            alert("Incorrect password!");
+        }
     }
 
     function showNoteContent(note) {
@@ -437,12 +473,21 @@ function showListsSection() {
       showSection('addNoteSection');
     }
 
+    // Modify the deleteNote function to include password verification
     function deleteNote(index) {
-      if (confirm("Are you sure you want to delete this note?")) {
-        notes.splice(index, 1);
-        localStorage.setItem('notes', JSON.stringify(notes));
-        displayNotes();
-      }
+        const note = notes[index];
+        if (note.password) {
+            actionType = 'delete'; // Set action type to delete
+            document.getElementById('passwordModal').style.visibility = 'visible';
+            document.getElementById('passwordInput').value = "";
+            document.getElementById('passwordModal').dataset.noteIndex = index;
+        } else {
+            if (confirm("Are you sure you want to delete this note?")) {
+                notes.splice(index, 1);
+                localStorage.setItem('notes', JSON.stringify(notes));
+                displayNotes();
+            }
+        }
     }
 
     function closeAddListSection() {
@@ -560,14 +605,8 @@ function showListsSection() {
     displayLists(); // Refresh the displayed lists
 }
 
-// Function to show the add list section
-function showAddListSection() {
-    showSection('addListSection');
-    document.getElementById('listTitle').value = "";
-    document.getElementById('newItem').value = "";
-    currentItems = []; // Reset current items
-    displayChecklist(); // Clear the checklist display
-}
+
+
 
 // Function to add an item to the checklist
 function addItem() {
