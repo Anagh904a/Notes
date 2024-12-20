@@ -170,7 +170,7 @@ button:hover {
 }
 
 .modal {
-   position: fixed;
+  position: fixed;
     top: 50%; /* Center vertically */
     left: 50%; /* Center horizontally */
     transform: translate(-50%, -50%); /* Adjust for the modal's own width and height */
@@ -180,7 +180,11 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 2px
+ 
 }
+    
+
 
 .modal-content {
     background-color: white;
@@ -354,6 +358,7 @@ button:hover {
       document.getElementById('noteContent').value = "";
       document.getElementById('noteTitle').value = "";
       document.getElementById('notePassword').value = "";
+    closeAddOptions();
     }
 
     function cancelNote() {
@@ -511,7 +516,8 @@ function showAddListSection() {
     document.getElementById('newItem').value = ""; // Clear the new item input
     currentItems = []; // Reset current items
     displayChecklist(); // Clear the checklist display
-}
+closeAddOptions();
+  }
 
 // Function to cancel adding a list
 function cancelList() {
