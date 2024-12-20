@@ -217,7 +217,7 @@ button:hover {
     <h3>Add a New Note</h3>
     <input id="noteTitle" type="text" placeholder="Enter note title...">
     <textarea id="noteContent" placeholder="Write your note here..."></textarea>
-    <button id="changePasswordButton" onclick="togglePasswordInput()">Change Password</button>
+    <button id="changePasswordButton" onclick="togglePasswordInput()">Manage Password</button>
     <input type="password" id="notePassword" placeholder="Enter New Password.." class="hidden">
     <button onclick="saveNote()">Save Note</button>
     <button id="saveNoteButton" onclick="cancelNote()">Cancel</button>
@@ -298,7 +298,9 @@ button:hover {
   <script>
     let actionType = null;
     let notes = JSON.parse(localStorage.getItem('notes')) || []; 
- 
+    let editingNoteIndex = null; // To track the index of the note being edited
+    let editingListIndex = null; // To track the index of the list being edited
+    
     function showCredits() {
       const credits = document.getElementById('creditsSection');
       credits.style.display = credits.style.display === 'none' ? 'block' : 'none';
@@ -366,21 +368,33 @@ button:hover {
     }
 
     function saveNote() {
-      const title = document.getElementById('noteTitle').value.trim();
-      const content = document.getElementById('noteContent').value.trim();
-      const password = document.getElementById('notePassword').value.trim();
+    const title = document.getElementById('noteTitle').value.trim();
+    const content = document.getElementById('noteContent').value.trim();
+    const password = document.getElementById('notePassword').value.trim();
 
-      if (content === "") {
+    if (content === "") {
         alert("Note content cannot be empty!");
         return;
-      }
-
-      const note = { title, content, password };
-      notes.push(note);
-      localStorage.setItem('notes', JSON.stringify(notes));
-      displayNotes();
-      showSection('notesSection');
     }
+
+    if (editingNoteIndex !== null) {
+        // Update existing note
+        notes[editingNoteIndex] = { title, content, password };
+        alert("Note updated successfully!");
+    } else {
+        // Add new note
+        const note = { title, content, password };
+        notes.push(note);
+        alert("Note saved successfully!");
+    }
+
+    localStorage.setItem('notes', JSON.stringify(notes));
+    displayNotes();
+    showSection('notesSection');
+
+    // Reset editing state
+    editingNoteIndex = null; // Reset after saving
+}
 
     function displayNotes() {
       const container = document.getElementById('notesContainer');
@@ -461,7 +475,11 @@ function verifyPassword() {
       document.getElementById('noteContent').value = note.content;
       document.getElementById('notePassword').value = note.password;
       showSection('addNoteSection');
-    }
+     // Set the index of the note being edited
+     editingNoteIndex = notes.findIndex(n => n.title === note.title && n.content === note.content);
+}
+    
+    
 
     // Modify the deleteNote function to include password verification
     function deleteNote(index) {
@@ -545,20 +563,22 @@ function saveList() {
         return;
     }
 
-    // Check for duplicates
-    const existingListIndex = lists.findIndex(list => list.title === title);
-    if (existingListIndex !== -1) {
-        alert("A list with this title already exists!");
-        return;
+    if (editingListIndex !== null) {
+        // Update existing list
+        lists[editingListIndex] = { title, items: currentItems.slice() };
+        alert("List updated successfully!");
+    } else {
+        // Add new list
+        const list = { title, items: currentItems.slice() };
+        lists.push(list);
+        alert("List saved successfully!");
     }
 
-    const list = { title, items: currentItems.slice() }; // Create a new list object
-    lists.push(list);
     localStorage.setItem('lists', JSON.stringify(lists));
     displayLists(); // Refresh the displayed lists
-    document.getElementById('listTitle').value = ""; // Clear the title input
-    currentItems = []; // Reset current items
-    displayChecklist(); // Clear the checklist display
+showSection('listsContainer');
+    // Reset editing state
+    editingListIndex = null; // Reset after saving
 }
 
 // Function to display lists
@@ -583,6 +603,9 @@ function openList(index) {
     currentItems = list.items.slice(); // Copy items to currentItems
     displayChecklist(); // Display the checklist with items
     showSection('addListSection'); // Show the add list section
+
+    // Set the index of the list being edited
+    editingListIndex = index; // Set the index of the list being edited
 }
 
 
