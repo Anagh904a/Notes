@@ -119,10 +119,10 @@
       background-color: white;
       padding: 20px;
       border-radius: 5px;
-      width: 300px;
+      width: 350px;
     }
     #passwordModal input[type="password"] {
-      width: 100%;
+      width: 95%;
       padding: 10px;
       margin: 10px 0;
       font-size: 16px;
@@ -195,6 +195,40 @@ button:hover {
 }
 
 
+input {
+    margin-bottom: 10px; /* Space below each input */
+    padding: 12px; /* Increased padding for better touch targets */
+    font-size: 16px; /* Consistent font size */
+    border: 1px solid #ddd; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus effects */
+}
+
+input:focus {
+    border-color: #ffa500; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(255, 165, 0, 0.5); /* Add a subtle shadow effect */
+    outline: none; /* Remove default outline */
+}
+
+input[type="password"] {
+    font-family: Arial, sans-serif; /* Ensure consistent font for password input */
+}
+
+
+
+.error {
+    color: red;
+    font-size: 14px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
   </style>
 </head>
 <body>
@@ -271,7 +305,7 @@ button:hover {
     </div>
 </div>
   
-<!--Botto Navigation Bar-->
+<!--Bottom Navigation Bar-->
 <div class="bottom-nav">
   <button class="nav-button" onclick="showSection('listsContainer')"><i class="fas fa-list"></i>Lists</button>
   <button class="nav-button" onclick="showSection('notesSection')"><i class="fas fa-sticky-note"></i> Notes</button>
@@ -284,41 +318,13 @@ button:hover {
 <div id="moreSection" class="container hidden">
   <h2>More Features</h2>
   
-  <div class="feature-section">
-      <h3>Sync Data</h3>
-      <p>This feature allows you to sync your notes across all devices. When enabled, your notes will automatically update whenever you make changes.</p>
-      <label>
-          <input type="checkbox" id="syncDataToggle" onchange="toggleSync()">
-          Enable Sync
-      </label>
-      <p>Note: Ensure you are logged in to use the sync feature.</p>
-  </div>
-
-  <div class="feature-section">
-      <h3>User Authentication</h3>
-      <p>Sign in to access your notes from any device. If you don't have an account, you can register here.</p>
-      <button onclick="showSignIn()">Sign In</button>
-      <button onclick="showRegister()">Register</button>
-  </div>
-
-  <div class="feature-section">
-      <h3>User Profile</h3>
-      <p>Manage your account settings, update your profile information, and change your password.</p>
-      <button onclick="showProfile()">View Profile</button>
-  </div>
+ 
 
   <div class="feature-section">
     <h3>What's New 🚀</h3>
     <p>We're excited to share the latest updates and improvements in this version:</p>
     
-    <h4>New Major Elements:</h4>
-    <ul>
-        <li>✨ Added a new sync option for seamless note syncing across devices.</li>
-        <li>🔑 Introduced login and register features with Google for easy access.</li>
-        <li>👤 Brand new profile section accessible from the More section.</li>
-    </ul>
-
-    <h4>Improvements & Bug Fixes:</h4>
+   <h4>Improvements & Bug Fixes:</h4>
     <ul>
         <li>🐞 Fixed duplicate note/list issue after editing.</li>
         <li>🔒 Changed "Change Password" button to "Manage Password".</li>
@@ -331,6 +337,8 @@ button:hover {
     </ul>
 </div>
 </div>
+
+
 
   <script>
     let actionType = null;
@@ -771,6 +779,36 @@ displayNotes();
 
 
 
+  </script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyARPrnJvfado0FX-mQ7pcLIa_98LZKlUGc",
+      authDomain: "notes-anagh.firebaseapp.com",
+      projectId: "notes-anagh",
+      storageBucket: "notes-anagh.firebasestorage.app",
+      messagingSenderId: "550200990936",
+      appId: "1:550200990936:web:7de949575866c1eb438bad",
+      measurementId: "G-T3K047M4WD"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+  const db = getFirestore(app);
+  
+ 
+  
   </script>
 </body>
 </html>
