@@ -673,7 +673,7 @@ function verifyPassword() {
     }
 
     function closeDeletePasswordModal() {
-    document.getElementById('deletePasswordModal').style.display = 'none'; // Hide the modal
+    document.getElementById('deletePasswordModal').style.visibility = 'hidden'; // Hide the modal
     document.getElementById('passwordInput').value = ""; // Clear the input
 }
 
@@ -845,7 +845,7 @@ document.getElementById('deletePasswordInput').addEventListener('keypress', func
 // Function to close the password modal
 function closePasswordModal() {
     document.getElementById('passwordModal').style.visibility = 'hidden';
-    document.getElementById('passwordInput').value = ""; // Clear the password input field
+    document.getElementById('passwordInput').value = ""; // Clear the password input fielding
 }
 
 // Event listener for closing the password modal with Escape key
@@ -953,4 +953,4 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase
   
   </script>
 </body>
-</html>
+  </html>
