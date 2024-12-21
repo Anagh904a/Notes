@@ -132,6 +132,36 @@
       padding: 10px;
     }
 
+     /* Password Modal */
+     #DeletePasswordModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 350px;
+    }
+    #DeletePasswordModal input[type="password"] {
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #DeletePasswordModal button {
+      width: 100%;
+      padding: 10px;
+    }
+
     #addListSection {
     background-color: #fff; /* White background */
     padding: 20px; /* Padding around the content */
@@ -319,10 +349,20 @@ a:hover {
   <!-- Password Modal -->
   <div id="passwordModal">
     <div class="modal-content">
-      <h3>Enter Password</h3>
+      <h3>Enter Password To Access The content</h3>
       <input type="password" id="passwordInput" placeholder="Password">
       <button onclick="verifyPassword()">Submit</button>
       <button onclick="closePasswordModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Delete Password Modal -->
+  <div id="DeletePasswordModal">
+    <div class="modal-content">
+      <h3>Enter Password To Delete The content</h3>
+      <input type="password" id="deletePasswordInput" placeholder="Password">
+      <button onclick="deleteVerifyPassword()">Submit</button>
+      <button onclick="closeDeletePasswordModal()">Close</button>
     </div>
   </div>
 
@@ -403,6 +443,10 @@ a:hover {
     let notes = JSON.parse(localStorage.getItem('notes')) || []; 
     let editingNoteIndex = null; // To track the index of the note being edited
     let editingListIndex = null; // To track the index of the list being edited
+    let historyStack = [];
+    let currentNoteId = null; // To track the ID of the note being accessed
+let currentDeleteNoteId = null; // To track the ID of the note being deleted
+   
     
     function showCredits() {
       const credits = document.getElementById('creditsSection');
@@ -456,7 +500,24 @@ a:hover {
         section.classList.add('hidden'); // Hide all sections
     });
     document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
+
+    // Manage history stack
+    if (historyStack[historyStack.length - 1] !== sectionId) {
+        historyStack.push(sectionId);
+    }
+    currentSection = sectionId; // Update current section
 }
+
+// Event listener for the Android back button functionality
+window.addEventListener('popstate', function(event) {
+    if (historyStack.length > 1) {
+        historyStack.pop(); // Remove the current section
+        const previousSection = historyStack.pop(); // Get the previous section
+        showSection(previousSection); // Show the previous section
+        historyStack.push(previousSection); // Push it back to maintain history
+    }
+});
+
 
     function showAddNote() {
       showSection('addNoteSection');
@@ -554,26 +615,34 @@ function showListsSection() {
 }
 
 function verifyPassword() {
-        const password = document.getElementById('passwordInput').value;
-        const index = document.getElementById('passwordModal').dataset.noteIndex;
+      const password = document.getElementById('passwordInput').value;
+      const index = document.getElementById('passwordModal').dataset.noteIndex;
+      const note = notes[index];
+
+      if (password === note.password) {
+        document.getElementById('passwordModal').style.visibility = 'hidden';
+        showNoteContent(note);
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+               function deleteVerifyPassword() {
+        const password = document.getElementById('deletePasswordInput').value;
+        const index = document.getElementById('deletePasswordModal').dataset.noteIndex;
         const note = notes[index];
 
         if (password === note.password) {
-            if (actionType === 'delete') {
-                // Delete the note
-                notes.splice(index, 1);
+            
+          notes.splice(index, 1);
                 localStorage.setItem('notes', JSON.stringify(notes));
                 displayNotes(); // Refresh the notes display
                 closePasswordModal(); // Close the modal
-            } else {
-                // Unlock the note and show its content
-                showNoteContent(note);
-                closePasswordModal(); // Close the modal
-            }
-        } else {
+           document.getElementById('DeletePasswordModal').style.visibility = 'hidden';
+          } else {
             alert("Incorrect password!");
         }
-    }
+      }
 
     function showNoteContent(note) {
       document.getElementById('noteTitle').value = note.title;
@@ -590,10 +659,10 @@ function verifyPassword() {
     function deleteNote(index) {
         const note = notes[index];
         if (note.password) {
-            actionType = 'delete'; // Set action type to delete
-            document.getElementById('passwordModal').style.visibility = 'visible';
-            document.getElementById('passwordInput').value = "";
-            document.getElementById('passwordModal').dataset.noteIndex = index;
+           
+            document.getElementById('deletePasswordModal').style.visibility = 'visible';
+            document.getElementById('deletePasswordInput').value = "";
+            document.getElementById('deletePasswordModal').dataset.noteIndex = index;
         } else {
             if (confirm("Are you sure you want to delete this note?")) {
                 notes.splice(index, 1);
@@ -602,6 +671,11 @@ function verifyPassword() {
             }
         }
     }
+
+    function closeDeletePasswordModal() {
+    document.getElementById('DeletePasswordModal').style.display = 'none'; // Hide the modal
+    document.getElementById('passwordInput').value = ""; // Clear the input
+}
 
     function closeAddListSection() {
     document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
