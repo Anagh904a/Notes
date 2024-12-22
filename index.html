@@ -127,6 +127,7 @@
       padding: 20px;
       border-radius: 5px;
       width: 350px;
+      position: absolute;
     }
     #passwordModal input[type="password"] {
       width: 95%;
@@ -409,9 +410,13 @@ a:hover {
 <!-- Add Lists Section -->
 <div id="addListSection" class="container">>
 <h3 id="manageListTitle">Manage Your Lists</h3>
-    <input id="listTitle" type="text" placeholder="Enter list title...">
-    <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
-    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
+   <label> Enter List Title
+<input id="listTitle" type="text">
+   </label>    
+<label> AddItem
+   <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
+</label> 
+   <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
     <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
     <button onclick="saveList()">Save List</button>
     <div id="checklistContainer"></div> <!-- Container for checklist items -->
