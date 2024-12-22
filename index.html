@@ -34,6 +34,12 @@
     button:hover {
       background-color: #ff8c00;
     }
+
+    .delete-button {
+    position: relative;
+    margin-left: 94%;
+    
+}
     textarea {
       width: 90%;
       height: 150px;
@@ -104,16 +110,17 @@
 
     /* Password Modal */
     #passwordModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
       background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
       justify-content: center;
       align-items: center;
-      visibility: hidden;
+      
     }
     .modal-content {
       background-color: white;
@@ -134,16 +141,17 @@
 
      /* Password Modal */
      #deletePasswordModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
       background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
       justify-content: center;
       align-items: center;
-      visibility: hidden;
+     
     }
     .modal-content {
       background-color: white;
@@ -231,7 +239,6 @@ button:hover {
     width: 300px; /* Set a fixed width */
     height: auto; /* Allow height to adjust based on content */
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 2px
@@ -317,10 +324,25 @@ a:hover {
     max-height: calc(100vh - 55px);
     margin-bottom: 55px;
 }
+
+#messageBox {
+            display: none; /* Hidden by default */
+            background-color: #808080; /* Grey color */
+            color: white;
+            padding: 15px;
+            border-radius: 20px;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: opacity 1s ease; /* Fade effect */
+            opacity: 1; /* Fully visible */
+        }
   </style>
 </head>
 <body>
   <h1>Notes App</h1>
+  
 
   <div id="notesSection" class="container">
     <h2>Your Notes</h2>
@@ -334,11 +356,14 @@ a:hover {
     </div>
 </div>
   
+<div id="messageBox">This is an Android-like message box!</div>
 
   <!-- Add Note Form -->
   <div id="addNoteSection" class="container hidden">
     <h3>Add a New Note</h3>
-    <input id="noteTitle" type="text" placeholder="Enter note title...">
+    <label> Enter Note Title
+    <input id="noteTitle" type="text">
+    </label>
     <textarea id="noteContent" placeholder="Write your note here..."></textarea>
     <button id="changePasswordButton" onclick="togglePasswordInput()">Manage Password</button>
     <input type="password" id="notePassword" placeholder="Enter New Password.." class="hidden">
@@ -383,7 +408,7 @@ a:hover {
 
 <!-- Add Lists Section -->
 <div id="addListSection" class="container">>
-<h3>Manage Your List</h3>
+<h3 id="manageListTitle">Manage Your Lists</h3>
     <input id="listTitle" type="text" placeholder="Enter list title...">
     <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
     <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
@@ -402,6 +427,14 @@ a:hover {
         <button onclick="closeAddOptions()"><i class="fas fa-times"></i>Close</button>
     </div>
 </div>
+
+<div id="notificationModal" class="modal hidden">
+  <div class="modal-content">
+      <h3>Notifications</h3>
+      <div id="notificationList"></div>
+      <button onclick="closeNotificationModal()">Close</button>
+  </div>
+</div>
   
 <!--Bottom Navigation Bar-->
 <div class="bottom-nav">
@@ -416,23 +449,11 @@ a:hover {
 <div id="moreSection" class="container hidden">
   <h2>More Features</h2>
   
- 
-
-  <div class="feature-section">
-    <h3>What's New 🚀</h3>
-    <p>We're excited to share the latest updates and improvements in this version:</p>
-    
-   <h4>Improvements & Bug Fixes:</h4>
-    <ul>
-        <li>🐞 Fixed duplicate note/list issue after editing.</li>
-        <li>🔒 Changed "Change Password" button to "Manage Password".</li>
-        <li>🖼️ Added icons in the navigation bar for better usability.</li>
-        <li>⏩ Implemented Enter key functions throughout the app for smoother navigation.</li>
-        <li>🚪 Added automatic close feature in all sections for improved user experience.</li>
-        <li>🛠️ Fixed bugs in the add button menu.</li>
-        <li>🔐 Added password requirement when deleting password-protected notes.</li>
-        <li>❌ Removed sync toggle from settings for a cleaner interface.</li>
-    </ul>
+ <div class="feature-section">
+      <h2>Inbox</h2>
+      <div id="notificationList"></div>
+      <button onclick="clearNotifications()">Clear All Notifications</button>
+    </div>
 </div>
 </div>
 
@@ -478,13 +499,13 @@ let currentDeleteNoteId = null; // To track the ID of the note being deleted
     function importNotes() {
         const fileInput = document.getElementById('importFile');
         if (!fileInput.files.length) {
-            alert("No file selected!");
+            showMessageBox("No file selected!");
             return;
         }
 
         localStorage.setItem('notes', JSON.stringify(notes));
         displayNotes();
-        alert('Notes imported successfully!');
+        showMessageBox('Notes imported successfully!');
     }
 
    
@@ -505,8 +526,52 @@ let currentDeleteNoteId = null; // To track the ID of the note being deleted
     if (historyStack[historyStack.length - 1] !== sectionId) {
         historyStack.push(sectionId);
     }
+
+    
+
+
     currentSection = sectionId; // Update current section
 }
+
+let notifications = []; // Array to hold notifications
+
+function initializeNotifications() {
+    // Add "What's New" notifications
+    notifications.push("🚀 What's New: Fixed duplicate note/list issue after editing.");
+    notifications.push("🔒 What's New: Changed 'Change Password' button to 'Manage Password'.");
+    
+}
+
+function displayNotifications() {
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = ""; // Clear existing notifications
+            notifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = 'notification-item'; // Add class for styling
+                notificationItem.textContent = notification;
+                notificationList.appendChild(notificationItem);
+            });
+        }
+
+function displayModalNotifications() {
+    const modalNotificationList = document.getElementById('notificationList'); // Ensure this is the correct ID
+    modalNotificationList.innerHTML = ""; // Clear existing notifications
+    notifications.forEach(notification => {
+        const notificationItem = document.createElement('div');
+        notificationItem.textContent = notification;
+        modalNotificationList.appendChild(notificationItem);
+    });
+}
+
+function clearNotifications() {
+    notifications = []; // Clear the notifications array
+    displayNotifications(); // Refresh the display
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    initializeNotifications(); // Initialize notifications on page load
+    displayNotifications(); // Display notifications in the Inbox
+});
 
 // Event listener for the Android back button functionality
 window.addEventListener('popstate', function(event) {
@@ -518,7 +583,25 @@ window.addEventListener('popstate', function(event) {
     }
 });
 
+let isMessageBoxVisible = false; // Flag to track visibility
+function showMessageBox(message) {
+    if (isMessageBoxVisible) return; // Prevent showing if already visible
 
+    const messageBox = document.getElementById('messageBox');
+    messageBox.textContent = message; // Set the message text
+    messageBox.style.display = 'block'; // Show the message box
+    isMessageBoxVisible = true; // Set the flag to true
+
+    // Fade out effect after 3 seconds
+    setTimeout(function() {
+        messageBox.style.opacity = '0'; // Start fading out
+        setTimeout(function() {
+            messageBox.style.display = 'none'; // Hide the message box after fading out
+            messageBox.style.opacity = '1'; // Reset opacity for next display
+            isMessageBoxVisible = false; // Reset the flag to allow showing again
+        }, 1000); // Wait for the fade out transition to complete
+    }, 1000); // Show for 3 seconds
+}
     function showAddNote() {
       showSection('addNoteSection');
       document.getElementById('noteContent').value = "";
@@ -537,19 +620,19 @@ window.addEventListener('popstate', function(event) {
     const password = document.getElementById('notePassword').value.trim();
 
     if (content === "") {
-        alert("Note content cannot be empty!");
+        showMessageBox("Note content cannot be empty!");
         return;
     }
 
     if (editingNoteIndex !== null) {
         // Update existing note
         notes[editingNoteIndex] = { title, content, password };
-        alert("Note updated successfully!");
+        showMessageBox("Note updated successfully!");
     } else {
         // Add new note
         const note = { title, content, password };
         notes.push(note);
-        alert("Note saved successfully!");
+        showMessageBox("Note saved successfully!");
     }
 
     localStorage.setItem('notes', JSON.stringify(notes));
@@ -560,20 +643,30 @@ window.addEventListener('popstate', function(event) {
     editingNoteIndex = null; // Reset after saving
 }
 
+function showNotification(message) {
+    const notificationList = document.getElementById('notificationList');
+    const notificationItem = document.createElement('div');
+    notificationItem.textContent = message;
+    notificationList.appendChild(notificationItem);
+    document.getElementById('notificationModal').style.display = 'block';
+}
 
+function closeNotificationModal() {
+    document.getElementById('notificationModal').style.display = 'none';
+}
 
     function displayNotes() {
       const container = document.getElementById('notesContainer');
       container.innerHTML = "";
       notes.forEach((note, index) => {
         const noteDiv = document.createElement('div');
-        noteDiv.className = "note";
-        noteDiv.innerHTML = `
-          <h4>${note.title}</h4>
+       noteDiv.innerHTML = `
+        <div class="note" onclick="openNote(${index})">  
+        <h4 onclick="openNote(${index})">${note.title}</h4>
           <p>${note.password ? "(Password Protected Note)" : note.content}</p>
-          <button onclick="openNote(${index})">Open</button>
-          <button onclick="deleteNote(${index})">Delete</button>
-        `;
+          <button class="delete-button" onclick="deleteNote(${index})">Delete</button>
+        </div>
+          `;
         container.appendChild(noteDiv);
       });
     }
@@ -581,7 +674,7 @@ window.addEventListener('popstate', function(event) {
     function openNote(index) {
       const note = notes[index];
       if (note.password) {
-        document.getElementById('passwordModal').style.visibility = 'visible';
+        document.getElementById('passwordModal').style.display = 'block';
         document.getElementById('passwordInput').value = "";
         document.getElementById('passwordModal').dataset.noteIndex = index;
       } else {
@@ -604,7 +697,7 @@ window.addEventListener('popstate', function(event) {
 });
 
     function closePasswordModal() {
-    document.getElementById('passwordModal').style.visibility = 'hidden';
+    document.getElementById('passwordModal').style.display = 'none';
     document.getElementById('passwordInput').value = ""; // Clear the password input field
 }
 
@@ -620,10 +713,10 @@ function verifyPassword() {
       const note = notes[index];
 
       if (password === note.password) {
-        document.getElementById('passwordModal').style.visibility = 'hidden';
+        document.getElementById('passwordModal').style.display = 'none';
         showNoteContent(note);
       } else {
-        alert("Incorrect password!");
+        showMessageBox("Incorrect password!");
       }
     }
 
@@ -638,9 +731,9 @@ function verifyPassword() {
                 localStorage.setItem('notes', JSON.stringify(notes));
                 displayNotes(); // Refresh the notes display
                 closePasswordModal(); // Close the modal
-           document.getElementById('deletePasswordModal').style.visibility = 'hidden';
+           document.getElementById('deletePasswordModal').style.display = 'none';
           } else {
-            alert("Incorrect password!");
+            showMessageBox("Incorrect password!");
         }
       }
 
@@ -660,7 +753,7 @@ function verifyPassword() {
         const note = notes[index];
         if (note.password) {
            
-            document.getElementById('deletePasswordModal').style.visibility = 'visible';
+            document.getElementById('deletePasswordModal').style.display = 'block';
             document.getElementById('deletePasswordInput').value = "";
             document.getElementById('deletePasswordModal').dataset.noteIndex = index;
         } else {
@@ -673,7 +766,7 @@ function verifyPassword() {
     }
 
     function closeDeletePasswordModal() {
-    document.getElementById('deletePasswordModal').style.visibility = 'hidden'; // Hide the modal
+    document.getElementById('deletePasswordModal').style.display = 'none'; // Hide the modal
     document.getElementById('passwordInput').value = ""; // Clear the input
 }
 
@@ -683,16 +776,15 @@ function verifyPassword() {
 }
 
     // Function to show the add options modal
-function showAddOptions() {
+    function showAddOptions() {
     const modal = document.getElementById('addOptionsModal');
-    modal.style.display = 'block'; // Show the modal
+    modal.classList.remove('hidden'); // Show the modal
     modal.style.opacity = '1'; // Optional: Add fade-in effect
 }
 
-// Function to close the add options modal
 function closeAddOptions() {
     const modal = document.getElementById('addOptionsModal');
-    modal.style.display = 'none'; // Hide the modal
+    modal.classList.add('hidden'); // Hide the modal
     modal.style.opacity = '0'; // Optional: Add fade-out effect
 }
 
@@ -711,7 +803,8 @@ function showAddListSection() {
     document.getElementById('addListSection').classList.remove('hidden'); // Show the add list section
     document.getElementById('listTitle').value = ""; // Clear the title input
     document.getElementById('newItem').value = ""; // Clear the new item input
-    currentItems = []; // Reset current items
+    document.getElementById('manageListTitle').textContent = `Manage Your ${listTitle} List`; // Update title
+  currentItems = []; // Reset current items
     displayChecklist(); // Clear the checklist display
 closeAddOptions();
   }
@@ -724,12 +817,7 @@ function cancelList() {
 }
 
 // Function to show a specific section
-function showSection(sectionId) {
-    document.querySelectorAll('.container').forEach(section => {
-        section.classList.add('hidden'); // Hide all sections
-    });
-    document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
-}
+
 
 
 
@@ -738,19 +826,19 @@ function saveList() {
     const title = document.getElementById('listTitle').value.trim();
 
     if (title === "" || currentItems.length === 0) {
-        alert("List title and items cannot be empty!");
+        showMessageBox("List title and items cannot be empty!");
         return;
     }
 
     if (editingListIndex !== null) {
         // Update existing list
         lists[editingListIndex] = { title, items: currentItems.slice() };
-        alert("List updated successfully!");
+        showMessageBox("List updated successfully!");
     } else {
         // Add new list
         const list = { title, items: currentItems.slice() };
         lists.push(list);
-        alert("List saved successfully!");
+        showMessageBox("List saved successfully!");
     }
 
     localStorage.setItem('lists', JSON.stringify(lists));
@@ -760,20 +848,7 @@ showSection('listsContainer');
     editingListIndex = null; // Reset after saving
 }
 
-// Function to display lists
-function displayLists() {
-    const container = document.getElementById('listsContainerContent');
-    container.innerHTML = ""; // Clear existing lists
-    lists.forEach((list, index) => {
-        const listDiv = document.createElement('div');
-        listDiv.className = "list";
-        listDiv.innerHTML = `
-           <button onclick="openList(${index})">Open</button>
-            <button onclick="deleteList(${index})">Delete</button>
-        `;
-        container.appendChild(listDiv);
-    });
-}
+
 
 // Function to open a list and pre-fill the add list section
 function openList(index) {
@@ -807,7 +882,7 @@ function addItem() {
     const newItemValue = newItemInput.value.trim();
 
     if (newItemValue === "") {
-        alert("Item cannot be empty!");
+        showMessageBox("Item cannot be empty!");
         return;
     }
 
@@ -836,16 +911,12 @@ document.getElementById('passwordInput').addEventListener('keypress', function(e
     }
 });
 
-document.getElementById('deletePasswordInput').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        deleteVerifyPassword(); // Call the function to verify password
-    }
-});
+
 
 // Function to close the password modal
 function closePasswordModal() {
-    document.getElementById('passwordModal').style.visibility = 'hidden';
-    document.getElementById('passwordInput').value = ""; // Clear the password input fielding
+    document.getElementById('passwordModal').style.display = 'none';
+    document.getElementById('passwordInput').value = ""; // Clear the password input field
 }
 
 // Event listener for closing the password modal with Escape key
@@ -891,12 +962,12 @@ function displayLists() {
     container.innerHTML = ""; // Clear existing lists
     lists.forEach((list, index) => {
         const listDiv = document.createElement('div');
-        listDiv.className = "note"
         listDiv.innerHTML = `
-            <h4>${list.title}</h4>
-            <button onclick="openList(${index})">Open</button>
-            <button onclick="deleteList(${index})">Delete</button>
-        `;
+        <div class="note" onclick="openList(${index})">    
+        <h4>${list.title}</h4>
+            <button class="delete-button" onclick="deleteList(${index})">Delete</button>
+        </div>
+            `;
         container.appendChild(listDiv);
     });
 }
@@ -953,4 +1024,4 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase
   
   </script>
 </body>
-  </html>
+</html>
