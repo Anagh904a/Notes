@@ -179,6 +179,58 @@
     margin-top: 20px; /* Space above the section */
 }
 
+/* General modal styling */
+.modal {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* Sit on top */
+}
+
+/* Modal content styling */
+.modal-content {
+    background-color: white; /* White background for modal content */
+    padding: 20px; /* Padding inside the modal */
+    border-radius: 5px; /* Rounded corners */
+    width: 300px; /* Set a fixed width */
+}
+
+/* Hidden class to hide elements */
+.hidden {
+    display: none; /* Hide elements with this class */
+}
+
+/* Styling for password input fields */
+input[type="password"] {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside the input */
+    margin: 10px 0; /* Margin above and below */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Rounded corners */
+}
+
+/* Button styling */
+button {
+    padding: 10px 15px; /* Padding for buttons */
+    margin: 5px 0; /* Margin around buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    border: none; /* No border */
+    background-color: #ffa500; /* Orange background */
+    color: white; /* White text */
+    border-radius: 4px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+button:hover {
+    background-color: #ff8c00; /* Darker orange on hover */
+}
+
 .input-field {
     width: 100%; /* Full width */
     padding: 12px; /* Padding inside the input */
@@ -348,6 +400,9 @@ a:hover {
   <div id="notesSection" class="container">
     <h2>Your Notes</h2>
     <div id="notesContainer"></div>
+  <!-- Placeholder for Notes -->
+<div id="noNotesMessage" class="hidden">No notes added.</div>
+</div>
   </div>
 
   <div id="listsContainer" class="container hidden">
@@ -355,7 +410,11 @@ a:hover {
     <div id="listsSection">
         <div id="listsContainerContent"></div>
     </div>
-</div>
+  <!-- Placeholder for Lists -->
+<div id="noListsMessage" class="hidden">No lists added.</div>
+  </div>
+
+
   
 <div id="messageBox">This is an Android-like message box!</div>
 
@@ -409,7 +468,7 @@ a:hover {
 
 <!-- Add Lists Section -->
 <div id="addListSection" class="container">>
-<h3 id="manageListTitle">Manage Your Lists</h3>
+<h3 id="manageListTitle">Manage Your  List</h3>
    <label> Enter List Title
 <input id="listTitle" type="text">
    </label>    
@@ -417,7 +476,8 @@ a:hover {
    <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
 </label> 
    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
-    <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
+   <button id="manageListPassword" onclick="showListPassword()">Manage Password</button>
+   <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
     <button onclick="saveList()">Save List</button>
     <div id="checklistContainer"></div> <!-- Container for checklist items -->
   </div>
@@ -428,7 +488,7 @@ a:hover {
     <div class="modal-content">
         <h3>Add Options</h3>
         <button onclick="showAddNote()"><i class="fas fa-list"></i>Add Note</button>
-        <button onclick="showAddListSection()"><i class="fas fa-sticky-note"></i>Add List</button>
+        <button id="addListButton" onclick="showAddListSection()"><i class="fas fa-sticky-note"></i>Add List</button>
         <button onclick="closeAddOptions()"><i class="fas fa-times"></i>Close</button>
     </div>
 </div>
@@ -460,6 +520,26 @@ a:hover {
       <button onclick="clearNotifications()">Clear All Notifications</button>
     </div>
 </div>
+</div>
+
+<!-- Password Modal for Accessing List -->
+<div id="listPasswordModal" class="modal hidden">
+  <div class="modal-content">
+      <h3>Enter Password to Access the List</h3>
+      <input type="password" id="listPasswordInput" placeholder="Password">
+      <button onclick="verifyListPassword()">Submit</button>
+      <button onclick="closeListPasswordModal()">Close</button>
+  </div>
+</div>
+
+<!-- Delete Password Modal for Deleting List -->
+<div id="deleteListPasswordModal" class="modal hidden">
+  <div class="modal-content">
+      <h3>Enter Password to Delete the List</h3>
+      <input type="password" id="deleteListPasswordInput" placeholder="Password">
+      <button onclick="deleteListVerifyPassword()">Submit</button>
+      <button onclick="closeDeleteListPasswordModal()">Close</button>
+  </div>
 </div>
 
 
@@ -515,11 +595,70 @@ let currentDeleteNoteId = null; // To track the ID of the note being deleted
 
    
 
+// Function to close the list password modal
+function closeListPasswordModal() {
+    document.getElementById('listPasswordModal').style.display = 'none'; // Hide the modal
+    document.getElementById('listPasswordInput').value = ""; // Clear the input
+}
+
+// Function to verify the password for accessing the list
+function verifyListPassword() {
+    const password = document.getElementById('listPasswordInput').value;
+    // Assuming you have a way to get the correct password for the list
+    const list = lists[editingListIndex]; // Get the list being accessed
+
+    if (password === list.password) {
+        closeListPasswordModal(); // Close the modal
+        // Proceed to show the list content
+        showListContent(list); // Implement this function to display the list
+    } else {
+        showMessageBox("Incorrect password!"); // Show an error message
+    }
+}
+
+// Function to show the delete password modal
+function showDeleteListPasswordModal(index) {
+    document.getElementById('deleteListPasswordModal').style.display = 'flex'; // Show the modal
+    document.getElementById('deleteListPasswordInput').value = ""; // Clear previous input
+    document.getElementById('deleteListPasswordModal').dataset.listIndex = index; // Store index
+}
+
+// Function to close the delete password modal
+function closeDeleteListPasswordModal() {
+    document.getElementById('deleteListPasswordModal').style.display = 'none'; // Hide the modal
+    document.getElementById('deleteListPasswordInput').value = ""; // Clear the input
+}
+
+// Function to verify the password for deleting the list
+function deleteListVerifyPassword() {
+    const password = document.getElementById('deleteListPasswordInput').value;
+    const index = document.getElementById('deleteListPasswordModal').dataset.listIndex;
+    const list = lists[index]; // Get the list being deleted
+
+    if (password === list.password) {
+        lists.splice(index, 1); // Remove the list
+        localStorage.setItem('lists', JSON.stringify(lists)); // Update local storage
+        displayLists(); // Refresh the displayed lists
+        closeDeleteListPasswordModal(); // Close the modal
+    } else {
+        showMessageBox("Incorrect password!"); // Show an error message
+    }
+}
+
     // Function to toggle the password input field
     function togglePasswordInput() {
         const passwordInput = document.getElementById('notePassword');
         passwordInput.classList.toggle('hidden');
     }
+
+    function showListPassword() {
+    const passwordInput = document.getElementById('listPassword');
+    if (passwordInput.classList.contains('hidden')) {
+        passwordInput.classList.remove('hidden'); // Show the password input
+    } else {
+        passwordInput.classList.add('hidden'); // Hide the password input
+    }
+}
     
     function showSection(sectionId) {
     document.querySelectorAll('.container').forEach(section => {
@@ -663,6 +802,11 @@ function closeNotificationModal() {
     function displayNotes() {
       const container = document.getElementById('notesContainer');
       container.innerHTML = "";
+      const noNotesMessage = document.getElementById('noNotesMessage'); // Get the no notes message element
+      if (notes.length === 0) {
+        noNotesMessage.classList.remove('hidden'); // Show the no notes message
+    } else {
+        noNotesMessage.classList.add('hidden');} // Hide the no notes message
       notes.forEach((note, index) => {
         const noteDiv = document.createElement('div');
        noteDiv.innerHTML = `
@@ -674,12 +818,13 @@ function closeNotificationModal() {
           `;
         container.appendChild(noteDiv);
       });
-    }
+    
+  }
 
     function openNote(index) {
       const note = notes[index];
       if (note.password) {
-        document.getElementById('passwordModal').style.display = 'block';
+        document.getElementById('passwordModal').style.display = 'flex';
         document.getElementById('passwordInput').value = "";
         document.getElementById('passwordModal').dataset.noteIndex = index;
       } else {
@@ -758,7 +903,7 @@ function verifyPassword() {
         const note = notes[index];
         if (note.password) {
            
-            document.getElementById('deletePasswordModal').style.display = 'block';
+            document.getElementById('deletePasswordModal').style.display = 'flex';
             document.getElementById('deletePasswordInput').value = "";
             document.getElementById('deletePasswordModal').dataset.noteIndex = index;
         } else {
@@ -772,7 +917,7 @@ function verifyPassword() {
 
     function closeDeletePasswordModal() {
     document.getElementById('deletePasswordModal').style.display = 'none'; // Hide the modal
-    document.getElementById('passwordInput').value = ""; // Clear the input
+    document.getElementById('deletePasswordInput').value = ""; // Clear the input
 }
 
     function closeAddListSection() {
@@ -806,13 +951,25 @@ function showAddListSection() {
 
     // Show the add list section
     document.getElementById('addListSection').classList.remove('hidden'); // Show the add list section
-    document.getElementById('listTitle').value = ""; // Clear the title input
     document.getElementById('newItem').value = ""; // Clear the new item input
-    document.getElementById('manageListTitle').textContent = `Manage Your ${listTitle} List`; // Update title
-  currentItems = []; // Reset current items
-    displayChecklist(); // Clear the checklist display
-closeAddOptions();
-  }
+
+    // Check if we are editing an existing list
+    if (editingListIndex !== null) {
+        const list = lists[editingListIndex]; // Get the list being edited
+        document.getElementById('listTitle').value = list.title; // Set the input value to the list title
+        currentItems = list.items.slice(); // Copy items to currentItems
+        displayChecklist(); // Display the checklist with items
+        document.getElementById('manageListTitle').textContent = `Manage Your ${list.title} List`; // Update title with the actual list title
+    } else {
+        // Reset for new list
+        document.getElementById('listTitle').value = ""; // Clear the title input
+        document.getElementById('manageListTitle').textContent = "Manage Your New List"; // Default title for new list
+        currentItems = []; // Reset current items
+        displayChecklist(); // Clear the checklist display
+    }
+
+    closeAddOptions(); // Close any open options
+}
 
 // Function to cancel adding a list
 function cancelList() {
@@ -829,6 +986,7 @@ function cancelList() {
 // Function to save a new list
 function saveList() {
     const title = document.getElementById('listTitle').value.trim();
+    const password = document.getElementById('listPassword').value.trim(); // Get password
 
     if (title === "" || currentItems.length === 0) {
         showMessageBox("List title and items cannot be empty!");
@@ -837,20 +995,19 @@ function saveList() {
 
     if (editingListIndex !== null) {
         // Update existing list
-        lists[editingListIndex] = { title, items: currentItems.slice() };
+        lists[editingListIndex] = { title, items: currentItems.slice(), password }; // Update the existing list
         showMessageBox("List updated successfully!");
     } else {
         // Add new list
-        const list = { title, items: currentItems.slice() };
-        lists.push(list);
+        const newList = { title, items: currentItems.slice(), password }; // Create a new list
+        lists.push(newList); // Add the new list to the lists array
         showMessageBox("List saved successfully!");
     }
 
-    localStorage.setItem('lists', JSON.stringify(lists));
+    localStorage.setItem('lists', JSON.stringify(lists)); // Save to local storage
     displayLists(); // Refresh the displayed lists
-showSection('listsContainer');
-    // Reset editing state
-    editingListIndex = null; // Reset after saving
+    showSection('listsContainer'); // Show the lists section
+    editingListIndex = null; // Reset editing state after saving
 }
 
 
@@ -861,13 +1018,17 @@ function openList(index) {
     document.getElementById('listTitle').value = list.title;
     currentItems = list.items.slice(); // Copy items to currentItems
     displayChecklist(); // Display the checklist with items
-    showSection('addListSection'); // Show the add list section
+    editingListIndex = index;
+    showAddListSection(); // Show the add list section
 
-    // Set the index of the list being edited
-    editingListIndex = index; // Set the index of the list being edited
+     // Set the index of the list being edited
 }
 
 
+document.getElementById('addListButton').addEventListener('click', function() {
+    editingListIndex = null; // Reset the editing index for a new list
+    showAddListSection(); // Show the add list section for a new list
+});
 
     const lists = JSON.parse(localStorage.getItem('lists')) || [];
 let currentItems = []; // Array to hold current checklist items
@@ -878,7 +1039,21 @@ function showListsSection() {
     displayLists(); // Refresh the displayed lists
 }
 
+function showListContent(list) {
+    // Implement the logic to display the list content
+    // For example, you might want to show the items in the list
+    const checklistContainer = document.getElementById('checklistContainer');
+    checklistContainer.innerHTML = ""; // Clear previous items
 
+    list.items.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.textContent = item; // Display each item
+        checklistContainer.appendChild(itemDiv);
+    });
+
+    // Show the section that contains the list content
+    showSection('checklistContainer'); // Assuming you have a section to show the checklist
+}
 
 
 // Function to add an item to the checklist
@@ -965,6 +1140,11 @@ function removeItem(index) {
 function displayLists() {
     const container = document.getElementById('listsContainerContent');
     container.innerHTML = ""; // Clear existing lists
+    const noListsMessage = document.getElementById('noListsMessage'); // Get
+    if (lists.length === 0) {
+        noListsMessage.classList.remove('hidden'); // Show the no lists message
+    } else {
+        noListsMessage.classList.add('hidden');} // Hide the no lists message
     lists.forEach((list, index) => {
         const listDiv = document.createElement('div');
         listDiv.innerHTML = `
@@ -975,6 +1155,7 @@ function displayLists() {
             `;
         container.appendChild(listDiv);
     });
+
 }
 
 // Function to delete a list
