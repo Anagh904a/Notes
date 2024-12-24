@@ -472,7 +472,7 @@ a:hover {
   </div>
 
 <!-- Add Lists Section -->
-<div id="addListSection" class="container">>
+<div id="addListSection" class="container">
 <h3 id="manageListTitle">Manage Your  List</h3>
    <label> Enter List Title
 <input id="listTitle" type="text">
@@ -483,8 +483,11 @@ a:hover {
    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
    <button id="manageListPassword" onclick="showListPassword()">Manage Password</button>
    <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
+   <button onclick="closeAddListSection()">Cancel</button>
     <button onclick="saveList()">Save List</button>
+    
     <div id="checklistContainer"></div> <!-- Container for checklist items -->
+
   </div>
 </div>
 
@@ -498,12 +501,9 @@ a:hover {
     </div>
 </div>
 
-<div id="notificationModal" class="modal hidden">
-  <div class="modal-content">
-      <h3>Notifications</h3>
-      <div id="notificationList"></div>
-      <button onclick="closeNotificationModal()">Close</button>
-  </div>
+
+
+  
 </div>
   
 <!--Bottom Navigation Bar-->
@@ -519,11 +519,11 @@ a:hover {
 <div id="moreSection" class="container hidden">
   <h2>More Features</h2>
   
- <div class="feature-section">
-      <h2>Inbox</h2>
-      <div id="notificationList"></div>
-      <button onclick="clearNotifications()">Clear All Notifications</button>
-    </div>
+ 
+<div class="feature-section">
+  <h2>Notificaton buttons</h2>
+  <button onclick="requestNotificationPermission()">Request for notification</button>
+<button onclick="sendPushNotification()">Send</button>  
 </div>
 </div>
 
@@ -550,7 +550,6 @@ a:hover {
 
 
   <script>
-    let actionType = null;
     let notes = JSON.parse(localStorage.getItem('notes')) || []; 
     let editingNoteIndex = null; // To track the index of the note being edited
     let editingListIndex = null; // To track the index of the list being edited
@@ -682,45 +681,9 @@ function deleteListVerifyPassword() {
     currentSection = sectionId; // Update current section
 }
 
-let notifications = []; // Array to hold notifications
 
-function initializeNotifications() {
-    // Add "What's New" notifications
-    notifications.push("🚀 What's New: Fixed duplicate note/list issue after editing.");
-    notifications.push("🔒 What's New: Changed 'Change Password' button to 'Manage Password'.");
-    
-}
 
-function displayNotifications() {
-            const notificationList = document.getElementById('notificationList');
-            notificationList.innerHTML = ""; // Clear existing notifications
-            notifications.forEach(notification => {
-                const notificationItem = document.createElement('div');
-                notificationItem.className = 'notification-item'; // Add class for styling
-                notificationItem.textContent = notification;
-                notificationList.appendChild(notificationItem);
-            });
-        }
 
-function displayModalNotifications() {
-    const modalNotificationList = document.getElementById('notificationList'); // Ensure this is the correct ID
-    modalNotificationList.innerHTML = ""; // Clear existing notifications
-    notifications.forEach(notification => {
-        const notificationItem = document.createElement('div');
-        notificationItem.textContent = notification;
-        modalNotificationList.appendChild(notificationItem);
-    });
-}
-
-function clearNotifications() {
-    notifications = []; // Clear the notifications array
-    displayNotifications(); // Refresh the display
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    initializeNotifications(); // Initialize notifications on page load
-    displayNotifications(); // Display notifications in the Inbox
-});
 
 // Event listener for the Android back button functionality
 window.addEventListener('popstate', function(event) {
@@ -1202,6 +1165,41 @@ displayNotes();
 
 
   </script>
-  
+ 
+ <script>
+  // Service Worker Registration
+  if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+              console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(function(error) {
+              console.error('Service Worker registration failed:', error);
+          });
+  }
+
+  // Request Notification Permission
+  function requestNotificationPermission() {
+      Notification.requestPermission().then(function(permission) {
+          if (permission === 'granted') {
+              console.log('Notification permission granted.');
+          } else {
+              console.log('Notification permission denied.');
+          }
+      });
+  }
+
+  // Send Push Notification
+  function sendPushNotification() {
+      if (Notification.permission === 'granted') {
+          navigator.serviceWorker.ready.then(function(registration) {
+              registration.showNotification('New Note Added', {
+                  body: 'You have added a new note successfully!',
+                  
+              });
+          });
+      }
+  }
+  </script>
 </body>
 </html>
