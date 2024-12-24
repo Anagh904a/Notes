@@ -420,7 +420,7 @@ a:hover {
 
   <!-- Add Note Form -->
   <div id="addNoteSection" class="container hidden">
-    <h3>Add a New Note</h3>
+    <h3 id="manageNoteTitle">Manage Your Note</h3>
     <label> Enter Note Title
     <input id="noteTitle" type="text">
     </label>
@@ -487,7 +487,7 @@ a:hover {
 <div id="addOptionsModal" class="modal hidden">
     <div class="modal-content">
         <h3>Add Options</h3>
-        <button onclick="showAddNote()"><i class="fas fa-list"></i>Add Note</button>
+        <button id="addNoteButton" onclick="showAddNote()"><i class="fas fa-list"></i>Add Note</button>
         <button id="addListButton" onclick="showAddListSection()"><i class="fas fa-sticky-note"></i>Add List</button>
         <button onclick="closeAddOptions()"><i class="fas fa-times"></i>Close</button>
     </div>
@@ -746,17 +746,34 @@ function showMessageBox(message) {
         }, 1000); // Wait for the fade out transition to complete
     }, 1000); // Show for 3 seconds
 }
-    function showAddNote() {
-      showSection('addNoteSection');
-      document.getElementById('noteContent').value = "";
-      document.getElementById('noteTitle').value = "";
-      document.getElementById('notePassword').value = "";
-    closeAddOptions();
+function showAddNote() {
+    showSection('addNoteSection');
+    document.getElementById('noteContent').value = ""; // Clear the note content
+    document.getElementById('notePassword').value = ""; // Clear the password input
+
+    if (editingNoteIndex !== null) {
+        // Editing an existing note
+        const note = notes[editingNoteIndex]; // Get the note being edited
+        document.getElementById('noteTitle').value = note.title; // Set the input value to the note title
+        document.getElementById('noteContent').value = note.content; // Set the input value to the note content
+        document.getElementById('manageNoteTitle').textContent = `Manage Your ${note.title} Note`; // Update title with the actual note title
+    } else {
+        // Creating a new note
+        document.getElementById('noteTitle').value = ""; // Clear the title input
+        document.getElementById('manageNoteTitle').textContent = "Add New Note"; // Set title for new note
     }
+    closeAddOptions(); // Close the add options modal
+}
 
     function cancelNote() {
       showSection('notesSection');
     }
+
+    // Add event listener for the Add Note button
+document.getElementById('addNoteButton').addEventListener('click', function() {
+    editingNoteIndex = null; // Reset the editing index for a new note
+    showAddNote(); // Show the add note section
+});
 
     function saveNote() {
     const title = document.getElementById('noteTitle').value.trim();
@@ -891,6 +908,7 @@ function verifyPassword() {
       document.getElementById('noteTitle').value = note.title;
       document.getElementById('noteContent').value = note.content;
       document.getElementById('notePassword').value = note.password;
+      document.getElementById('manageNoteTitle').textContent = `Manage Your ${note.title}`; // Update the title to reflect the note being managed
       showSection('addNoteSection');
      // Set the index of the note being edited
      editingNoteIndex = notes.findIndex(n => n.title === note.title && n.content === note.content);
