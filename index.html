@@ -391,10 +391,15 @@ a:hover {
             transition: opacity 1s ease; /* Fade effect */
             opacity: 1; /* Fully visible */
         }
+
+        #Alpha {
+          color: #ff1c1c;
+        }
   </style>
 </head>
 <body>
   <h1>Notes App</h1>
+  <h3 id="Alpha">This app is under devlopment! You are Currently using Alpha Version! PLease Report Bugs to anaghmanglick@gmail.com!</h3>
   
 
   <div id="notesSection" class="container">
@@ -1197,35 +1202,6 @@ displayNotes();
 
 
   </script>
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
   
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyARPrnJvfado0FX-mQ7pcLIa_98LZKlUGc",
-      authDomain: "notes-anagh.firebaseapp.com",
-      projectId: "notes-anagh",
-      storageBucket: "notes-anagh.firebasestorage.app",
-      messagingSenderId: "550200990936",
-      appId: "1:550200990936:web:7de949575866c1eb438bad",
-      measurementId: "G-T3K047M4WD"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-  const db = getFirestore(app);
-  
- 
-  
-  </script>
 </body>
 </html>
