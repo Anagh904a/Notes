@@ -617,6 +617,15 @@ a:hover {
     let currentNoteId = null; // To track the ID of the note being accessed
 let currentDeleteNoteId = null; // To track the ID of the note being deleted
    
+    function closeListPasswordModal() {
+    document.getElementById('listPasswordModal').style.display = 'none';
+    
+}
+
+function closeDeleteListPasswordModal() {
+    document.getElementById('deleteListPasswordModal').style.display = 'none';
+  
+}
     
     function showCredits() {
       const credits = document.getElementById('creditsSection');
