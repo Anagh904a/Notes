@@ -400,7 +400,7 @@ a:hover {
 <body>
   <h1>Notes App</h1>
   <h3 id="Alpha">This app is under devlopment! You are Currently using Alpha Version! PLease Report Bugs to anaghmanglick@gmail.com!</h3>
-  
+  <input type="text" id="searchInput" placeholder="Search notes..." oninput="searchNotes()"  style="width: 80%; margin: 10px auto; display: none;">
 
   <div id="notesSection" class="container">
     <h2>Your Notes</h2>
@@ -507,13 +507,19 @@ a:hover {
 </div>
   
 <!--Bottom Navigation Bar-->
-<div class="bottom-nav">
-  <button class="nav-button" onclick="showSection('listsContainer')"><i class="fas fa-list"></i>Lists</button>
-  <button class="nav-button" onclick="showSection('notesSection')"><i class="fas fa-sticky-note"></i> Notes</button>
-  <div class="add-button" onclick="showAddOptions()">+</div>
-  <button class="nav-button" onclick="showSection('settings')"><i class="fas fa-cog"></i> Settings</button>
-  <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-ellipsis-h"></i> More</button>
-</div>
+    <div class="bottom-nav">
+        <button class="nav-button" onclick="showSection('listsContainer')"><i class="fas fa-list"></i></button>
+        <button class="nav-button" onclick="showSection('notesSection')"><i class="fas fa-sticky-note"></i></button>
+        <button class="nav-button" onclick="toggleSearchInput()">
+            <i class="fas fa-search"></i>
+        </button>
+        <div class="add-button" onclick="showAddOptions()">+</div>
+        <button class="nav-button" onclick="showSection('settings')"><i class="fas fa-cog"></i></button>
+        <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-ellipsis-h"></i></button>
+        <button class="nav-button" onclick="toggleRearrangeOptions()">
+            <i class="fas fa-arrows-alt"></i> <!-- Icon for rearranging -->
+        </button>
+    </div>
 
 <!-- More Section -->
 <div id="moreSection" class="container hidden">
@@ -527,24 +533,25 @@ a:hover {
 </div>
 </div>
 
-<!-- Password Modal for Accessing List -->
+<!-- List Password Modal -->
 <div id="listPasswordModal" class="modal hidden">
-  <div class="modal-content">
-      <h3>Enter Password to Access the List</h3>
-      <input type="password" id="listPasswordInput" placeholder="Password">
-      <button onclick="verifyListPassword()">Submit</button>
-      <button onclick="closeListPasswordModal()">Close</button>
-  </div>
+    <div class="modal-content">
+        <h3>Enter Password to Access the List</h3>
+        <input type="password" id="listPasswordInput" placeholder="Password">
+        <button onclick="verifyListPassword()">Submit</button>
+        <button onclick="closeListPasswordModal()">Close</button>
+    </div>
 </div>
 
-<!-- Delete Password Modal for Deleting List -->
+
+<!-- Delete List Password Modal -->
 <div id="deleteListPasswordModal" class="modal hidden">
-  <div class="modal-content">
-      <h3>Enter Password to Delete the List</h3>
-      <input type="password" id="deleteListPasswordInput" placeholder="Password">
-      <button onclick="deleteListVerifyPassword()">Submit</button>
-      <button onclick="closeDeleteListPasswordModal()">Close</button>
-  </div>
+    <div class="modal-content">
+        <h3>Enter Password to Delete the List</h3>
+        <input type="password" id="deleteListPasswordInput" placeholder="Password">
+        <button onclick="deleteListVerifyPassword()">Submit</button>
+        <button onclick="closeDeleteListPasswordModal()">Close</button>
+    </div>
 </div>
 
 
@@ -562,6 +569,11 @@ let currentDeleteNoteId = null; // To track the ID of the note being deleted
       const credits = document.getElementById('creditsSection');
       credits.style.display = credits.style.display === 'none' ? 'block' : 'none';
     }
+
+    function toggleRearrangeOptions() {
+    // Display a message indicating that the feature is not implemented yet
+    alert("This feature is not implemented yet.");
+}
 
     function backupNotes() {
       const blob = new Blob([JSON.stringify(notes)], { type: 'application/json' });
@@ -597,7 +609,37 @@ let currentDeleteNoteId = null; // To track the ID of the note being deleted
         showMessageBox('Notes imported successfully!');
     }
 
-   
+   function searchNotes() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filteredNotes = notes.filter(note => note && (note.title.toLowerCase().includes(searchTerm) || note.content.toLowerCase().includes(searchTerm)));
+    displayFilteredNotes(filteredNotes);
+}
+
+// Function to display filtered notes
+function displayFilteredNotes(filteredNotes) {
+    const container = document.getElementById('notesContainer');
+    container.innerHTML = ""; // Clear existing notes
+    const noNotesMessage = document.getElementById('noNotesMessage');
+
+    if (filteredNotes.length === 0) {
+        noNotesMessage.classList.remove('hidden'); // Show no notes message
+    } else {
+        noNotesMessage.classList.add('hidden'); // Hide no notes message
+    }
+
+    filteredNotes
+.forEach((note, index) => {
+        const noteDiv = document.createElement('div');
+        noteDiv.innerHTML = `
+            <div class="note" onclick="openNote(${index})"> 
+                <h4>${note.title}</h4>
+                <p>${note.password ? "(Password Protected Note)" : note.content}</p>
+                <button class="delete-button" onclick="deleteNote(${index})">Delete</button>
+            </div>
+        `;
+        container.appendChild(noteDiv);
+    });
+}
 
 // Function to close the list password modal
 function closeListPasswordModal() {
@@ -608,15 +650,14 @@ function closeListPasswordModal() {
 // Function to verify the password for accessing the list
 function verifyListPassword() {
     const password = document.getElementById('listPasswordInput').value;
-    // Assuming you have a way to get the correct password for the list
-    const list = lists[editingListIndex]; // Get the list being accessed
+    const listIndex = document.getElementById('listPasswordModal').dataset.listIndex; // Assuming you set this when opening the modal
+    const list = lists[listIndex]; // Get the list being accessed
 
     if (password === list.password) {
         closeListPasswordModal(); // Close the modal
-        // Proceed to show the list content
-        showListContent(list); // Implement this function to display the list
+        showListContent(list); // Implement this function to display the list content
     } else {
-        showMessageBox("Incorrect password!"); // Show an error message
+         showMessageBox("Incorrect password!"); // Show an error message
     }
 }
 
@@ -627,25 +668,27 @@ function showDeleteListPasswordModal(index) {
     document.getElementById('deleteListPasswordModal').dataset.listIndex = index; // Store index
 }
 
-// Function to close the delete password modal
+// Function to close the delete list password modal
 function closeDeleteListPasswordModal() {
     document.getElementById('deleteListPasswordModal').style.display = 'none'; // Hide the modal
     document.getElementById('deleteListPasswordInput').value = ""; // Clear the input
 }
 
 // Function to verify the password for deleting the list
+// Function to verify the password for deleting the list
 function deleteListVerifyPassword() {
     const password = document.getElementById('deleteListPasswordInput').value;
-    const index = document.getElementById('deleteListPasswordModal').dataset.listIndex;
+    const index = document.getElementById('deleteListPasswordModal').dataset.listIndex; // Get the index of the list being deleted
     const list = lists[index]; // Get the list being deleted
 
     if (password === list.password) {
+        // If the password is correct, delete the list
         lists.splice(index, 1); // Remove the list
         localStorage.setItem('lists', JSON.stringify(lists)); // Update local storage
         displayLists(); // Refresh the displayed lists
         closeDeleteListPasswordModal(); // Close the modal
     } else {
-        showMessageBox("Incorrect password!"); // Show an error message
+        alert("Incorrect password!"); // Show an error message
     }
 }
 
@@ -655,7 +698,7 @@ function deleteListVerifyPassword() {
         passwordInput.classList.toggle('hidden');
     }
 
-    function showListPassword() {
+    function showListPasswordModal() {
     const passwordInput = document.getElementById('listPassword');
     if (passwordInput.classList.contains('hidden')) {
         passwordInput.classList.remove('hidden'); // Show the password input
@@ -1001,13 +1044,20 @@ function saveList() {
 // Function to open a list and pre-fill the add list section
 function openList(index) {
     const list = lists[index];
-    document.getElementById('listTitle').value = list.title;
-    currentItems = list.items.slice(); // Copy items to currentItems
-    displayChecklist(); // Display the checklist with items
-    editingListIndex = index;
-    showAddListSection(); // Show the add list section
 
-     // Set the index of the list being edited
+    // Check if the list has a password
+    if (list.password) {
+        // Store the index of the list being accessed in the modal
+        document.getElementById('listPasswordModal').dataset.listIndex = index; 
+        showListPasswordModal(); // Show the password modal
+    } else {
+        // If no password is required, proceed to open the list
+        document.getElementById('listTitle').value = list.title;
+        currentItems = list.items.slice(); // Copy items to currentItems
+        displayChecklist(); // Display the checklist with items
+        editingListIndex = index;
+        showAddListSection(); // Show the add list section
+    }
 }
 
 
@@ -1146,10 +1196,19 @@ function displayLists() {
 
 // Function to delete a list
 function deleteList(index) {
-    if (confirm("Are you sure you want to delete this list?")) {
-        lists.splice(index, 1);
-        localStorage.setItem('lists', JSON.stringify(lists));
-        displayLists();
+    const list = lists[index];
+
+    // Check if the list has a password
+    if (list.password) {
+        // Show the password modal for deletion
+        showDeleteListPasswordModal(index); // Pass the index to the modal
+    } else {
+        // If no password is required, confirm deletion
+        if (confirm("Are you sure you want to delete this list?")) {
+            lists.splice(index, 1); // Remove the list
+            localStorage.setItem('lists', JSON.stringify(lists)); // Update local storage
+            displayLists(); // Refresh the displayed lists
+        }
     }
 }
 
