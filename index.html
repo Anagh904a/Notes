@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -624,7 +625,7 @@ let currentDeleteNoteId = null; // To track the ID of the note being deleted
 
     function toggleRearrangeOptions() {
     // Display a message indicating that the feature is not implemented yet
-    alert("This feature is not implemented yet.");
+    showMessageBox("This feature is not implemented yet.");
 }
 
     function backupNotes() {
@@ -694,10 +695,7 @@ function displayFilteredNotes(filteredNotes) {
 }
 
 // Function to close the list password modal
-function closeListPasswordModal() {
-    document.getElementById('listPasswordModal').style.display = 'none'; // Hide the modal
-    document.getElementById('listPasswordInput').value = ""; // Clear the input
-}
+
 
     function toggleSearchInput() {
     const searchInput = document.getElementById('searchInput');
@@ -716,8 +714,13 @@ function verifyListPassword() {
     const list = lists[listIndex]; // Get the list being accessed
 
     if (password === list.password) {
-        closeListPasswordModal(); // Close the modal
-        showListContent(list); // Implement this function to display the list content
+       document.getElementById('listPasswordModal').style.display = 'none'; // Close the modal
+        document.getElementById('listTitle').value = list.title;
+        currentItems = list.items.slice(); // Copy items to currentItems
+        displayChecklist(); // Display the checklist with items
+        editingListIndex = listIndex; // Update the editing list index
+        showAddListSection();// Implement this function to display the list content
+        document.getElementById('listPassword').value = list.password;
     } else {
          showMessageBox("Incorrect password!"); // Show an error message
     }
@@ -750,17 +753,9 @@ function clearCalculator() {
 }
 
 // Function to show the delete password modal
-function showDeleteListPasswordModal(index) {
-    document.getElementById('deleteListPasswordModal').style.display = 'flex'; // Show the modal
-    document.getElementById('deleteListPasswordInput').value = ""; // Clear previous input
-    document.getElementById('deleteListPasswordModal').dataset.listIndex = index; // Store index
-}
 
-// Function to close the delete list password modal
-function closeDeleteListPasswordModal() {
-    document.getElementById('deleteListPasswordModal').style.display = 'none'; // Hide the modal
-    document.getElementById('deleteListPasswordInput').value = ""; // Clear the input
-}
+
+// Function to close the delete list password mod
 
 // Function to verify the password for deleting the list
 // Function to verify the password for deleting the list
@@ -771,12 +766,11 @@ function deleteListVerifyPassword() {
 
     if (password === list.password) {
         // If the password is correct, delete the list
-        lists.splice(index, 1); // Remove the list
-        localStorage.setItem('lists', JSON.stringify(lists)); // Update local storage
+        deleteList(index);
         displayLists(); // Refresh the displayed lists
-        closeDeleteListPasswordModal(); // Close the modal
+        document.getElementById('deleteListPasswordModal').style.display = 'none'; // Close the modal
     } else {
-        alert("Incorrect password!"); // Show an error message
+        showMessageBox("Incorrect password!"); // Show an error message
     }
 }
 
@@ -786,14 +780,7 @@ function deleteListVerifyPassword() {
         passwordInput.classList.toggle('hidden');
     }
 
-    function showListPasswordModal() {
-    const passwordInput = document.getElementById('listPassword');
-    if (passwordInput.classList.contains('hidden')) {
-        passwordInput.classList.remove('hidden'); // Show the password input
-    } else {
-        passwordInput.classList.add('hidden'); // Hide the password input
-    }
-}
+    
     
     function showSection(sectionId) {
     document.querySelectorAll('.container').forEach(section => {
@@ -962,10 +949,7 @@ function closeNotificationModal() {
     displayLists();
 });
 
-    function closePasswordModal() {
-    document.getElementById('passwordModal').style.display = 'none';
-    document.getElementById('passwordInput').value = ""; // Clear the password input field
-}
+    
 
 function showListsSection() {
     showSection('listsContainer'); // Show the lists container
@@ -1137,7 +1121,7 @@ function openList(index) {
     if (list.password) {
         // Store the index of the list being accessed in the modal
         document.getElementById('listPasswordModal').dataset.listIndex = index; 
-        showListPasswordModal(); // Show the password modal
+        document.getElementById('listPasswordModal').style.display = 'flex';
     } else {
         // If no password is required, proceed to open the list
         document.getElementById('listTitle').value = list.title;
@@ -1145,6 +1129,7 @@ function openList(index) {
         displayChecklist(); // Display the checklist with items
         editingListIndex = index;
         showAddListSection(); // Show the add list section
+        document.getElementById('listPassword').value = list.password;
     }
 }
 
@@ -1289,7 +1274,7 @@ function deleteList(index) {
     // Check if the list has a password
     if (list.password) {
         // Show the password modal for deletion
-        showDeleteListPasswordModal(index); // Pass the index to the modal
+        document.getElementById('deleteListPasswordModal').style.display = 'flex';
     } else {
         // If no password is required, confirm deletion
         if (confirm("Are you sure you want to delete this list?")) {
