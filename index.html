@@ -395,6 +395,37 @@ a:hover {
         #Alpha {
           color: #ff1c1c;
         }
+
+     .calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.calculator-buttons button {
+    padding: 20px;
+    font-size: 18px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.calculator-buttons button:hover {
+    background-color: #ff8c00;
+}
+
+#calculatorInput {
+    width: 100%;
+    padding: 10px;
+    font-size: 24px;
+    text-align: right;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
   </style>
 </head>
 <body>
@@ -515,10 +546,9 @@ a:hover {
         </button>
         <div class="add-button" onclick="showAddOptions()">+</div>
         <button class="nav-button" onclick="showSection('settings')"><i class="fas fa-cog"></i></button>
-        <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-ellipsis-h"></i></button>
-        <button class="nav-button" onclick="toggleRearrangeOptions()">
-            <i class="fas fa-arrows-alt"></i> <!-- Icon for rearranging -->
-        </button>
+      <button class="nav-button" onclick="showSection('calculatorSection')"><i class="fas fa-calculator"></i></button>  
+      <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-ellipsis-h"></i></button>
+    </button>
     </div>
 
 <!-- More Section -->
@@ -554,7 +584,29 @@ a:hover {
     </div>
 </div>
 
-
+<!-- Calculator Section -->
+<div id="calculatorSection" class="container hidden">
+    <h2>Calculator</h2>
+    <input type="text" id="calculatorInput" placeholder="0" readonly>
+    <div class="calculator-buttons">
+        <button onclick="appendToCalculator('7')">7</button>
+        <button onclick="appendToCalculator('8')">8</button>
+        <button onclick="appendToCalculator('9')">9</button>
+        <button onclick="appendToCalculator('/')">/</button>
+        <button onclick="appendToCalculator('4')">4</button>
+        <button onclick="appendToCalculator('5')">5</button>
+        <button onclick="appendToCalculator('6')">6</button>
+        <button onclick="appendToCalculator('*')">*</button>
+        <button onclick="appendToCalculator('1')">1</button>
+        <button onclick="appendToCalculator('2')">2</button>
+        <button onclick="appendToCalculator('3')">3</button>
+        <button onclick="appendToCalculator('-')">-</button>
+        <button onclick="appendToCalculator('0')">0</button>
+        <button onclick="calculateResult()">=</button>
+        <button onclick="clearCalculator()">C</button>
+        <button onclick="appendToCalculator('+')">+</button>
+    </div>
+</div>
 
   <script>
     let notes = JSON.parse(localStorage.getItem('notes')) || []; 
@@ -669,6 +721,32 @@ function verifyListPassword() {
     } else {
          showMessageBox("Incorrect password!"); // Show an error message
     }
+}
+
+    function appendToCalculator(value) {
+    const calculatorInput = document.getElementById('calculatorInput');
+    if (calculatorInput.value === "0" && value !== '.') {
+        calculatorInput.value = value; // Replace 0 with the first number
+    } else {
+        calculatorInput.value += value; // Append the value
+    }
+}
+
+
+
+
+
+function calculateResult() {
+    const calculatorInput = document.getElementById('calculatorInput');
+    try {
+        calculatorInput.value = eval(calculatorInput.value); // Evaluate the expression
+    } catch (error) {
+        calculatorInput.value = "Error"; // Handle any errors
+    }
+}
+
+function clearCalculator() {
+    document.getElementById('calculatorInput').value = "0"; // Reset the calculator
 }
 
 // Function to show the delete password modal
