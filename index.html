@@ -647,6 +647,16 @@ function closeListPasswordModal() {
     document.getElementById('listPasswordInput').value = ""; // Clear the input
 }
 
+    function toggleSearchInput() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.style.display = searchInput.style.display === 'none' ? 'block' : 'none';
+}
+
+function showListPassword() {
+    const listPasswordInput = document.getElementById('listPassword');
+    listPasswordInput.classList.toggle('hidden'); // Toggle visibility of the password input
+}
+
 // Function to verify the password for accessing the list
 function verifyListPassword() {
     const password = document.getElementById('listPasswordInput').value;
