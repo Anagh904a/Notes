@@ -760,15 +760,23 @@ function clearCalculator() {
 // Function to verify the password for deleting the list
 // Function to verify the password for deleting the list
 function deleteListVerifyPassword() {
-    const password = document.getElementById('deleteListPasswordInput').value;
+    const passwordInput = document.getElementById('deleteListPasswordInput').value;
     const index = document.getElementById('deleteListPasswordModal').dataset.listIndex; // Get the index of the list being deleted
+    
+    console.log("List Index:", index); // Debugging line
+    
     const list = lists[index]; // Get the list being deleted
 
-    if (password === list.password) {
+    if (!list) {
+        console.error("List not found at index:", index); // Log an error if the list is undefined
+        return; // Exit the function if the list is not found
+    }
+
+    if (passwordInput === list.password) {
         // If the password is correct, delete the list
         deleteList(index);
         displayLists(); // Refresh the displayed lists
-        document.getElementById('deleteListPasswordModal').style.display = 'none'; // Close the modal
+        document.getElementById('deleteListPasswordModal').style.display = 'none';
     } else {
         showMessageBox("Incorrect password!"); // Show an error message
     }
