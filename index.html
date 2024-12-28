@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -677,11 +678,17 @@ function closeDeleteListPasswordModal() {
         showMessageBox('Notes imported successfully!');
     }
 
-   function searchNotes() {
+    function searchNotes() {
+    const currentSection = document.querySelector('.container:not(.hidden)');
+    if (currentSection.id !== 'notesSection') {
+        showMessageBox("Please be on the Notes section to use this feature.");
+        return;
+    } else {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const filteredNotes = notes.filter(note => note && (note.title.toLowerCase().includes(searchTerm) || note.content.toLowerCase().includes(searchTerm)));
     displayFilteredNotes(filteredNotes);
 }
+    }
 
 // Function to display filtered notes
 function displayFilteredNotes(filteredNotes) {
@@ -702,6 +709,7 @@ function displayFilteredNotes(filteredNotes) {
             <div class="note" onclick="openNote(${index})"> 
                 <h4>${note.title}</h4>
                 <p>${note.password ? "(Password Protected Note)" : note.content}</p>
+                <span style="float: right;">${note.date}</span> <!-- Display the date here -->
                 <button class="delete-button" onclick="deleteNote(${index})">Delete</button>
             </div>
         `;
@@ -884,10 +892,11 @@ document.getElementById('addNoteButton').addEventListener('click', function() {
     showAddNote(); // Show the add note section
 });
 
-    function saveNote() {
+function saveNote() {
     const title = document.getElementById('noteTitle').value.trim();
     const content = document.getElementById('noteContent').value.trim();
     const password = document.getElementById('notePassword').value.trim();
+    const date = new Date().toLocaleDateString(); // Get the current date
 
     if (content === "") {
         showMessageBox("Note content cannot be empty!");
@@ -896,11 +905,11 @@ document.getElementById('addNoteButton').addEventListener('click', function() {
 
     if (editingNoteIndex !== null) {
         // Update existing note
-        notes[editingNoteIndex] = { title, content, password };
+        notes[editingNoteIndex] = { title, content, password, date }; // Include date
         showMessageBox("Note updated successfully!");
     } else {
         // Add new note
-        const note = { title, content, password };
+        const note = { title, content, password, date }; // Include date
         notes.push(note);
         showMessageBox("Note saved successfully!");
     }
@@ -939,6 +948,7 @@ function closeNotificationModal() {
         <div class="note" onclick="openNote(${index})">  
         <h4 onclick="openNote(${index})">${note.title}</h4>
           <p>${note.password ? "(Password Protected Note)" : note.content}</p>
+           <span style="float: right;">${note.date}</span>
           <button class="delete-button" onclick="deleteNote(${index})">Delete</button>
         </div>
           `;
