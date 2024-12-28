@@ -1185,7 +1185,7 @@ function saveNote() {
     const title = document.getElementById('noteTitle').value.trim();
     const content = document.getElementById('noteContent').value.trim();
     const password = document.getElementById('notePassword').value.trim();
-    const date = new Date().toLocaleDateString(); // Get the current date
+    const date = new Date(); // Get the current date
     const formattedDate = formatDate(date); // Format the date
 
    
