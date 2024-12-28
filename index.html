@@ -609,22 +609,22 @@ h2 {
   <h3 id="Alpha">This app is under devlopment! You are Currently using Alpha Version! PLease Report Bugs to anaghmanglick@gmail.com!</h3>
   <input type="text" id="searchInput" placeholder="Search notes..." oninput="searchNotes()"  style="width: 80%; margin: 10px auto; display: none;">
 
-  <div id="notesSection" class="container">
-    <h2>Your Notes</h2>
+ <!-- Combined Notes and Lists Section -->
+<div id="combinedContainer" class="container">
+    <h2>Your Notes and Lists</h2>
     <div id="notesContainer"></div>
-  <!-- Placeholder for Notes -->
-<div id="noNotesMessage" class="hidden">No notes added.</div>
-</div>
-  </div>
-
-  <div id="listsContainer" class="container hidden">
-    <h2>Your Lists</h2>
     <div id="listsSection">
-        <div id="listsContainerContent"></div>
+            <div id="listsContainerContent"></div>
+        </div>
+        <div id="noListsMessage" class="hidden">No lists added.</div>
     </div>
-  <!-- Placeholder for Lists -->
-<div id="noListsMessage" class="hidden">No lists added.</div>
-  </div>
+    <div id="noNotesMessage" class="hidden">No notes added.</div>
+</div>
+
+
+
+
+
 
 
   
@@ -715,17 +715,14 @@ h2 {
   
 <!--Bottom Navigation Bar-->
     <div class="bottom-nav">
-        <button class="nav-button" onclick="showSection('listsContainer')"><i class="fas fa-list"></i></button>
-        <button class="nav-button" onclick="showSection('notesSection')"><i class="fas fa-sticky-note"></i></button>
-        <button class="nav-button" onclick="toggleSearchInput()">
-            <i class="fas fa-search"></i>
-        </button>
-        <div class="add-button" onclick="showAddOptions()">+</div>
-        <button class="nav-button" onclick="showSection('settings')"><i class="fas fa-cog"></i></button>
+        <button class="nav-button" onclick="showSection('combinedContainer')"><i class="fas fa-th-list"></i></button> <!-- Combined Notes and Lists -->
+       </button>
         <button class="nav-button" onclick="showSection('calendarSection')"><i class="fas fa-calendar"></i></button>
-      <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-ellipsis-h"></i></button>
-    </button>
-    </div>
+        <div class="add-button" onclick="showAddOptions()">+</div>
+        <button class="nav-button" onclick="toggleSearchInput()">
+            <i class="fas fa-search"></i></button>
+            <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-bars"></i></button> <!-- More Section -->
+        </div>
 
 <!-- More Section -->
 <div id="moreSection" class="container hidden">
@@ -740,6 +737,7 @@ h2 {
         <button onclick="toggleFeatureSection('notificationPanel')">
             <i class="fas fa-bell"></i> <!-- Icon for Notifications -->
         </button>
+        <button onclick="toggleFeatureSection('settings')"><i class="fas fa-cog"></i></button>
     </div>
 
     <!-- Feature Sections -->
@@ -754,7 +752,20 @@ h2 {
         <button onclick="closeFeatureSection('privacyInfoSection')">Close</button>  
     </div>
         
-    
+    <div id="settings" class="feature-section hidden">
+        <button onclick="closeFeatureSection('settings')">Close</button>
+        <h2>Settings</h2>
+        <h3>Other Settings</h3>
+        <button onclick="showCredits()">Credits</button>
+        <div id="creditsSection" style="display:none;">
+            <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
+        </div>
+        <h3>Backup/Import</h3>
+        <button onclick="backupNotes()">Backup Notes</button>
+        <input type="file" id="importFile" onchange="prepareImport(event)">
+        <button onclick="importNotes()">Continue Import</button>
+    </div>
+</div>
 
     <div id="calculatorSection" class="feature-section hidden">
         <h3>Calculator</h3>
@@ -1086,9 +1097,11 @@ function deleteListVerifyPassword() {
 
     if (passwordInput === list.password) {
         // If the password is correct, delete the list
-        deleteList(index);
-        displayLists(); // Refresh the displayed lists
+        lists.splice(index, 1);
+        localStorage.setItem('lists', JSON.stringify(lists));
         document.getElementById('deleteListPasswordModal').style.display = 'none';
+        document.getElementById('listPasswordModal').style.display = 'none';
+    displayLists();
     } else {
         showMessageBox("Incorrect password!"); // Show an error message
     }
@@ -1172,7 +1185,7 @@ function showAddNote() {
 }
 
     function cancelNote() {
-      showSection('notesSection');
+      showSection('combinedContainer');
     }
 
     // Add event listener for the Add Note button
@@ -1207,7 +1220,7 @@ function saveNote() {
 
     localStorage.setItem('notes', JSON.stringify(notes));
     displayNotes();
-    showSection('notesSection');
+    showSection('combinedContainer');
 
     // Reset editing state
     editingNoteIndex = null; // Reset after saving
@@ -1239,7 +1252,8 @@ function closeNotificationModal() {
         const formattedDate = formatDate(noteDate); // Format the date for display
         noteDiv.innerHTML = `
         <div class="note" onclick="openNote(${index})">  
-        <h4 onclick="openNote(${index})">${note.title}</h4>
+        <i class="fas fa-sticky-note"></i>
+            <h4>${note.title}</h4>
           <p>${note.password ? "(Password Protected Note)" : note.content}</p>
            <span class="note-date">${formattedDate}</span>
           <button onclick="deleteNote(${index})">Delete</button>
@@ -1268,7 +1282,7 @@ function closeNotificationModal() {
     });
 
     // Show only the notes section on page load
-    showSection('notesSection'); // Show the notes section
+    showSection('combinedContainer'); // Show the notes section
 
     // Load notes and lists from local storage
     displayNotes();
@@ -1278,7 +1292,7 @@ function closeNotificationModal() {
     
 
 function showListsSection() {
-    showSection('listsContainer'); // Show the lists container
+    showSection('combinedContainer'); // Show the lists container
     displayLists(); // Refresh the displayed lists
     document.getElementById('addListSection').classList.add('hidden'); // Ensure add list section is hidden
 }
@@ -1349,7 +1363,7 @@ function verifyPassword() {
 
     function closeAddListSection() {
     document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
-    showSection('listsContainer'); // Show the lists section
+    showSection('combinedContainer'); // Show the lists section
 }
 
     // Function to show the add options modal
@@ -1402,7 +1416,7 @@ function showAddListSection() {
 function cancelList() {
     // Hide the add list section and show the lists section
     document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
-    showSection('listsContainer'); // Show the lists section
+    showSection('combinedContainer'); // Show the lists section
 }
 
 // Function to show a specific section
@@ -1435,7 +1449,7 @@ function saveList() {
 
     localStorage.setItem('lists', JSON.stringify(lists)); // Save to local storage
     displayLists(); // Refresh the displayed lists
-    showSection('listsContainer'); // Show the lists section
+    showSection('combinedContainer'); // Show the lists section
     editingListIndex = null; // Reset editing state after saving
 }
 
@@ -1472,7 +1486,7 @@ let currentItems = []; // Array to hold current checklist items
 
 // Function to show the lists section
 function showListsSection() {
-    showSection('listsContainer');
+    showSection('combinedContainer');
     displayLists(); // Refresh the displayed lists
 }
 
@@ -1589,7 +1603,8 @@ function displayLists() {
         listDiv.innerHTML = `
         
         <div class="note" onclick="openList(${index})">    
-        <h4>${list.title}</h4>
+        <i class="fas fa-list"></i> <!-- List Icon -->
+            <h4>${list.title}</h4>
              <span class="list-date">${formattedDate}</span>
         <button onclick="deleteList(${index})">Delete</button>
         </div>
@@ -1607,6 +1622,7 @@ function deleteList(index) {
     if (list.password) {
         // Show the password modal for deletion
         document.getElementById('deleteListPasswordModal').style.display = 'flex';
+        document.getElementById('deleteListPasswordModal').dataset.listIndex = index; // Set the index here
     } else {
         // If no password is required, confirm deletion
         if (confirm("Are you sure you want to delete this list?")) {
@@ -1619,7 +1635,7 @@ function deleteList(index) {
 
 // Function to cancel adding a list
 function cancelList() {
-    showSection('listsContainer'); // Show the lists section
+    showSection('combinedContainer'); // Show the lists section
 }
 
 // Call displayLists on page load
