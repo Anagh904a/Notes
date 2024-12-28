@@ -427,6 +427,181 @@ a:hover {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.note-date {
+    font-size: 20px; /* Smaller font for the date */
+    /* Lighter color for the date */
+    margin-bottom: 10px; /* Space between title and date */
+float: right;
+}
+
+.list-date {
+    font-size: 15px; /* Smaller font for the date */
+    /* Lighter color for the date */
+    margin-bottom: 10px; /* Space between title and date */
+float: right;
+
+}
+
+.feature-buttons {
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow wrapping to the next line */
+    justify-content: space-around; /* Space buttons evenly */
+    margin: 10px 0; /* Margin around the button section */
+}
+
+.feature-buttons button {
+    background: none; /* No background */
+    border: none; /* No border */
+font-size: 24px; /* Icon size */
+color: black;
+}
+
+/* General styles for the container */
+#calendarSection {
+    font-family: 'Arial', sans-serif;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: auto; /* Allow scrolling if content overflows */
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+/* Styling for the month navigation */
+.month {
+    background-color: #ff7f32; /* Orange color */
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.month ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.month ul li {
+    font-size: 1.2em;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+}
+
+.month ul li#monthYear {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+}
+
+/* Hover effects for previous/next buttons */
+.month ul li:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+}
+
+/* Styling for the weekdays (Mo, Tu, etc.) */
+.weekdays {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 10px;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+}
+
+.weekdays li {
+    width: 35px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Styling for the days grid */
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for the days of the week */
+    grid-gap: 5px; /* Space between grid items */
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+    border: 1px solid #ccc; /* Add border around the entire days grid */
+}
+
+/* Styling for individual day cells */
+.days li {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border: 1px solid #ccc; /* Add border around each day */
+    border-radius: 5px; /* Rounded corners for a softer look */
+    cursor: pointer;
+    font-size: 1.1em;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for days */
+.days li:hover {
+    background-color: #ff7f32; /* Hover effect with the same orange color */
+    color: white;
+}
+
+/* Styling for today's date */
+.days li.active {
+    background-color: #ff5733; /* A distinct background for today's date */
+    color: white;
+}
+
+/* Selected day */
+.days li.selected {
+    background-color: #ff7f32;
+    color: white;
+}
+
+/* Disabled days (out of the current month) */
+.days li.disabled {
+    color: #d3d3d3;
+    pointer-events: none;
+}
+
+/* Style for previous/next button */
+.prev, .next {
+    cursor: pointer;
+    font-size: 1.5em;
+    color: white;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.prev {
+    margin-left: 10px;
+}
+
+.next {
+    margin-right: 10px;
+}
+
   </style>
 </head>
 <body>
@@ -547,29 +722,75 @@ a:hover {
         </button>
         <div class="add-button" onclick="showAddOptions()">+</div>
         <button class="nav-button" onclick="showSection('settings')"><i class="fas fa-cog"></i></button>
-      <button class="nav-button" onclick="showSection('calculatorSection')"><i class="fas fa-calculator"></i></button>  
+        <button class="nav-button" onclick="showSection('calendarSection')"><i class="fas fa-calendar"></i></button>
       <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-ellipsis-h"></i></button>
     </button>
     </div>
 
 <!-- More Section -->
 <div id="moreSection" class="container hidden">
-  <h2>More Features</h2>
-  
- 
-<div class="feature-section">
-  <h2>Notificaton buttons</h2>
-  <button onclick="requestNotificationPermission()">Request for notification</button>
-<button onclick="sendPushNotification()">Send</button>  
-</div>
-  <div class="feature-section">
-    <p>Our website offers a versatile platform designed to help you keep all your important notes, lists, and tasks organized in one place. It features a simple and user-friendly interface that allows you to create, edit, and manage notes with ease. You can categorize your lists into different sections, customize them according to your needs, and add tasks with deadlines. The website also supports organizing notes based on subjects, topics, or any other categories you choose. With various tools and features like reminders, tags, and filters, it helps you stay on top of your work and study plans. The website’s flexible structure ensures that you can create a personalized environment tailored to your individual needs.</p>
+    <h2>More Features</h2>
+    <div class="feature-buttons">
+        <button onclick="toggleFeatureSection('privacyInfoSection')">
+            <i class="fas fa-user-shield"></i> <!-- Icon for Privacy Info -->
+        </button>
+        <button onclick="toggleFeatureSection('calculatorSection')">
+            <i class="fas fa-calculator"></i> <!-- Icon for Calculator -->
+        </button>
+        <button onclick="toggleFeatureSection('notificationPanel')">
+            <i class="fas fa-bell"></i> <!-- Icon for Notifications -->
+        </button>
+    </div>
 
-    <p>Security is our top priority, and we understand the importance of keeping your personal information safe. All your notes and lists are stored locally on your device, meaning there is no cloud syncing or external backend service that could potentially expose your data. By utilizing local storage, your information stays private and secure within the confines of your device. Additionally, we implement robust encryption techniques to protect your data. Whether you’re typing a note or organizing a list, all data is encrypted in real-time to ensure that no one can access it without your authorization. We also offer password protection for both notes and lists, providing an added layer of security. This feature ensures that only you can view and edit your sensitive content, preventing unauthorized access.</p>
+    <!-- Feature Sections -->
+    <div id="privacyInfoSection" class="feature-section hidden">
+        
+        <h3>Privacy Information and About Our website</h3>
+        <p>Our website developed by indiviual developer offers a versatile platform designed to help you keep all your important notes, lists, and tasks organized in one place. It features a simple and user-friendly interface that allows you to create, edit, and manage notes with ease. You can categorize your lists into different sections, customize them according to your needs, and add tasks with deadlines. The website also supports organizing notes based on subjects, topics, or any other categories you choose. With various tools and features like reminders, tags, and filters, it helps you stay on top of your work and study plans. The website’s flexible structure ensures that you can create a personalized environment tailored to your individual needs.</p>
 
-    <p>In addition to the note-taking and list-keeping features, the website is part of a broader educational platform that includes various tools and projects designed for students and educators. This includes the "Notes and Lists Vista," which helps users manage their accounts and access their saved notes and lists, as well as the "School Tools Platform," which provides a range of educational tools and resources. The website also integrates a collaborative environment for users to exchange ideas and learning materials. With this combination of tools, we aim to provide a comprehensive space for learning, organizing, and improving productivity in educational settings.</p>
-  </div>
+        <p>Security is our top priority, and we understand the importance of keeping your personal information safe. All your notes and lists are stored locally on your device, meaning there is no cloud syncing or external backend service that could potentially expose your data. By utilizing local storage, your information stays private and secure within the confines of your device. Additionally, we implement robust encryption techniques to protect your data. Whether you’re typing a note or organizing a list, all data is encrypted in real-time to ensure that no one can access it without your authorization. We also offer password protection for both notes and lists, providing an added layer of security. This feature ensures that only you can view and edit your sensitive content, preventing unauthorized access.</p>
+    
+        <p>In addition to the note-taking and list-keeping features, the website is part of a broader educational platform that includes various tools and projects designed for students and educators. This includes the "Notes and Lists Vista," which helps users manage their accounts and access their saved notes and lists, as well as the "School Tools Platform," which provides a range of educational tools and resources. The website also integrates a collaborative environment for users to exchange ideas and learning materials. With this combination of tools, we aim to provide a comprehensive space for learning, organizing, and improving productivity in educational settings.</p>
+        <button onclick="closeFeatureSection('privacyInfoSection')">Close</button>  
+    </div>
+        
+    
+
+    <div id="calculatorSection" class="feature-section hidden">
+        <h3>Calculator</h3>
+        <button onclick="closeFeatureSection('calculatorSection')">Close</button>
+        <input type="text" id="calculatorInput" placeholder="0" readonly>
+        <div class="calculator-buttons">
+            <button onclick="appendToCalculator('7')">7</button>
+            <button onclick="appendToCalculator('8')">8</button>
+            <button onclick="appendToCalculator('9')">9</button>
+            <button onclick="appendToCalculator('/')">/</button>
+            <button onclick="appendToCalculator('4')">4</button>
+            <button onclick="appendToCalculator('5')">5</button>
+            <button onclick="appendToCalculator('6')">6</button>
+            <button onclick="appendToCalculator('*')">*</button>
+            <button onclick="appendToCalculator('.')">.</button>
+            <button onclick="appendToCalculator('1')">1</button>
+            <button onclick="appendToCalculator('2')">2</button>
+            <button onclick="appendToCalculator('3')">3</button>
+            <button onclick="appendToCalculator('-')">-</button>
+            <button onclick="appendToCalculator('0')">0</button>
+            <button onclick="calculateResult()">=</button>
+            <button onclick="clearCalculator()">C</button>
+            <button onclick="appendToCalculator('+')">+</button>
+        </div>
+        
+    <div id="notificationPanel" class="feature-section hidden">
+        <h3>Notifications</h3>
+        <h2>Notification Buttons</h2>
+        <button onclick="requestNotificationPermission()">Request Notification Permission</button>
+        <button onclick="sendPushNotification()">Send Notification</button>
+        <p id="notificationStatus"></p> <!-- To display notification status -->
+        <button onclick="closeFeatureSection('notificationPanel')">Close</button>
+    </div>
 </div>
+</div>
+
 
 <!-- List Password Modal -->
 <div id="listPasswordModal" class="modal hidden">
@@ -592,29 +813,29 @@ a:hover {
     </div>
 </div>
 
-<!-- Calculator Section -->
-<div id="calculatorSection" class="container hidden">
-    <h2>Calculator</h2>
-    <input type="text" id="calculatorInput" placeholder="0" readonly>
-    <div class="calculator-buttons">
-        <button onclick="appendToCalculator('7')">7</button>
-        <button onclick="appendToCalculator('8')">8</button>
-        <button onclick="appendToCalculator('9')">9</button>
-        <button onclick="appendToCalculator('/')">/</button>
-        <button onclick="appendToCalculator('4')">4</button>
-        <button onclick="appendToCalculator('5')">5</button>
-        <button onclick="appendToCalculator('6')">6</button>
-        <button onclick="appendToCalculator('*')">*</button>
-        <button onclick="appendToCalculator('1')">1</button>
-        <button onclick="appendToCalculator('2')">2</button>
-        <button onclick="appendToCalculator('3')">3</button>
-        <button onclick="appendToCalculator('-')">-</button>
-        <button onclick="appendToCalculator('0')">0</button>
-        <button onclick="calculateResult()">=</button>
-        <button onclick="clearCalculator()">C</button>
-        <button onclick="appendToCalculator('+')">+</button>
+<div id="calendarSection" class="container">
+    <h2>Calendar</h2>
+    <div class="month">
+        <ul>
+            <li class="prev" onclick="changeMonth(-1)">&#10094;</li>
+            <li class="next" onclick="changeMonth(1)">&#10095;</li>
+            <li id="monthYear"></li>
+        </ul>
     </div>
+
+    <ul class="weekdays">
+        <li>Mo</li>
+        <li>Tu</li>
+        <li>We</li>
+        <li>Th</li>
+        <li>Fr</li>
+        <li>Sa</li>
+        <li>Su</li>
+    </ul>
+
+    <ul class="days" id="daysContainer"></ul>
 </div>
+     
 
   <script>
     let notes = JSON.parse(localStorage.getItem('notes')) || []; 
@@ -678,17 +899,60 @@ function closeDeleteListPasswordModal() {
         showMessageBox('Notes imported successfully!');
     }
 
+    let currentDate = new Date(); // Initialize current date
+
+function displayCalendar() {
+    const monthYear = document.getElementById('monthYear');
+    const daysContainer = document.getElementById('daysContainer');
+    
+    // Get the current month and year
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+    
+    // Set the month and year in the header
+    monthYear.innerHTML = `${currentDate.toLocaleString('default', { month: 'long' })}<br><span style="font-size:18px">${year}</span>`;
+    
+    // Clear previous days
+    daysContainer.innerHTML = '';
+
+    // Get the first day of the month (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate(); // Last date of the month
+
+    // Fill the days with empty cells for days before the first of the month
+    for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+        daysContainer.innerHTML += '<li></li>'; // Empty cells for days before the first of the month
+    }
+
+    // Fill the days of the month
+    for (let day = 1; day <= lastDate; day++) {
+        const isToday = (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear());
+        daysContainer.innerHTML += `<li${isToday ? ' class="active"' : ''}>${day}</li>`;
+    }
+}
+
+// Function to change the month
+function changeMonth(direction) {
+    currentDate.setMonth(currentDate.getMonth() + direction);
+    displayCalendar(); // Refresh the calendar display
+}
+
+// Call displayCalendar on page load
+document.addEventListener("DOMContentLoaded", function() {
+    displayCalendar(); // Display the calendar when the page loads
+});
+
     function searchNotes() {
-    const currentSection = document.querySelector('.container:not(.hidden)');
-    if (currentSection.id !== 'notesSection') {
-        showMessageBox("Please be on the Notes section to use this feature.");
-        return;
-    } else {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const filteredNotes = notes.filter(note => note && (note.title.toLowerCase().includes(searchTerm) || note.content.toLowerCase().includes(searchTerm)));
     displayFilteredNotes(filteredNotes);
 }
-    }
+
+function formatDate(date) {
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+    
 
 // Function to display filtered notes
 function displayFilteredNotes(filteredNotes) {
@@ -709,8 +973,8 @@ function displayFilteredNotes(filteredNotes) {
             <div class="note" onclick="openNote(${index})"> 
                 <h4>${note.title}</h4>
                 <p>${note.password ? "(Password Protected Note)" : note.content}</p>
-                <span style="float: right;">${note.date}</span> <!-- Display the date here -->
-                <button class="delete-button" onclick="deleteNote(${index})">Delete</button>
+                <span class="note-date">${note.date}</span> <!-- Display the date here -->
+                <button onclick="deleteNote(${index})">Delete</button>
             </div>
         `;
         container.appendChild(noteDiv);
@@ -718,9 +982,34 @@ function displayFilteredNotes(filteredNotes) {
 }
 
 // Function to close the list password modal
+function toggleFeatureSection(sectionId) {
+    const sections = ['privacyInfoSection', 'calculatorSection', 'notificationPanel']; // Add all feature section IDs here
+    sections.forEach(section => {
+        const element = document.getElementById(section);
+        if (section === sectionId) {
+            element.classList.toggle('hidden'); // Toggle the selected section
+        } else {
+            element.classList.add('hidden'); // Hide other sections
+        }
+    });
+}
 
+// Function to close a specific feature section
+function closeFeatureSection(sectionId) {
+    const element = document.getElementById(sectionId);
+    element.classList.add('hidden'); // Hide the specified section
+}
 
-    function toggleSearchInput() {
+function toggleSearchInput() {
+    const currentSection = document.querySelector('.container:not(.hidden)');
+    
+    // Check if the current section is the notes section
+    if (currentSection.id !== 'notesSection') {
+        showMessageBox("Please be on the Notes section to use the search feature.");
+        return; // Exit the function if not in the notes section
+   
+    }
+
     const searchInput = document.getElementById('searchInput');
     searchInput.style.display = searchInput.style.display === 'none' ? 'block' : 'none';
 }
@@ -897,7 +1186,9 @@ function saveNote() {
     const content = document.getElementById('noteContent').value.trim();
     const password = document.getElementById('notePassword').value.trim();
     const date = new Date().toLocaleDateString(); // Get the current date
+    const formattedDate = formatDate(date); // Format the date
 
+   
     if (content === "") {
         showMessageBox("Note content cannot be empty!");
         return;
@@ -944,12 +1235,14 @@ function closeNotificationModal() {
         noNotesMessage.classList.add('hidden');} // Hide the no notes message
       notes.forEach((note, index) => {
         const noteDiv = document.createElement('div');
-       noteDiv.innerHTML = `
+        const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
+        const formattedDate = formatDate(noteDate); // Format the date for display
+        noteDiv.innerHTML = `
         <div class="note" onclick="openNote(${index})">  
         <h4 onclick="openNote(${index})">${note.title}</h4>
           <p>${note.password ? "(Password Protected Note)" : note.content}</p>
-           <span style="float: right;">${note.date}</span>
-          <button class="delete-button" onclick="deleteNote(${index})">Delete</button>
+           <span class="note-date">${formattedDate}</span>
+          <button onclick="deleteNote(${index})">Delete</button>
         </div>
           `;
         container.appendChild(noteDiv);
@@ -1121,7 +1414,10 @@ function cancelList() {
 function saveList() {
     const title = document.getElementById('listTitle').value.trim();
     const password = document.getElementById('listPassword').value.trim(); // Get password
+    const date = new Date(); // Get the current date
+    const formattedDate = formatDate(date); // Format the date
 
+    
     if (title === "" || currentItems.length === 0) {
         showMessageBox("List title and items cannot be empty!");
         return;
@@ -1289,10 +1585,14 @@ function displayLists() {
         noListsMessage.classList.add('hidden');} // Hide the no lists message
     lists.forEach((list, index) => {
         const listDiv = document.createElement('div');
+        const listDate = new Date(list.date); // Convert the stored date string back to a Date object
+        const formattedDate = formatDate(listDate); // Format the date for display
         listDiv.innerHTML = `
+        
         <div class="note" onclick="openList(${index})">    
         <h4>${list.title}</h4>
-            <button class="delete-button" onclick="deleteList(${index})">Delete</button>
+             <span class="list-date">${formattedDate}</span>
+        <button onclick="deleteList(${index})">Delete</button>
         </div>
             `;
         container.appendChild(listDiv);
