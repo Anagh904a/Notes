@@ -436,7 +436,7 @@ float: right;
 }
 
 .list-date {
-    font-size: 15px; /* Smaller font for the date */
+    font-size: 20px; /* Smaller font for the date */
     /* Lighter color for the date */
     margin-bottom: 10px; /* Space between title and date */
 float: right;
@@ -1417,7 +1417,6 @@ function saveList() {
     const date = new Date(); // Get the current date
     const formattedDate = formatDate(date); // Format the date
 
-    
     if (title === "" || currentItems.length === 0) {
         showMessageBox("List title and items cannot be empty!");
         return;
@@ -1425,11 +1424,11 @@ function saveList() {
 
     if (editingListIndex !== null) {
         // Update existing list
-        lists[editingListIndex] = { title, items: currentItems.slice(), password }; // Update the existing list
+        lists[editingListIndex] = { title, items: currentItems.slice(), password, date: formattedDate }; // Update the existing list and set the new date
         showMessageBox("List updated successfully!");
     } else {
         // Add new list
-        const newList = { title, items: currentItems.slice(), password }; // Create a new list
+        const newList = { title, items: currentItems.slice(), password, date: formattedDate }; // Create a new list with the date
         lists.push(newList); // Add the new list to the lists array
         showMessageBox("List saved successfully!");
     }
