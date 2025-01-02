@@ -183,24 +183,24 @@
 /* General modal styling */
 .modal {
     display: flex; /* Use flexbox for centering */
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
+    position: fixed; /* Stay in place */
+    
     left: 0;
+    top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    z-index: 1000; /* Sit on top */
-}
-
-/* Modal content styling */
-.modal-content {
-    background-color: white; /* White background for modal content */
-    padding: 20px; /* Padding inside the modal */
-    border-radius: 5px; /* Rounded corners */
-    width: 300px; /* Set a fixed width */
-}
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 350px;
+      position: absolute;
+    }
 
 /* Hidden class to hide elements */
 .hidden {
@@ -286,27 +286,24 @@ button:hover {
 }
 
 .modal {
-  position: fixed;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust for the modal's own width and height */
-    width: 300px; /* Set a fixed width */
-    height: auto; /* Allow height to adjust based on content */
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    border-radius: 2px
- 
-}
+  position: fixed; /* Stay in place */
     
-
-
-.modal-content {
-    background-color: white;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      
+    }
+    .modal-content {
+      background-color: white;
       padding: 20px;
       border-radius: 5px;
-      width: 300px;
-}
+      width: 350px;
+      position: absolute;
+    }
 
 
 input {
@@ -606,7 +603,7 @@ h2 {
 </head>
 <body>
   <h1>Notes App</h1>
-  <h3 id="Alpha">This app is under devlopment! You are Currently using Alpha Version! PLease Report Bugs to anaghmanglick@gmail.com!</h3>
+  
   <input type="text" id="searchInput" placeholder="Search notes..." oninput="searchNotes()"  style="width: 80%; margin: 10px auto; display: none;">
 
  <!-- Combined Notes and Lists Section -->
@@ -1253,6 +1250,7 @@ function closeNotificationModal() {
         noteDiv.innerHTML = `
         <div class="note" onclick="openNote(${index})">  
         <i class="fas fa-sticky-note"></i>
+            <p>It's a note</p>
             <h4>${note.title}</h4>
           <p>${note.password ? "(Password Protected Note)" : note.content}</p>
            <span class="note-date">${formattedDate}</span>
@@ -1604,6 +1602,7 @@ function displayLists() {
         
         <div class="note" onclick="openList(${index})">    
         <i class="fas fa-list"></i> <!-- List Icon -->
+            <p>It's a List</p>
             <h4>${list.title}</h4>
              <span class="list-date">${formattedDate}</span>
         <button onclick="deleteList(${index})">Delete</button>
