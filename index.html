@@ -735,7 +735,7 @@ h2 {
         <button onclick="toggleFeatureSection('privacyInfoSection')">
             <i class="fas fa-user-shield"></i>Privacy Info
         </button>
-        <button onclick="toggleFeatureSection('calculatorSection')">
+        <button onclick="showSection('calculatorSection')">
             <i class="fas fa-calculator"></i>Calculator
         </button>
         <button onclick="alert('Push notifications are under development')">
@@ -787,9 +787,22 @@ h2 {
     </div>
 
 
-    <div id="calculatorSection" class="feature-section hidden">
+
+        
+    <div id="notificationPanel" class="feature-section hidden">
+        <h3>Notifications</h3>
+        <h2>Notification Buttons</h2>
+        <button onclick="requestNotificationPermission()">Request Notification Permission</button>
+        <button onclick="sendPushNotification()">Send Notification</button>
+        <p id="notificationStatus"></p> <!-- To display notification status -->
+        <button onclick="closeFeatureSection('notificationPanel')">Close</button>
+    </div>
+</div>
+</div>
+
+    <div id="calculatorSection" class="container hidden">
         <h3>Calculator</h3>
-        <button onclick="closeFeatureSection('calculatorSection')">Close</button>
+        <button onclick="showSection('moreSection')">Close</button>
         <input type="text" id="calculatorInput" placeholder="0" readonly>
         <div class="calculator-buttons">
             <button onclick="appendToCalculator('7')">7</button>
@@ -810,19 +823,6 @@ h2 {
             <button onclick="clearCalculator()">C</button>
             <button onclick="appendToCalculator('+')">+</button>
         </div>
-        
-    <div id="notificationPanel" class="feature-section hidden">
-        <h3>Notifications</h3>
-        <h2>Notification Buttons</h2>
-        <button onclick="requestNotificationPermission()">Request Notification Permission</button>
-        <button onclick="sendPushNotification()">Send Notification</button>
-        <p id="notificationStatus"></p> <!-- To display notification status -->
-        <button onclick="closeFeatureSection('notificationPanel')">Close</button>
-    </div>
-</div>
-</div>
-
-
 <!-- List Password Modal -->
 <div id="listPasswordModal" class="modal hidden">
     <div class="modal-content">
