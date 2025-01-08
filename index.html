@@ -1034,8 +1034,8 @@ function toggleSearchInput() {
     const currentSection = document.querySelector('.container:not(.hidden)');
     
     // Check if the current section is the notes section
-    if (currentSection.id !== 'notesSection') {
-        showMessageBox("Please be on the Notes section to use the search feature.");
+    if (currentSection.id !== 'combinedContainer') {
+        showMessageBox("Please be on the  home section to use the search feature.");
         return; // Exit the function if not in the notes section
    
     }
