@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>ColorNotes Inspired Notes App</title>
     <style>
-       
-        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -95,6 +93,7 @@
             background-color: #ffa500;
             color: white;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
 
         .nav-button {
@@ -272,7 +271,7 @@
             /* Pointer cursor on hover */
             border: none;
             /* No border */
-            
+
             /* Orange background */
             color: white;
             /* White text */
@@ -320,7 +319,7 @@
             /* Pointer cursor on hover */
             border: none;
             /* No border */
-          
+
             /* Orange background */
             color: white;
             /* White text */
@@ -494,67 +493,66 @@
         }
 
         .top-bar {
-     top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #ff9e2e;
-      color: white;
-      padding: 10px 20px;
-      display: hidden;
-      align-items: center;
-      justify-content: space-between;
-      position:fixed;
-      
-    
-    }
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ff9e2e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            border-radius: 5px;
 
-    .top-bar .back-icon {
-      font-size: 24px;
-      cursor: pointer;
-    }
+        }
 
-    .top-bar .title {
-      font-size: 18px;
-      font-weight: bold;
-      flex-grow: 1;
-      text-align: center;
-    }
+        .top-bar .back-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
 
-    .top-bar .edit-btn,
-    .top-bar .menu-btn {
-      font-size: 24px;
-      cursor: pointer;
-      background-color: #ff9e2e;
-    }
 
-    #editNoteButton {
-        background-color: #ff9e2e;
-    }
-    #menuButton {
-        background-color: #ff9e2e;
-    }
 
-    #editListButton {
-        background-color: #ff9e2e;
-    }
-    #menuButton2 {
-        background-color: #ff9e2e;
-    }
+        .top-bar .edit-btn,
+        .top-bar .menu-btn {
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #ff9e2e;
+        }
 
-    .top-bar input {
-      flex-grow: 1;
-      margin: 0 10px;
-      padding: 5px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-    }
+        #editNoteButton {
+            background-color: #ff9e2e;
+        }
 
-    /* Content Section */
-    .content {
-      margin-top: 20px;
-      padding: 20px;
-    }
+
+        #editListButton {
+            background-color: #ff9e2e;
+        }
+
+
+        .top-bar input {
+            flex-grow: 1;
+            margin: 0 10px;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .top-bar button {
+            margin: 0 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Content Section */
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+        }
 
         .calculator-buttons button {
             padding: 20px;
@@ -599,15 +597,7 @@
 
         }
 
-        #mainHeader {
-           
-        width: 100%;
-        height: 40px;
-      background-color: #ff9e2e;
-      color: white;
-     
-     
-        }
+
 
         #addNoteSection {
             background-color: #fff;
@@ -621,6 +611,7 @@
             margin-top: 20px;
             /* Space above the section */
         }
+
         .feature-buttons {
             display: grid;
             /* Use flexbox for layout */
@@ -633,23 +624,23 @@
         }
 
         .feature-buttons button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    margin: 5px 0;
-    cursor: pointer;
-    border: none;
-    color: rgb(0, 0, 0);
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    background-color: transparent;
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            border: none;
+            color: rgb(0, 0, 0);
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            background-color: transparent;
+        }
 
-.feature-buttons button i {
-    font-size: 24px;
-    margin-bottom: 5px;
-}
+        .feature-buttons button i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
 
         .feature-buttons button:hover {
             background-color: #ddd;
@@ -706,7 +697,7 @@
             font-weight: bold;
             font-size: 1.5em;
             color: white;
-        margin-right: 600px;
+            margin-right: 600px;
         }
 
         /* Hover effects for previous/next buttons */
@@ -812,7 +803,6 @@
             margin-right: 10px;
         }
 
-      
 
 
 
@@ -822,100 +812,73 @@
 
 
 
-#checklistContainer {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
 
-#checklistContainer li {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-#checklistContainer li:last-child {
-  border-bottom: none;
-}
-
-.modal-content h2 {
-      margin: 0 0 20px;
-      color: #333;
-    }
-
-    .modal-content input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .modal-content button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .modal-content button:hover {
-      background-color: #45a049;
-    }
-
-    #menuOptions {
-    position: absolute;
-    top: 40px;
-    right: 20px;
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-#menuOptions button {
-    padding: 10px;
-    border: none;
-    background-color: #ffffff;
-    cursor: pointer;
-}
-
-#menuOptions button:hover {
-    background-color: #f5f5f5;
-}
-
-.delete-btn {
-    background-color: #ff1c1c;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    }
-    .delete-btn:hover {
-        background-color: #df0909;
+        #checklistContainer {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-#changePasswordButton {
-    color: #ffffff;
-}
+        #checklistContainer li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
 
-#noteTitle {
-    
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-}
-    
+        #checklistContainer li:last-child {
+            border-bottom: none;
+        }
+
+        .modal-content h2 {
+            margin: 0 0 20px;
+            color: #333;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+
+
+
+
+
+        .delete-btn {
+            background-color: #ff1c1c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: #df0909;
+        }
+
+        #changePasswordButton {
+            color: #ffffff;
+        }
     </style>
 </head>
 
 <body>
-   <h1 style="background-color: orange;" id="mainHeader">My Sticky Notes</h1>
+    <h1 style="background-color: orange;" id="mainHeader">My Sticky Notes</h1>
 
     <input type="text" id="searchInput" placeholder="Search your notes and lists..." oninput="searchNotes()"
         style="width: 80%; margin: 10px auto; display: none;">
@@ -943,19 +906,20 @@
 
     <!-- Add Note Form -->
     <!-- Add Note Form -->
-<div id="addNoteSection" class="container hidden">
-    <div class="top-bar" style="display: flex;">
-        <i class="fas fa-arrow-left back-icon" onclick="cancelNote()"></i>
-        <button id="editNoteButton" onclick="toggleEditNote()"><i class="fas fa-pencil-alt"></i></button>
-        <input type="text" id="noteTitle" placeholder="Enter your note title...">
+    <div id="addNoteSection" class="container hidden">
+        <div class="top-bar" style="display: flex;">
+            <i class="fas fa-arrow-left back-icon" onclick="cancelNote()"></i>
+            <button id="editNoteButton" onclick="toggleEditNote()"><i class="fas fa-pencil-alt"></i></button>
+            <input type="text" id="noteTitle" placeholder="Enter your note title...">
+
+        </div>
+        <h3 id="manageNoteTitle">Manage Your Note</h3>
+        <textarea id="noteContent" placeholder="Write your note here..."></textarea>
         <button id="changePasswordButton" onclick="togglePasswordInput()">
             <i class="fas fa-lock"></i> Manage Your Password
         </button>
- </div>
-    <h3 id="manageNoteTitle">Manage Your Note</h3>
-    <textarea id="noteContent" placeholder="Write your note here..."></textarea>
-    <input type="password" id="notePassword" placeholder="Enter New Password.." class="hidden">
-   </div>
+        <input type="password" id="notePassword" placeholder="Enter New Password.." class="hidden">
+    </div>
 
 
 
@@ -984,8 +948,8 @@
         </div>
     </div>
 
-   
-    
+
+
     <!-- Settings Section -->
     <div id="settings" class="container">
         <h2>Settings</h2>
@@ -1006,15 +970,17 @@
             <i class="fas fa-arrow-left back-icon" onclick="cancelList()"></i>
             <button id="editListButton" onclick="toggleEditList()"><i class="fas fa-check"></i></button>
             <input type="text" id="listTitle" placeholder="Enter your list title...">
-            <button id="manageListPassword" onclick="showListPassword()">
-                <i class="fas fa-lock"></i> Manage Your Password
-            </button>
+
         </div>
         <h3 id="manageListTitle">Manage Your List</h3>
         <label> AddItem
             <input id="newItem" type="text" placeholder="Enter item name..."> <!-- Input for new item -->
         </label>
-        <button id="addItemButton" onclick="addItem()">Add Item</button> <!-- Button to add item -->
+        <button id="addItemButton" onclick="addItem()"><i class="fas fa-plus"></i>Add Item</button>
+        <!-- Button to add item -->
+        <button id="manageListPassword" onclick="showListPassword()">
+            <i class="fas fa-lock"></i> Manage Your Password
+        </button>
         <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
         <div id="checklistContainer"></div> <!-- Container for checklist items -->
     </div>
@@ -1050,45 +1016,45 @@
     </div>
 
     <!-- More Section -->
-<div id="moreSection" class="container hidden">
-    <h2>More Features</h2>
-    <div class="feature-buttons">
-        <button onclick="toggleFeatureSection('privacyInfoSection')">
-            <i class="fas fa-user-shield"></i>
-            <br>
-            Privacy Info
-        </button>
-        <button onclick="showSection('calculatorSection')">
-            <i class="fas fa-calculator"></i>
-            <br>
-            Calculator
-        </button>
-        <button onclick="alert('Push notifications are under development')">
-            <i class="fas fa-bell"></i>
-            <br>
-            Notifications
-        </button>
-        
-        
-        <button onclick="showSection('settingsSection')">
-            <i class="fas fa-cog"></i>
-            <br>
-            Settings
-        </button>
-       <button onclick="showAlert('Themes')">
-            <i class="fas fa-palette"></i>
-            <br>
-            Themes
-        </button>
-        <button onclick="showAlert('Data Management')">
-            <i class="fas fa-database"></i>
-            <br>
-            Data Management
-        </button>
-    </div>
-</div>
+    <div id="moreSection" class="container hidden">
+        <h2>More Features</h2>
+        <div class="feature-buttons">
+            <button onclick="toggleFeatureSection('privacyInfoSection')">
+                <i class="fas fa-user-shield"></i>
+                <br>
+                Privacy Info
+            </button>
+            <button onclick="showSection('calculatorSection')">
+                <i class="fas fa-calculator"></i>
+                <br>
+                Calculator
+            </button>
+            <button onclick="alert('Push notifications are under development')">
+                <i class="fas fa-bell"></i>
+                <br>
+                Notifications
+            </button>
 
-           
+
+            <button onclick="showSection('settingsSection')">
+                <i class="fas fa-cog"></i>
+                <br>
+                Settings
+            </button>
+            <button onclick="showAlert('Themes')">
+                <i class="fas fa-palette"></i>
+                <br>
+                Themes
+            </button>
+            <button onclick="showAlert('Data Management')">
+                <i class="fas fa-database"></i>
+                <br>
+                Data Management
+            </button>
+        </div>
+    </div>
+
+
 
     <!-- Feature Sections -->
     <div id="privacyInfoSection" class="feature-section hidden">
@@ -1137,8 +1103,8 @@
 
 
 
-    
-    
+
+
 
     <div id="calculatorSection" class="container hidden">
         <h3>Calculator</h3>
@@ -1208,13 +1174,13 @@
         <ul class="days" id="daysContainer"></ul>
     </div>
 
-    
+
     <script>
         let notes = JSON.parse(localStorage.getItem('notes')) || [];
         let editingNoteIndex = null;
         let historyStack = [];
-        let currentNoteId = null; 
-        let currentDeleteNoteId = null; 
+        let currentNoteId = null;
+        let currentDeleteNoteId = null;
 
         function closeListPasswordModal() {
             document.getElementById('listPasswordModal').style.display = 'none';
@@ -1270,49 +1236,41 @@
             showMessageBox('Notes imported successfully!');
         }
 
-        function showMenu() {
-    const menuOptions = document.getElementById('menuOptions');
-    menuOptions.classList.toggle('hidden');
-}
 
-function showMenu2() {
-    const menuOptions = document.getElementById('menuOptions2');
-    menuOptions.classList.toggle('hidden');
-}
 
-// Function to toggle edit note mode
-function toggleEditNote() {
-    const noteTitle = document.getElementById('noteTitle');
-    const noteContent = document.getElementById('noteContent');
-    const editNoteButton = document.getElementById('editNoteButton');
+        // Function to toggle edit note mode
+        function toggleEditNote() {
+            const noteTitle = document.getElementById('noteTitle');
+            const noteContent = document.getElementById('noteContent');
+            const editNoteButton = document.getElementById('editNoteButton');
 
-    if (noteTitle.disabled) {
-        noteTitle.disabled = false;
-        noteContent.disabled = false;
-        editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
-    } else {
-        noteTitle.disabled = true;
-        noteContent.disabled = true;
-        editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
-   saveNote(); 
-    }
-}
-// Function to toggle edit list mode
-function toggleEditList() {
-    const listTitle = document.getElementById('listTitle');
-    const editListButton = document.getElementById('editListButton');
+            if (noteTitle.disabled) {
+                noteTitle.disabled = false;
+                noteContent.disabled = false;
+                editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
+            } else {
+                noteTitle.disabled = true;
+                noteContent.disabled = true;
+                editNoteButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                saveNote();
+            }
+        }
+        // Function to toggle edit list mode
+        function toggleEditList() {
+            const listTitle = document.getElementById('listTitle');
+            const editListButton = document.getElementById('editListButton');
 
-    if (listTitle.disabled) {
-        listTitle.disabled = false;
-        editListButton.innerHTML = '<i class="fas fa-check"></i>';
-   newItem.disabled = false;
-    } else {
-        listTitle.disabled = true;
-        editListButton.innerHTML = '<i class="fas fa-check"></i>';
-        newItem.disabled = true;
-        saveList();
-    }
-}
+            if (listTitle.disabled) {
+                listTitle.disabled = false;
+                editListButton.innerHTML = '<i class="fas fa-check"></i>';
+                newItem.disabled = false;
+            } else {
+                listTitle.disabled = true;
+                editListButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                newItem.disabled = true;
+                saveList();
+            }
+        }
 
         let currentDate = new Date(); // Initialize current date
 
@@ -1429,7 +1387,7 @@ function toggleEditList() {
             searchInput.style.display = searchInput.style.display === 'none' ? 'block' : 'none';
         }
 
-       
+
 
         function showListPassword() {
             const listPasswordInput = document.getElementById('listPassword');
@@ -1578,47 +1536,52 @@ function toggleEditList() {
         }
 
 
-function showAddNote() {
-    showSection('addNoteSection');
-    document.getElementById('noteContent').value = ""; // Clear the note content
-    document.getElementById('notePassword').value = ""; // Clear the password input
-    const mainHeader = document.getElementById('mainHeader');
-    const noteTopBar = document.querySelector('.top-bar');
-    const navBar = document.querySelector('.bottom-nav');
-    noteTitle.disabled = true;
-            noteContent.disabled = true;
-            editNoteButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-    if (editingNoteIndex !== null) {
-        // Editing an existing note
-        const note = notes[editingNoteIndex]; // Get the note being edited
-        document.getElementById('noteTitle').value = note.title; // Set the input value to the note title
-        document.getElementById('noteContent').value = note.content; // Set the input value to the note content
-        document.getElementById('manageNoteTitle').textContent = `Manage Your ${note.title} Note`; // Update title with the actual note title
-        mainHeader.classList.add('hidden');
-        navBar.style.display = 'none';
-        noteTopBar.style.display = 'block';
-    } else {
-        // Creating a new note
-        document.getElementById('noteTitle').value = ""; // Clear the title input
-        document.getElementById('manageNoteTitle').textContent = "Add New Note"; // Set title for new note
-        mainHeader.classList.add('hidden');
-        navBar.style.display = 'none';
-        noteTopBar.style.display = 'block';
-    }
-    closeAddOptions(); // Close the add options modal
-}
+        function showAddNote() {
+            showSection('addNoteSection');
+            document.getElementById('noteContent').value = ""; // Clear the note content
+            document.getElementById('notePassword').value = ""; // Clear the password input
+            const mainHeader = document.getElementById('mainHeader');
+            const noteTopBar = document.querySelector('.top-bar');
+            const navBar = document.querySelector('.bottom-nav');
+            const editNoteButton = document.getElementById('editNoteButton');
 
-// Function to cancel note and reset visibility
-function cancelNote() {
-    
-    const mainHeader = document.getElementById('mainHeader');
-    const noteTopBar = document.querySelector('.top-bar');
-    const navBar = document.querySelector('.bottom-nav');
-mainHeader.classList.remove('hidden');
-    navBar.style.display = 'flex';
-noteTopBar.style.display = 'none';
-showSection('combinedContainer');
-}
+            if (editingNoteIndex !== null) {
+                // Editing an existing note
+                const note = notes[editingNoteIndex]; // Get the note being edited
+                document.getElementById('noteTitle').value = note.title; // Set the input value to the note title
+                document.getElementById('noteContent').value = note.content; // Set the input value to the note content
+                document.getElementById('manageNoteTitle').textContent = `Manage Your ${note.title} Note`; // Update title with the actual note title
+                editNoteButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                noteTitle.disabled = true;
+                noteContent.disabled = true;
+                mainHeader.classList.add('hidden');
+                navBar.style.display = 'none';
+                noteTopBar.style.display = 'block';
+            } else {
+                // Creating a new note
+                document.getElementById('noteTitle').value = ""; // Clear the title input
+                document.getElementById('manageNoteTitle').textContent = "Add New Note"; // Set title for new note
+                mainHeader.classList.add('hidden');
+                navBar.style.display = 'none';
+                noteTopBar.style.display = 'block';
+                editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
+                noteTitle.disabled = false;
+                noteContent.disabled = false;
+            }
+            closeAddOptions(); // Close the add options modal
+        }
+
+        // Function to cancel note and reset visibility
+        function cancelNote() {
+
+            const mainHeader = document.getElementById('mainHeader');
+            const noteTopBar = document.querySelector('.top-bar');
+            const navBar = document.querySelector('.bottom-nav');
+            mainHeader.classList.remove('hidden');
+            navBar.style.display = 'flex';
+            noteTopBar.style.display = 'none';
+            showSection('combinedContainer');
+        }
 
         // Add event listener for the Add Note button
         document.getElementById('addNoteButton').addEventListener('click', function () {
@@ -1654,8 +1617,8 @@ showSection('combinedContainer');
             displayNotes();
             showSection('combinedContainer');
             mainHeader.classList.remove('hidden');
-    navBar.style.display = 'flex';
-noteTopBar.style.display = 'none';
+            navBar.style.display = 'flex';
+            noteTopBar.style.display = 'none';
 
             // Reset editing state
             editingNoteIndex = null; // Reset after saving
@@ -1701,6 +1664,7 @@ noteTopBar.style.display = 'none';
 
         function openNote(index) {
             const note = notes[index];
+
             if (note.password) {
                 document.getElementById('passwordModal').style.display = 'flex';
                 document.getElementById('passwordInput').value = "";
@@ -1803,16 +1767,16 @@ noteTopBar.style.display = 'none';
 
         // Function to show the add options modal
         function showAddOptions() {
-const modal = document.getElementById('addOptionsModal');
-    modal.classList.remove('hidden');
- }
+            const modal = document.getElementById('addOptionsModal');
+            modal.classList.remove('hidden');
+        }
 
 
 
         function closeAddOptions() {
             const modal = document.getElementById('addOptionsModal');
             modal.classList.add('hidden'); // Hide the modal
-            
+
         }
 
         // Function to open a list and pre-fill the add list section
@@ -1823,8 +1787,8 @@ const modal = document.getElementById('addOptionsModal');
         function showAddListSection() {
             // Hide all sections first
             const mainHeader = document.getElementById('mainHeader');
-    const noteTopBar = document.querySelector('.top-bar');
-    const navBar = document.querySelector('.bottom-nav');
+            const noteTopBar = document.querySelector('.top-bar');
+            const navBar = document.querySelector('.bottom-nav');
             document.querySelectorAll('.container').forEach(section => {
                 section.classList.add('hidden'); // Hide all sections
             });
@@ -1832,9 +1796,8 @@ const modal = document.getElementById('addOptionsModal');
             // Show the add list section
             document.getElementById('addListSection').classList.remove('hidden'); // Show the add list section
             document.getElementById('newItem').value = ""; // Clear the new item input
-            listTitle.disabled = true;
-            newItem.disabled = true;
-        editListButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+            const editNoteButton = document.getElementById('editNoteButton');
+            editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
             // Check if we are editing an existing list
             if (editingListIndex !== null) {
                 const list = lists[editingListIndex]; // Get the list being edited
@@ -1842,18 +1805,24 @@ const modal = document.getElementById('addOptionsModal');
                 currentItems = list.items.slice(); // Copy items to currentItems
                 displayChecklist(); // Display the checklist with items
                 document.getElementById('manageListTitle').textContent = `Manage Your ${list.title} List`; // Update title with the actual list title
+                editNoteButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                listTitle.disabled = true;
+                newItem.disabled = true;
                 mainHeader.classList.add('hidden');
-        navBar.style.display = 'none';
-        noteTopBar.style.display = 'block';
+                navBar.style.display = 'none';
+                noteTopBar.style.display = 'block';
             } else {
                 // Reset for new list
                 document.getElementById('listTitle').value = ""; // Clear the title input
                 document.getElementById('manageListTitle').textContent = "Manage Your New List"; // Default title for new list
                 currentItems = []; // Reset current items
                 displayChecklist(); // Clear the checklist display
+                editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
+                listTitle.disabled = false;
+                newItem.disabled = false;
                 mainHeader.classList.add('hidden');
-        navBar.style.display = 'none';
-        noteTopBar.style.display = 'block';
+                navBar.style.display = 'none';
+                noteTopBar.style.display = 'block';
             }
 
             closeAddOptions(); // Close any open options
@@ -1864,13 +1833,13 @@ const modal = document.getElementById('addOptionsModal');
             // Hide the add list section and show the lists section
             document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
             const mainHeader = document.getElementById('mainHeader');
-    const list = document.querySelector('.top-bar');
-    const navBar = document.querySelector('.bottom-nav');
-mainHeader.classList.remove('hidden');
-    navBar.style.display = 'flex';
+            const list = document.querySelector('.top-bar');
+            const navBar = document.querySelector('.bottom-nav');
+            mainHeader.classList.remove('hidden');
+            navBar.style.display = 'flex';
 
             showSection('combinedContainer'); // Show the lists section
-            
+
         }
 
         // Function to show a specific section
@@ -1904,10 +1873,10 @@ mainHeader.classList.remove('hidden');
             localStorage.setItem('lists', JSON.stringify(lists)); // Save to local storage
             displayLists(); // Refresh the displayed lists
             const mainHeader = document.getElementById('mainHeader');
-    const list = document.querySelector('.top-bar');
-    const navBar = document.querySelector('.bottom-nav');
-mainHeader.classList.remove('hidden');
-    navBar.style.display = 'flex';
+            const list = document.querySelector('.top-bar');
+            const navBar = document.querySelector('.bottom-nav');
+            mainHeader.classList.remove('hidden');
+            navBar.style.display = 'flex';
             showSection('combinedContainer'); // Show the lists section
             editingListIndex = null; // Reset editing state after saving
         }
@@ -1917,6 +1886,7 @@ mainHeader.classList.remove('hidden');
         // Function to open a list and pre-fill the add list section
         function openList(index) {
             const list = lists[index];
+
 
             // Check if the list has a password
             if (list.password) {
@@ -2095,7 +2065,7 @@ mainHeader.classList.remove('hidden');
         }
 
         // Function to cancel adding a list
-       
+
 
         // Call displayLists on page load
         displayLists();
