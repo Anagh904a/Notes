@@ -30,6 +30,41 @@
             outline: none;
         }
 
+        /* Fade-in animation for modals */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-out animation for modals */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Apply animation to modal content */
+.modal-content {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Hide modal with fade-out animation */
+.hidden {
+    display: none;
+    animation: fadeOut 0.3s ease forwards;
+}
+
         button {
             padding: 8px 12px;
             margin: 5px;
