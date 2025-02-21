@@ -7,23 +7,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>ColorNotes Inspired Notes App</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f3f3f3;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+       body {
+   
+     font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f3f3f3; display: flex; flex-direction: column; height: 100vh; 
+}
 
-        h1 {
-            text-align: center;
-            background-color: #ffa500;
-            color: white;
-            padding: 10px;
-            margin: 0;
-        }
+h1 {
+    background-color: #4A90E2; /* Blue */
+    color: white;
+    text-align: center;
+        padding: 10px;
+        margin: 0;
+    }
+
+ 
+
+button:hover {
+    background-color: #9ba731; /* Darker Blue on hover */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+
 
         * {
             -webkit-tap-highlight-color: transparent;
@@ -62,19 +68,7 @@
 /* Hide modal with fade-out animation */
 
 
-        button {
-            padding: 8px 12px;
-            margin: 5px;
-            cursor: pointer;
-            border: none;
-            color: white;
-            border-radius: 4px;
-            background-color: #ffae00;
-        }
-
-        button:hover {
-            background-color: #ff8c00;
-        }
+        
 
         .delete-button {
             position: relative;
@@ -84,7 +78,7 @@
 
         textarea {
             width: 97%;
-            height: 400px;
+            height: 120px;
             margin: 10px;
             padding: 10px;
             border: 1px solid #ccc;
@@ -105,14 +99,7 @@
             overflow-y: auto;
         }
 
-        .note {
-            background: #fffacd;
-            padding: 10px;
-            margin: 10px;
-            border: 1px solid #ffa500;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+       
 
         .bottom-nav {
             display: flex;
@@ -122,36 +109,43 @@
             bottom: 0;
             width: 100%;
             height: 55px;
-            background-color: #ffa500;
+            background-color: #509ce4; /* Blue */
             color: white;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
-
-        .nav-button {
+ .nav-button {
             background: none;
             border: none;
-            color: white;
+            color: rgb(255, 255, 255);
             font-size: 16px;
             cursor: pointer;
+            margin-right: 20px;
+        }
+        .nav-button:hover {
+            background: rgb(0, 63, 158);
         }
 
         .add-button {
-            background-color: white;
-            color: #ffa500;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 30px;
-            line-height: 60px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            position: relative;
-            bottom: 20px;
+            position: fixed; /* Fixed position for the button */
+    bottom: 20px; /* Position the button below the nav bar */
+    right: 20px; /* Distance from the right */
+    background-color: #FF6F61; /* Vibrant color for the add button */
+    color: white; /* Text color */
+    border-radius: 50%; /* Make it circular */
+    width: 60px; /* Width of the button */
+    height: 60px; /* Height of the button */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    font-size: 30px; /* Font size for the plus sign */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    cursor: pointer; /* Pointer cursor on hover */
+    z-index: 1;
         }
 
         .add-button:hover {
-            background-color: #ff8c00;
+            background-color: #ac0707;
             color: white;
         }
 
@@ -303,9 +297,10 @@
             /* Pointer cursor on hover */
             border: none;
             /* No border */
-
+            background-color: #fbff00; /* Teal */
+            color: #000;
             /* Orange background */
-            color: white;
+            
             /* White text */
             border-radius: 4px;
             /* Rounded corners */
@@ -314,8 +309,8 @@
         }
 
         button:hover {
-            background-color: #ff8c00;
-            /* Darker orange on hover */
+            background-color: #9ba731; /* Darker Blue on hover */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .input-field {
@@ -342,29 +337,7 @@
             /* Remove default outline */
         }
 
-        button {
-            padding: 10px 15px;
-            /* Padding for buttons */
-            margin: 5px 0;
-            /* Margin around buttons */
-            cursor: pointer;
-            /* Pointer cursor on hover */
-            border: none;
-            /* No border */
-
-            /* Orange background */
-            color: white;
-            /* White text */
-            border-radius: 4px;
-            /* Rounded corners */
-            transition: background-color 0.3s;
-            /* Smooth transition for hover effect */
-        }
-
-        button:hover {
-            background-color: #ff8c00;
-            /* Darker orange on hover */
-        }
+       
 
         .checklist-container {
             margin-top: 15px;
@@ -610,14 +583,7 @@
             border-radius: 4px;
         }
 
-        .note-date {
-            font-size: 20px;
-            /* Smaller font for the date */
-            /* Lighter color for the date */
-            margin-bottom: 10px;
-            /* Space between title and date */
-            float: right;
-        }
+       
 
         .list-date {
             font-size: 20px;
@@ -628,6 +594,37 @@
             float: right;
 
         }
+
+        /* Style for Undo and Redo Buttons */
+#undoButton, #redoButton {
+    background: transparent;  /* Transparent background */
+    color: #333; /* Default text color */
+    border: 2px solid #333;  /* Border color */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    transition: all 0.3s ease;  /* Smooth transition for hover effects */
+}
+
+/* Hover effect for undo and redo buttons */
+#undoButton:hover, #redoButton:hover {
+    background-color: rgba(51, 51, 51, 0.1);  /* Light background on hover */
+    color: #000;  /* Dark text color on hover */
+}
+
+/* Disabled state (gray color) for undo and redo buttons */
+#undoButton:disabled, #redoButton:disabled {
+    color: gray;
+    border-color: gray;
+    cursor: not-allowed;  /* Shows not-allowed cursor */
+}
+
+
+
 
 
 
@@ -642,7 +639,13 @@
             /* Shadow for depth */
             margin-top: 20px;
             /* Space above the section */
+            
+            
         }
+
+        #undoButton i, #redoButton i {
+    margin-right: 5px;
+}
 
         .feature-buttons {
             display: grid;
@@ -701,7 +704,7 @@
 
         /* Styling for the month navigation */
         .month {
-            background-color: #ff7f32;
+            background-color: #ffd000;
             /* Orange color */
             padding: 10px 0;
             text-align: center;
@@ -906,11 +909,159 @@
         #changePasswordButton {
             color: #ffffff;
         }
+
+        .settings-button {
+    background: transparent; /* Transparent background */
+    border: none; /* No border */
+    color: black; 
+    font-size: 24px; /* Size of the icon */
+    cursor: pointer; /* Pointer cursor on hover */
+    position: j;
+    right: 20px; /* Distance from the right */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.settings-button:hover {
+    color: #FF6F61; /* Change color on hover */
+    background-color: rgba(255, 255, 255, 0.2); /* Light background on hover with transparency */
+    border-radius: 5px; /* Optional: rounded corners for the hover effect */
+}
+
+
+.top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #4A90E2; /* Header background color */
+            color: white;
+            padding: 10px 20px;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .top-nav h1 {
+            margin: 0;
+        }
+
+        .top-nav .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .note {
+            background: #ffffff;
+            border-left: 5px solid #4A90E2; /* Left border */
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative; /* For positioning icons */
+        }
+
+        .note-date {
+            display: block; /* Ensure the date is on a new line */
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+    text-align: left; /* Align text to the left */
+        }
+
+        .note .icon {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 18px;
+            color: #4A90E2; /* Icon color */
+        }
+
+        .note .pin-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            color: #FF6F61; /* Pin icon color */
+        }
+
+        .fab {
+            position: fixed; /* Fixed position for the button */
+    bottom: 60px; /* Position the button below the nav bar */
+    right: 20px; /* Distance from the right */
+    background-color: #FF6F61; /* Vibrant color for the add button */
+    color: white; /* Text color */
+    border-radius: 50%; /* Make it circular */
+    width: 60px; /* Width of the button */
+    height: 60px; /* Height of the button */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    font-size: 30px; /* Font size for the plus sign */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    cursor: pointer; /* Pointer cursor on hover */
+    z-index: 1;
+        }
+
+        .fab:hover {
+            background-color: #FF4C4C; /* Darker shade on hover */
+        }
+
+        .bottom-nav::after {
+            content: '';
+            position: absolute;
+            bottom: 20px; /* Match the position of the add button */
+            right: 20px; /* Center the cutout */
+            width: 60px; /* Width of the cutout */
+            height: 60px; /* Height of the cutout */
+            border-radius: 50%; /* Make it circular */
+            background-color: #ffffff; /* Match the nav bar color */
+            z-index: 0; /* Place behind the nav bar */
+            
+        }
+
+        
+        #progressContainer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+progress {
+    width: 100%;
+    height: 20px;
+    border-radius: 5px;
+    appearance: none; /* Remove default styling */
+}
+
+progress::-webkit-progress-bar {
+    background-color: #f3f3f3; /* Background color */
+    border-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+    background-color: #4CAF50; /* Progress color */
+    border-radius: 5px;
+}
+
+progress::-moz-progress-bar {
+    background-color: #4CAF50; /* Progress color for Firefox */
+}
+  
     </style>
 </head>
 
 <body>
-    <h1 style="background-color: orange;" id="mainHeader">My Sticky Notes</h1>
+   
+    <div class="top-nav">
+        <h1>My Sticky Notes</h1>
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="toggleSearchInput()">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="nav-button" onclick= "showSection('settingsSection')"><i class="fas fa-cog"></i></button>
+           
+        </div>
+        </div>
+    
 
     <input type="text" id="searchInput" placeholder="Search your notes and lists..." oninput="searchNotes()"
         style="width: 80%; margin: 10px auto; display: none;">
@@ -939,24 +1090,76 @@
     <!-- Add Note Form -->
     <!-- Add Note Form -->
     <div id="addNoteSection" class="container hidden">
-        <div class="top-bar" style="display: flex;">
-            <i class="fas fa-arrow-left back-icon" onclick="cancelNote()"></i>
-            <button id="editNoteButton" onclick="toggleEditNote()"><i class="fas fa-pencil-alt"></i></button>
-            <input type="text" id="noteTitle" placeholder="Enter your note title...">
-
-        </div>
+       
+            <button onclick="cancelNote()"><i class="fas fa-arrow-left back-icon"></i>Back</button>
+            <button onclick="saveNote()"><i class="fas fa-save"></i> Save</button>
+            
+            <button id="changePasswordButton" onclick="togglePasswordInput()" style="padding: 10px 15px;
+            /* Padding for buttons */
+            margin: 5px 0;
+            /* Margin around buttons */
+            cursor: pointer;
+            /* Pointer cursor on hover */
+            border: none;
+            /* No border */
+            background-color: #fbff00; /* Teal */
+            color: #000;
+            /* Orange background */
+            
+            /* White text */
+            border-radius: 4px;
+            /* Rounded corners */
+            transition: background-color 0.3s;
+            /* Smooth transition for hover effect */">
+                <i class="fas fa-lock"></i> Manage Your Password
+            </button>
+                
+               
         <h3 id="manageNoteTitle">Manage Your Note</h3>
-        <textarea id="noteContent" placeholder="Write your note here..."></textarea>
-        <button id="changePasswordButton" onclick="togglePasswordInput()">
-            <i class="fas fa-lock"></i> Manage Your Password
-        </button>
-        <input type="password" id="notePassword" placeholder="Enter New Password.." class="hidden">
+        <input type="text" id="noteTitle" placeholder="Enter your note title...">
+        <textarea id="noteContent" placeholder="Write your note here...">
+            </textarea>
+
+<button id="undoButton" onclick="undo()">
+    <i class="fas fa-undo"></i> 
+</button>
+
+<button id="redoButton" onclick="redo()">
+    <i class="fas fa-redo"></i> 
+</button>
+
+            <input type="password" id="notePassword" placeholder="Enter New Password.." class="hidden">
     </div>
 
 
 
 
+    <div id="dataManagementSection" class="container hidden">
+        <h2>Data Management</h2>
+        <div id="progressContainer" style="display:none;">
+            <p id="progressText">Operation in progress...</p>
+            <progress id="progressBar" value="0" max="100"></progress>
+        </div>
+        <button onclick="backupNotes()">Backup Notes</button>
+        <input type="file" id="importFile" onchange="prepareImport(event)" />
+        <button onclick="importNotes()">Import Notes</button>
+        <br>
+        <button onclick="clearData()">Clear All Data</button>
 
+        <button onclick="encryptData()">Encrypt Data</button>
+        <br>
+        <button onclick="decryptData()">Decrypt Data</button>
+        <div id="dataStats">
+            <br>
+            <p>Total Notes: <span id="noteCount">0</span></p>
+            <p>Total Lists: <span id="listCount">0</span></p>
+        </div>
+        <div id="progressContainer" style="display:none;">
+            <p id="progressText">Operation in progress...</p>
+            <progress id="progressBar" value="0" max="100"></progress>
+        </div>
+    </div>
+    
 
 
 
@@ -1034,18 +1237,24 @@
 
     </div>
 
-    <!--Bottom Navigation Bar-->
-    <div class="bottom-nav">
-        <button class="nav-button" onclick="showSection('combinedContainer')"><i class="fas fa-th-list"></i></button>
-        <!-- Combined Notes and Lists -->
-        </button>
-        <button class="nav-button" onclick="showSection('calendarSection')"><i class="fas fa-calendar"></i></button>
-        <div class="add-button" onclick="showAddOptions()">+</div>
-        <button class="nav-button" onclick="toggleSearchInput()">
-            <i class="fas fa-search"></i></button>
-        <button class="nav-button" onclick="showSection('moreSection')"><i class="fas fa-bars"></i></button>
-        <!-- More Section -->
-    </div>
+   <!-- Bottom Navigation Bar -->
+<div class="bottom-nav">
+    <button class="nav-button" onclick="showSection('combinedContainer')">
+        <i class="fas fa-th-list"></i>
+    </button>
+    <button class="nav-button" onclick="showSection('calendarSection')">
+        <i class="fas fa-calendar"></i>
+    </button>
+   
+    <button class="nav-button" onclick="showSection('moreSection')">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- The add button will be positioned separately -->
+    <div class="add-button" onclick="showAddOptions()">+</div>
+</div>
+
+<!-- Add Button -->
+
 
     <!-- More Section -->
     <div id="moreSection" class="container hidden">
@@ -1061,10 +1270,12 @@
                 <br>
                 Calculator
             </button>
-            <button onclick="alert('Push notifications are under development')">
+           
+            <button id="notifyButton">
                 <i class="fas fa-bell"></i>
                 <br>
                 Notifications
+            </button>
             </button>
 
 
@@ -1078,7 +1289,7 @@
                 <br>
                 Themes
             </button>
-            <button onclick="showAlert('Data Management')">
+            <button onclick="showSection('dataManagementSection')">
                 <i class="fas fa-database"></i>
                 <br>
                 Data Management
@@ -1206,14 +1417,170 @@
         <ul class="days" id="daysContainer"></ul>
     </div>
 
+    
+
+
 
     <script>
+
+
         let notes = JSON.parse(localStorage.getItem('notes')) || [];
         let editingNoteIndex = null;
-        let historyStack = [];
         let currentNoteId = null;
         let currentDeleteNoteId = null;
+       
+    // Declare the history stack and the current index
+let historyStack = [];
+let currentIndex = -1;
 
+// Function to save the current state of the textarea into history stack
+function saveState() {
+    const noteContent = document.getElementById('noteContent').value;
+    
+    // If the current index is not the last element in the stack, remove any "future" states
+    if (currentIndex < historyStack.length - 1) {
+        historyStack = historyStack.slice(0, currentIndex + 1);
+    }
+
+    // Add the current content to the history stack
+    historyStack.push(noteContent);
+    currentIndex++;
+
+    toggleButtons();
+}
+
+// Function to handle undo
+function undo() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        const previousState = historyStack[currentIndex];
+        // Restore the previous state
+        document.getElementById('noteContent').value = previousState;
+    }
+    toggleButtons();
+}
+
+// Function to handle redo
+function redo() {
+    if (currentIndex < historyStack.length - 1) {
+        currentIndex++;
+        const nextState = historyStack[currentIndex];
+        // Restore the next state
+        document.getElementById('noteContent').value = nextState;
+    }
+    toggleButtons();
+}
+
+function showProgressBar() {
+    document.getElementById("progressContainer").style.display = "block";
+    let progress = 0;
+    const progressBar = document.getElementById("progressBar");
+    const interval = setInterval(() => {
+        progress += 10;
+        progressBar.value = progress;
+        if (progress === 100) {
+            clearInterval(interval);
+            document.getElementById("progressContainer").style.display = "none";
+        }
+    }, 1000);
+}
+
+function clearData() {
+    if (confirm("Are you sure you want to clear all data? This action cannot be undone.")) {
+        localStorage.removeItem('notes');
+        localStorage.removeItem('lists');
+        notes = [];
+        lists = [];
+        displayNotes();
+        displayLists();
+        showMessageBox("All data cleared successfully!");
+    }
+}
+
+function encryptData() {
+    const encryptedNotes = btoa(JSON.stringify(notes)); // Base64 encode the notes
+    const encryptedLists = btoa(JSON.stringify(lists)); // Base64 encode the lists
+    localStorage.setItem('encryptedNotes', encryptedNotes);
+    localStorage.setItem('encryptedLists', encryptedLists);
+    showMessageBox("Data encrypted successfully!");
+}
+
+function decryptData() {
+    const encryptedNotes = localStorage.getItem('encryptedNotes');
+    const encryptedLists = localStorage.getItem('encryptedLists');
+
+    if (encryptedNotes) {
+        notes = JSON.parse(atob(encryptedNotes)); // Base64 decode the notes
+    } else {
+        notes = [];
+    }
+
+    if (encryptedLists) {
+        lists = JSON.parse(atob(encryptedLists)); // Base64 decode the lists
+    } else {
+        lists = [];
+    }
+
+    localStorage.setItem('notes', JSON.stringify(notes)); // Save decrypted notes back to local storage
+    localStorage.setItem('lists', JSON.stringify(lists)); // Save decrypted lists back to local storage
+    displayNotes();
+    displayLists();
+    showMessageBox("Data decrypted successfully!");
+}
+
+// Function to toggle button states (enable/disable)
+function toggleButtons() {
+    const undoButton = document.getElementById('undoButton');
+    const redoButton = document.getElementById('redoButton');
+    
+    // Enable/Disable Undo button
+    undoButton.disabled = currentIndex <= 0;
+    
+    // Enable/Disable Redo button
+    redoButton.disabled = currentIndex >= historyStack.length - 1;
+}
+
+// Event listener to automatically save the content whenever the user types
+document.getElementById('noteContent').addEventListener('input', saveState);
+
+// Initial call to enable/disable buttons on page load
+toggleButtons();
+
+
+function showProgressBar() {
+    document.getElementById("progressContainer").style.display = "block";
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+    let progress = 0;
+
+    const interval = setInterval(() => {
+        progress += 10; // Increment progress by 10%
+        progressBar.value = progress; // Update the progress bar value
+        progressText.textContent = `Operation in progress... ${progress}%`; // Update text
+
+        if (progress >= 100) {
+            clearInterval(interval); // Stop the interval when complete
+            progressText.textContent = "Operation completed!"; // Update text on completion
+            setTimeout(() => {
+                document.getElementById("progressContainer").style.display = "none"; // Hide the progress bar after a delay
+            }, 2000); // Hide after 2 seconds
+        }
+    }, 1000); // Update every second
+}
+
+// Example usage: Call this function when starting a backup operation
+function backupNotes() {
+    showProgressBar(); // Show the progress bar
+    // Simulate a backup operation
+    setTimeout(() => {
+        // Your backup logic here
+        console.log("Notes backed up successfully!");
+    }, 10000); // Simulate a 10-second operation
+}
+   
+
+
+        
         function closeListPasswordModal() {
             document.getElementById('listPasswordModal').style.display = 'none';
 
@@ -1228,6 +1595,17 @@
             const credits = document.getElementById('creditsSection');
             credits.style.display = credits.style.display === 'none' ? 'block' : 'none';
         }
+
+       
+        function updateDataStats() {
+    const noteCount = document.getElementById('noteCount');
+    const listCount = document.getElementById('listCount');
+
+    // Count the number of notes and lists
+    noteCount.textContent = notes.length; // Update the note count
+    listCount.textContent = lists.length; // Update the list count
+}
+
 
         function toggleRearrangeOptions() {
             // Display a message indicating that the feature is not implemented yet
@@ -1256,10 +1634,22 @@
             }
         }
 
+        document.getElementById('notifyButton').onclick = function() {
+        if (Notification.permission === "granted") {
+            new Notification("Reminder!", { body: "Don't forget to check your notes!" });
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    new Notification("Reminder!", { body: "Don't forget to check your notes!" });
+                }
+            });
+        }
+    };
+
         function importNotes() {
             const fileInput = document.getElementById('importFile');
             if (!fileInput.files.length) {
-                showNMessegeBox("No file selected!");
+                showMessageBox("No file selected!");
                 return;
             }
 
@@ -1377,7 +1767,6 @@
                     noteDiv.innerHTML = `
             <div class="note" onclick="openNote(${index})"> 
                 <h4>${note.title}</h4>
-                <p>${note.password ? "(Password Protected Note)" : note.content}</p>
                 <span class="note-date">${note.date}</span> <!-- Display the date here -->
                 <button onclick="deleteNote(${index})">Delete</button>
             </div>
@@ -1647,6 +2036,7 @@
 
             localStorage.setItem('notes', JSON.stringify(notes));
             displayNotes();
+            updateDataStats();
             showSection('combinedContainer');
             mainHeader.classList.remove('hidden');
             navBar.style.display = 'flex';
@@ -1682,10 +2072,9 @@
                 const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
                 const formattedDate = formatDate(noteDate); // Format the date for display
                 noteDiv.innerHTML = `
-        <div class="note" onclick="openNote(${index})">  
+       <div class="note" onclick="openNote(${index})">  
        <h4>${note.title}</h4>
-          <p>${note.password ? "(Password Protected Note)" : note.content}</p>
-           <span class="note-date">${formattedDate}</span>
+          <span class="note-date">${formattedDate}</span>
           <button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
         </div>
           `;
