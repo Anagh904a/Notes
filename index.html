@@ -129,7 +129,7 @@ button:hover {
         .add-button {
             position: fixed; /* Fixed position for the button */
     bottom: 20px; /* Position the button below the nav bar */
-    right: 20px; /* Distance from the right */
+    
     background-color: #FF6F61; /* Vibrant color for the add button */
     color: white; /* Text color */
     border-radius: 50%; /* Make it circular */
@@ -140,8 +140,10 @@ button:hover {
     justify-content: center; /* Center horizontally */
     font-size: 30px; /* Font size for the plus sign */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-    cursor: pointer; /* Pointer cursor on hover */
-    z-index: 1;
+    position: absolute; /* Position it absolutely */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust to center */
+    background-color: #FF6F61; 
         }
 
         .add-button:hover {
@@ -586,12 +588,11 @@ button:hover {
        
 
         .list-date {
-            font-size: 20px;
-            /* Smaller font for the date */
-            /* Lighter color for the date */
-            margin-bottom: 10px;
-            /* Space between title and date */
-            float: right;
+            display: block; /* Ensure the date is on a new line */
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+    text-align: left; /* Align text to the left */
 
         }
 
@@ -840,7 +841,22 @@ button:hover {
 
 
 
+        
+#addItemButton {
+    
+    color: rgb(0, 0, 0); /* White text */
+    border: none; /* No border */
+    border-radius: 25px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition */
+    height: 40px; /* Set height to match the input field */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    
 
+}
 
 
 
@@ -962,7 +978,7 @@ button:hover {
 
         .note-date {
             display: block; /* Ensure the date is on a new line */
-    font-size: 12px;
+    font-size: 14px;
     color: #888;
     margin-top: 5px;
     text-align: left; /* Align text to the left */
@@ -982,6 +998,19 @@ button:hover {
             right: 10px;
             font-size: 18px;
             color: #FF6F61; /* Pin icon color */
+        }
+
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            color: rgb(255, 255, 255);
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .toggle-sidebar:hover {
+            background: rgb(0, 63, 158);
         }
 
         .fab {
@@ -1006,45 +1035,127 @@ button:hover {
             background-color: #FF4C4C; /* Darker shade on hover */
         }
 
-        .bottom-nav::after {
-            content: '';
-            position: absolute;
-            bottom: 20px; /* Match the position of the add button */
-            right: 20px; /* Center the cutout */
-            width: 60px; /* Width of the cutout */
-            height: 60px; /* Height of the cutout */
-            border-radius: 50%; /* Make it circular */
-            background-color: #ffffff; /* Match the nav bar color */
-            z-index: 0; /* Place behind the nav bar */
-            
-        }
+       
 
+        .sidebar {
+    position: fixed; /* Fixed position */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    width: 250px; /* Width of the sidebar */
+    height: 100%; /* Full height */
+    background-color: #0066ff; /* White background */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    padding: 20px; /* Padding inside the sidebar */
+    z-index: 1000; /* Ensure it appears above other elements */
+    transition: transform 1s ease; /* Smooth transition for opening/closing */
+    
+}
+
+.sidebar-hidden {
+    transform: translateX(-100%); /* Hide the sidebar off-screen */
+}
+
+.sidebar h2 {
+    margin-top: 0; /* Remove default margin */
+}
+
+.sidebar button {
+    display: block; /* Block display for buttons */
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding for buttons */
+    border: none; /* No border */
+    background: none; /* No background */
+    text-align: left; /* Align text to the left */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.sidebar button:hover {
+    background-color: #f0f0f0; /* Light gray on hover */
+}
+
+.setting-category {
+    margin-bottom: 20px;
+}
+
+.setting-category h3 {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.toggle-icon {
+    font-size: 20px;
+}
+
+/* Modal styling */
+#snbakeyVerificationModal {
+    
+    position: fixed; /* Fixed position to cover the entire viewport */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: #000; /* Semi-transparent black background */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000; /* Ensure it appears above other elements */
+    
+}
+
+/* Modal content styling */
+#snbakeyVerificationModal .modal-content {
+    background-color: white; /* White background for the modal */
+    padding: 20px; /* Padding inside the modal */
+    border-radius: 10px; /* Rounded corners */
+    width: 350px; /* Fixed width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+/* Gradient button styling */
+#snbakeyVerificationModal .gradient-button {
+    background: linear-gradient(90deg, #FF6F61, #FF3D00); /* Gradient background */
+    color: white; /* White text color */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s ease; /* Smooth transition for hover effect */
+}
+
+#snbakeyVerificationModal .gradient-button:hover {
+    background: linear-gradient(90deg, #FF3D00, #FF6F61); /* Reverse gradient on hover */
+}
+
+/* Fade-in animation for modals */
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start fully transparent */
+    }
+    to {
+        opacity: 1; /* End fully opaque */
+    }
+}
+
+#snbakeyVerificationModal.modal.hidden {
+    display: hidden;
+}
+
+.setting-category div {
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
         
-        #progressContainer {
-    margin-top: 20px;
-    text-align: center;
-}
-
-progress {
-    width: 100%;
-    height: 20px;
-    border-radius: 5px;
-    appearance: none; /* Remove default styling */
-}
-
-progress::-webkit-progress-bar {
-    background-color: #f3f3f3; /* Background color */
-    border-radius: 5px;
-}
-
-progress::-webkit-progress-value {
-    background-color: #4CAF50; /* Progress color */
-    border-radius: 5px;
-}
-
-progress::-moz-progress-bar {
-    background-color: #4CAF50; /* Progress color for Firefox */
-}
   
     </style>
 </head>
@@ -1052,6 +1163,9 @@ progress::-moz-progress-bar {
 <body>
    
     <div class="top-nav">
+        <button class="nav-button" onclick="showSection('moreSection')">
+            <i class="fas fa-bars"></i>
+        </button>
         <h1>Notes</h1>
         <div class="nav-buttons">
             <button class="nav-button" onclick="toggleSearchInput()">
@@ -1074,9 +1188,10 @@ progress::-moz-progress-bar {
             <div id="listsContainerContent"></div>
         </div>
         <div id="noListsMessage" class="hidden">No lists added.</div>
+        <div id="noNotesMessage" class="hidden">No notes added.</div>
     </div>
-    <div id="noNotesMessage" class="hidden">No notes added.</div>
-    </div>
+   
+    
 
 
 
@@ -1094,23 +1209,8 @@ progress::-moz-progress-bar {
             <button onclick="cancelNote()"><i class="fas fa-arrow-left back-icon"></i>Back</button>
             <button onclick="saveNote()"><i class="fas fa-save"></i> Save</button>
             
-            <button id="changePasswordButton" onclick="togglePasswordInput()" style="padding: 10px 15px;
-            /* Padding for buttons */
-            margin: 5px 0;
-            /* Margin around buttons */
-            cursor: pointer;
-            /* Pointer cursor on hover */
-            border: none;
-            /* No border */
-            background-color: #fbff00; /* Teal */
-            color: #000;
-            /* Orange background */
-            
-            /* White text */
-            border-radius: 4px;
-            /* Rounded corners */
-            transition: background-color 0.3s;
-            /* Smooth transition for hover effect */">
+            <button id="changePasswordButton" onclick="togglePasswordInput()" style="padding: 10px 15px;margin: 5px 0;cursor: pointer;border: none;background-color: #fbff00; /* Teal */
+            color: #000;border-radius: 4px;transition: background-color 0.3s;">
                 <i class="fas fa-lock"></i> Manage Your Password
             </button>
                 
@@ -1134,6 +1234,45 @@ progress::-moz-progress-bar {
 
 
 
+   
+
+    <!-- Add Lists Section -->
+    <div id="addListSection" class="container">
+        
+            <button onclick="cancelList()"><i class="fas fa-arrow-left back-icon" ></i>Back</button>
+            <button onclick="saveList()"><i class="fas fa-save"></i>Save</button>
+            <button id="manageListPassword" onclick="showListPassword()">
+                <i class="fas fa-lock"></i> Manage Your Password
+            </button>
+        
+
+        
+        <h3 id="manageListTitle">Manage Your List</h3>
+        <input type="text" id="listTitle" placeholder="Enter your list title..."> <br>
+       
+            <input id="newItem" type="text" placeholder="Enter item name..."> <!-- Input for new item -->
+        
+        <button id="addItemButton" onclick="addItem()"><i class="fas fa-plus"></i>Add Item</button>
+        <!-- Button to add item -->
+        
+        <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
+        <div id="checklistContainer"></div> <!-- Container for checklist items -->
+        <button id="addItemButton" onclick="addItem()"><i class="fas fa-plus"></i>Add Item</button>
+    </div>
+    </div>
+
+    <!-- Add Options Modal -->
+    <div id="addOptionsModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Add Options</h3>
+            <button id="addNoteButton" onclick="showAddNote()"><i class="fas fa-list"></i>Add Note</button>
+            <button id="addListButton" onclick="showAddListSection()"><i class="fas fa-sticky-note"></i>Add
+                List</button>
+            <button onclick="closeAddOptions()"><i class="fas fa-times"></i>Close</button>
+        </div>
+    </div>
+
+
     <div id="dataManagementSection" class="container hidden">
         <h2>Data Management</h2>
         <div id="progressContainer" style="display:none;">
@@ -1154,10 +1293,7 @@ progress::-moz-progress-bar {
             <p>Total Notes: <span id="noteCount">0</span></p>
             <p>Total Lists: <span id="listCount">0</span></p>
         </div>
-        <div id="progressContainer" style="display:none;">
-            <p id="progressText">Operation in progress...</p>
-            <progress id="progressBar" value="0" max="100"></progress>
-        </div>
+        
     </div>
     
 
@@ -1199,42 +1335,6 @@ progress::-moz-progress-bar {
         <button onclick="importNotes()">Continue Import</button>
     </div>
 
-    <!-- Add Lists Section -->
-    <div id="addListSection" class="container">
-        <div class="top-bar" style="display: flex;">
-            <i class="fas fa-arrow-left back-icon" onclick="cancelList()"></i>
-            <button id="editListButton" onclick="toggleEditList()"><i class="fas fa-check"></i></button>
-            <input type="text" id="listTitle" placeholder="Enter your list title...">
-
-        </div>
-        <h3 id="manageListTitle">Manage Your List</h3>
-        <label> AddItem
-            <input id="newItem" type="text" placeholder="Enter item name..."> <!-- Input for new item -->
-        </label>
-        <button id="addItemButton" onclick="addItem()"><i class="fas fa-plus"></i>Add Item</button>
-        <!-- Button to add item -->
-        <button id="manageListPassword" onclick="showListPassword()">
-            <i class="fas fa-lock"></i> Manage Your Password
-        </button>
-        <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
-        <div id="checklistContainer"></div> <!-- Container for checklist items -->
-    </div>
-    </div>
-
-    <!-- Add Options Modal -->
-    <div id="addOptionsModal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Add Options</h3>
-            <button id="addNoteButton" onclick="showAddNote()"><i class="fas fa-list"></i>Add Note</button>
-            <button id="addListButton" onclick="showAddListSection()"><i class="fas fa-sticky-note"></i>Add
-                List</button>
-            <button onclick="closeAddOptions()"><i class="fas fa-times"></i>Close</button>
-        </div>
-    </div>
-
-
-
-
     </div>
 
    <!-- Bottom Navigation Bar -->
@@ -1242,12 +1342,11 @@ progress::-moz-progress-bar {
     <button class="nav-button" onclick="showSection('combinedContainer')">
         <i class="fas fa-th-list"></i>
     </button>
-    <button class="nav-button" onclick="showSection('calendarSection')">
-        <i class="fas fa-calendar"></i>
-    </button>
-   
-    <button class="nav-button" onclick="showSection('moreSection')">
-        <i class="fas fa-bars"></i>
+  
+    <div class="add-button" onclick="showAddOptions()">+</div>
+    <button class="nav-button" onclick="showSection('securitySettings')">
+        <i class="fas fa-shield-alt"></i> <!-- Security Icon -->
+       
     </button>
     <!-- The add button will be positioned separately -->
     <div class="add-button" onclick="showAddOptions()">+</div>
@@ -1256,7 +1355,8 @@ progress::-moz-progress-bar {
 <!-- Add Button -->
 
 
-    <!-- More Section -->
+    
+
     <div id="moreSection" class="container hidden">
         <h2>More Features</h2>
         <div class="feature-buttons">
@@ -1296,8 +1396,6 @@ progress::-moz-progress-bar {
             </button>
         </div>
     </div>
-
-
 
     <!-- Feature Sections -->
     <div id="privacyInfoSection" class="feature-section hidden">
@@ -1418,7 +1516,74 @@ progress::-moz-progress-bar {
     </div>
 
     
+<div id="securitySettings" class="container">
+    <h2>Security Settings</h2>
 
+    <!-- Data Encryption Section -->
+    <div class="setting-category">
+        <h3 onclick="toggleSection('encryptionSection')">
+            <i class="fas fa-lock"></i> Data Encryption
+            <span class="toggle-icon" id="encryptionToggle">+</span>
+        </h3>
+        <div id="encryptionSection" class="hidden">
+            <button onclick="goBack()">Back</button>
+            <label>
+                <input type="checkbox" id="enableEncryption" />
+                Enable encryption of data
+            </label>
+        </div>
+    </div>
+
+    <!-- Password Management Section -->
+    <div class="setting-category">
+        <h3 onclick="toggleSection('passwordManagementSection')">
+            <i class="fas fa-key"></i> Password Management
+            <span class="toggle-icon" id="passwordManagementToggle">+</span>
+        </h3>
+        <div id="passwordManagementSection" class="hidden">
+            <button onclick="goBack()">Back</button>
+            <button class="gradient-button" onclick="openSNBAKeySetupModal()">Setup/Reset SNBA Key</button>
+        </div>
+    </div>
+
+    <!-- Lock Notes Section -->
+    <div class="setting-category">
+        <h3 onclick="toggleSection('lockNotesSection')">
+            <i class="fas fa-lock"></i> Lock Notes
+            <span class="toggle-icon" id="lockNotesToggle">+</span>
+        </h3>
+        <div id="lockNotesSection" class="hidden">
+            <button onclick="goBack()">Back</button>
+            <label>
+                <input type="checkbox" id="lockNotes" />
+                Lock notes after inactivity
+            </label>
+        </div>
+    </div>
+</div>
+
+<<!-- SNBA Key Setup Modal -->
+<div id="snbakeySetupModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Setup SNBA Key</h3>
+        <input type="password" id="snbakey" placeholder="Enter your SNBA Key" required />
+        <input type="password" id="confirmSnbakey" placeholder="Confirm your SNBA Key" required />
+        <button class="gradient-button" onclick="saveSNBAKey()">Save SNBA Key</button><p>Press above button if 
+            you want to
+remove SNBA key
+        </p>
+        <button onclick="closeSNBAKeySetupModal()">Close</button>
+    </div>
+</div>
+
+<!-- SNBA Key Verification Modal -->
+<div id="snbakeyVerificationModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Enter SNBA Key</h3>
+        <input type="password" id="snbakeyInput" placeholder="Enter your SNBA Key" required />
+        <button class="gradient-button" onclick="verifySNBAKey()">Verify SNBA Key</button>
+    </div>
+</div>
 
 
     <script>
@@ -1429,7 +1594,7 @@ progress::-moz-progress-bar {
         let currentNoteId = null;
         let currentDeleteNoteId = null;
        
-    // Declare the history stack and the current index
+   
 let historyStack = [];
 let currentIndex = -1;
 
@@ -1471,18 +1636,49 @@ function redo() {
     toggleButtons();
 }
 
-function showProgressBar() {
-    document.getElementById("progressContainer").style.display = "block";
-    let progress = 0;
-    const progressBar = document.getElementById("progressBar");
-    const interval = setInterval(() => {
-        progress += 10;
-        progressBar.value = progress;
-        if (progress === 100) {
-            clearInterval(interval);
-            document.getElementById("progressContainer").style.display = "none";
-        }
-    }, 1000);
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.remove('hidden'); // Toggle visibility
+}
+
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.add('hidden'); // Hide sidebar
+}
+
+// Close sidebar if clicked outside
+window.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    if (!event.target.matches('.toggle-sidebar') && !sidebar.contains(event.target)) {
+        sidebar.classList.add('hidden'); // Hide sidebar
+    }
+});
+
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const toggleIcon = document.getElementById(sectionId + 'Toggle');
+
+    if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+        toggleIcon.textContent = '-'; // Change icon to minus
+    } else {
+        section.classList.add('hidden');
+        toggleIcon.textContent = '+'; // Change icon to plus
+    }
+}
+
+function goBack() {
+    // Hide all sections when going back
+    const sections = document.querySelectorAll('.setting-category div');
+    sections.forEach(section => {
+        section.classList.add('hidden');
+    });
+
+    // Reset toggle icons to plus
+    const toggleIcons = document.querySelectorAll('.toggle-icon');
+    toggleIcons.forEach(icon => {
+        icon.textContent = '+';
+    });
 }
 
 function clearData() {
@@ -1546,36 +1742,65 @@ document.getElementById('noteContent').addEventListener('input', saveState);
 // Initial call to enable/disable buttons on page load
 toggleButtons();
 
-
-function showProgressBar() {
-    document.getElementById("progressContainer").style.display = "block";
-    const progressBar = document.getElementById("progressBar");
-    const progressText = document.getElementById("progressText");
-    let progress = 0;
-
-    const interval = setInterval(() => {
-        progress += 10; // Increment progress by 10%
-        progressBar.value = progress; // Update the progress bar value
-        progressText.textContent = `Operation in progress... ${progress}%`; // Update text
-
-        if (progress >= 100) {
-            clearInterval(interval); // Stop the interval when complete
-            progressText.textContent = "Operation completed!"; // Update text on completion
-            setTimeout(() => {
-                document.getElementById("progressContainer").style.display = "none"; // Hide the progress bar after a delay
-            }, 2000); // Hide after 2 seconds
-        }
-    }, 1000); // Update every second
+function openSNBAKeySetupModal() {
+    document.getElementById('snbakeySetupModal').classList.remove('hidden');
 }
 
 // Example usage: Call this function when starting a backup operation
-function backupNotes() {
-    showProgressBar(); // Show the progress bar
-    // Simulate a backup operation
-    setTimeout(() => {
-        // Your backup logic here
-        console.log("Notes backed up successfully!");
-    }, 10000); // Simulate a 10-second operation
+// Function to show the SNBA key verification modal on page load
+
+
+
+// Function to verify the SNBA key
+window.onload = function() {
+    const storedKey = localStorage.getItem('snbakey'); // Check if SNBA key is stored
+
+    if (storedKey) {
+        // If SNBA key is found, show the verification modal
+        document.getElementById('snbakeyVerificationModal').classList.remove('hidden');
+    } else {
+        // If no SNBA key is found, show the setup modal
+        document.getElementById('snbakeyVerificationModal').classList.add('hidden');
+        showMessageBox('Welcome Back!');
+    }
+};
+
+// Function to save the SNBA key
+function saveSNBAKey() {
+    const snbakey = document.getElementById('snbakey').value;
+    const confirmSnbakey = document.getElementById('confirmSnbakey').value;
+
+    if (snbakey !== confirmSnbakey) {
+        showMessageBox("SNBA Keys do not match!");
+        return;
+    }
+
+    // Save the SNBA key securely (e.g., encrypt and store in local storage)
+    localStorage.setItem('snbakey', snbakey); // Store the SNBA key
+    showMessageBox("Your SNBA key has been set up successfully!");
+    closeSNBAKeySetupModal();
+}
+
+// Function to close the SNBA key setup modal
+function closeSNBAKeySetupModal() {
+    document.getElementById('snbakeySetupModal').classList.add('hidden');
+}
+
+// Function to verify the SNBA key
+function verifySNBAKey() {
+    const enteredKey = document.getElementById('snbakeyInput').value;
+    const storedKey = localStorage.getItem('snbakey'); // Get the stored SNBA key
+
+    if (enteredKey === storedKey) {
+        // Correct SNBA key, continue loading the app
+        document.getElementById('snbakeyVerificationModal').classList.add('hidden');
+        showMessageBox("SNBA Key verified successfully!"); // Optional: Show a success message
+        showMessageBox('Welcome Back!');
+        // Load the rest of the app or redirect to the main page
+    } else {
+        // Incorrect SNBA key, prompt the user
+        alert("Incorrect SNBA Key! Please try again.");
+    }
 }
    
 
@@ -1607,10 +1832,7 @@ function backupNotes() {
 }
 
 
-        function toggleRearrangeOptions() {
-            // Display a message indicating that the feature is not implemented yet
-            showMessageBox("This feature is not implemented yet.");
-        }
+        
 
         function backupNotes() {
             const blob = new Blob([JSON.stringify(notes)], { type: 'application/json' });
@@ -1661,38 +1883,7 @@ function backupNotes() {
 
 
         // Function to toggle edit note mode
-        function toggleEditNote() {
-            const noteTitle = document.getElementById('noteTitle');
-            const noteContent = document.getElementById('noteContent');
-            const editNoteButton = document.getElementById('editNoteButton');
-
-            if (noteTitle.disabled) {
-                noteTitle.disabled = false;
-                noteContent.disabled = false;
-                editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
-            } else {
-                noteTitle.disabled = true;
-                noteContent.disabled = true;
-                editNoteButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-                saveNote();
-            }
-        }
-        // Function to toggle edit list mode
-        function toggleEditList() {
-            const listTitle = document.getElementById('listTitle');
-            const editListButton = document.getElementById('editListButton');
-
-            if (listTitle.disabled) {
-                listTitle.disabled = false;
-                editListButton.innerHTML = '<i class="fas fa-check"></i>';
-                newItem.disabled = false;
-            } else {
-                listTitle.disabled = true;
-                editListButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-                newItem.disabled = true;
-                saveList();
-            }
-        }
+        
 
         let currentDate = new Date(); // Initialize current date
 
@@ -1799,7 +1990,7 @@ function backupNotes() {
 
             // Check if the current section is the notes section
             if (currentSection.id !== 'combinedContainer') {
-                showMessageBox("Please be on the  home section to use the search feature.");
+                showMessageBox("Please be on the home section to use the search feature.");
                 return; // Exit the function if not in the notes section
 
             }
@@ -2095,6 +2286,8 @@ function backupNotes() {
             }
         }
 
+        
+
         document.addEventListener("DOMContentLoaded", function () {
             // Hide all sections initially
             document.querySelectorAll('.container').forEach(section => {
@@ -2253,14 +2446,14 @@ function backupNotes() {
         function cancelList() {
             // Hide the add list section and show the lists section
             document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
-            const mainHeader = document.getElementById('mainHeader');
-            const list = document.querySelector('.top-bar');
+           
             const navBar = document.querySelector('.bottom-nav');
-            mainHeader.classList.remove('hidden');
+           
             navBar.style.display = 'flex';
 
             showSection('combinedContainer'); // Show the lists section
-
+displayNotes();
+displayLists();
         }
 
         // Function to show a specific section
