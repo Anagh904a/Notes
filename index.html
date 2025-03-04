@@ -24,7 +24,7 @@ h1 {
 
 button:hover {
     background-color: #9ba731; /* Darker Blue on hover */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(1.05); /* Slightly enlarge button */
 }
 
 
@@ -1281,11 +1281,7 @@ button:hover {
         <input type="file" id="importFile" onchange="prepareImport(event)" />
         <button onclick="importNotes()">Import Notes</button>
         <br>
-        <button onclick="clearData()">Clear All Data</button>
-
-        <button onclick="encryptData()">Encrypt Data</button>
-        <br>
-        <button onclick="decryptData()">Decrypt Data</button>
+       
         <div id="dataStats">
             <br>
             <p>Total Notes: <span id="noteCount">0</span></p>
@@ -1387,11 +1383,7 @@ button:hover {
                 <br>
                 Themes
             </button>
-            <button onclick="showSection('dataManagementSection')">
-                <i class="fas fa-database"></i>
-                <br>
-                Data Management
-            </button>
+           
             <button onclick="showSection('calendarSection')">
 <i class="fa fa-calendar"></i>
 <br>
@@ -1526,15 +1518,17 @@ Calendar
     <!-- Data Encryption Section -->
     <div class="setting-category">
         <h3 onclick="toggleSection('encryptionSection')">
-            <i class="fas fa-lock"></i> Data Encryption
+            <i class="fas fa-lock"></i> Data Management
             <span class="toggle-icon" id="encryptionToggle">+</span>
         </h3>
         <div id="encryptionSection" class="hidden">
             <button onclick="goBack()">Back</button>
-            <label>
-                <input type="checkbox" id="enableEncryption" />
-                Enable encryption of data
-            </label>
+            <button onclick="clearData()">Clear All Data</button>
+
+            <button onclick="encryptData()">Encrypt Data</button>
+            
+            <button onclick="decryptData()">Decrypt Data</button>
+            <button onclick="showMessageBox('Server-side fetaures will be added in future updates. Stay tunned')">Allow data mangement on Server-side</button>
         </div>
     </div>
 
@@ -1700,14 +1694,17 @@ function clearData() {
 function encryptData() {
     const encryptedNotes = btoa(JSON.stringify(notes)); // Base64 encode the notes
     const encryptedLists = btoa(JSON.stringify(lists)); // Base64 encode the lists
+    showMessageBox("This feature is buggy and may not work as expected. Use with cuation your old data may be deleted");
     localStorage.setItem('encryptedNotes', encryptedNotes);
     localStorage.setItem('encryptedLists', encryptedLists);
     showMessageBox("Data encrypted successfully!");
+
 }
 
 function decryptData() {
     const encryptedNotes = localStorage.getItem('encryptedNotes');
     const encryptedLists = localStorage.getItem('encryptedLists');
+    showMessageBox("This feature is buggy and may not work as expected. Use with cuation your old data may be deleted");
 
     if (encryptedNotes) {
         notes = JSON.parse(atob(encryptedNotes)); // Base64 decode the notes
@@ -1726,6 +1723,7 @@ function decryptData() {
     displayNotes();
     displayLists();
     showMessageBox("Data decrypted successfully!");
+    
 }
 
 // Function to toggle button states (enable/disable)
@@ -2352,6 +2350,7 @@ function verifySNBAKey() {
             showSection('addNoteSection');
             // Set the index of the note being edited
             editingNoteIndex = notes.findIndex(n => n.title === note.title && n.content === note.content);
+        closeAddOptions()
         }
 
 
