@@ -5,186 +5,374 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maintenance - Sticky Notes by Anagh</title>
     <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    text-align: center;
+        /* Fullscreen background gradient */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #loading {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeOut 1.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Container for the content */
+        .container {
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            padding: 40px 60px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Maintenance message styling */
+        .maintenance-message h1 {
+            font-size: 3em;
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .maintenance-message p {
+            font-size: 1.4em;
+            color: #636e72;
+            margin-bottom: 20px;
+        }
+
+        /* Timer styling */
+        #maintenance-timer {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        /* New features section */
+        .new-features {
+            margin-top: 40px;
+            animation: fadeInFeatures 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInFeatures {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .new-features h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #2d3436;
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .mySlides {
+            display: none;
+            transition: transform 1s ease-in-out;
+            padding: 15px;
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .mySlides h3 {
+            font-size: 2em;
+            color: #0072ff;
+            font-weight: 600;
+        }
+
+        .slide-content {
+            font-size: 1.2em;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        /* Dot navigation */
+        .dot-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .dot {
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dot.active {
+            background-color: #0072ff;
+        }
+
+        /* Responsive design */
+        /* General responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 30px;
+        max-width: 100%; /* Full width */
+    }
+
+    .maintenance-message h1 {
+        font-size: 2.5em;
+    }
+
+    .new-features h2 {
+        font-size: 2em;
+    }
+
+    .slideshow-container {
+        width: 100%;
+    }
+
+    /* Max height adjustment for smaller screens */
+    body {
+        font-size: 14px;
+        padding: 10px;
+        overflow-y: auto;
+    }
+
+    .container {
+        max-height: 90vh; /* Prevents overflow on smaller screens */
+        overflow-y: auto;
+    }
+
+    .mySlides h3 {
+        font-size: 1.8em;
+    }
+
+    .slide-content {
+        font-size: 1em;
+    }
 }
 
-.container {
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 1s;
-    max-width: 800px; /* Increased width */
+/* For smaller screens, ensure that the height is managed properly */
+@media (max-height: 600px) {
+    .container {
+        max-height: 85vh; /* Reduce height on shorter screens */
+        overflow-y: scroll; /* Allow scrolling if the content overflows */
+    }
+
+    .maintenance-message h1 {
+        font-size: 2em;
+    }
+
+    .maintenance-message p {
+        font-size: 1.2em;
+    }
+
+    .new-features h2 {
+        font-size: 1.8em;
+    }
+
+    .mySlides h3 {
+        font-size: 1.5em;
+    }
+
+    .slide-content {
+        font-size: 0.9em;
+    }
+
+    .dot {
+        width: 10px; /* Smaller dots on small screens */
+        height: 10px;
+    }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* For very small screens or mobile viewports */
+@media (max-height: 400px) {
+    .container {
+        max-height: 80vh; /* Further reduce height */
+        padding: 15px 20px;
+        overflow-y: scroll;
+    }
+
+    .maintenance-message h1 {
+        font-size: 1.8em;
+    }
+
+    .maintenance-message p {
+        font-size: 1em;
+    }
+
+    .new-features h2 {
+        font-size: 1.6em;
+    }
+
+    .mySlides h3 {
+        font-size: 1.4em;
+    }
+
+    .slide-content {
+        font-size: 0.8em;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
 }
 
-.maintenance-message h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-}
-
-.new-features {
-    margin-top: 20px;
-}
-
-.slideshow-container {
-    position: relative;
-    max-width: 100%; /* Full width */
-    margin: auto;
-    overflow: hidden; /* Hide overflow for sliding effect */
-}
-
-.mySlides {
-    display: none;
-    animation: slide 1s ease-in-out; /* Slide animation */
-}
-
-@keyframes slide {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
-}
-
-.dot {
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
-    background-color: #bbb;
-    border-radius: 50%;
-    display : inline-block;
-    cursor: pointer;
-}
-
-.dot.active {
-    background-color: #717171;
-}
 
     </style>
 </head>
 <body>
+
     <div class="container">
         <div class="maintenance-message">
             <h1>We'll be back soon!</h1>
             <p>Our website is currently undergoing maintenance for update 5.2.</p>
             <p>Estimated downtime: <span id="maintenance-timer"></span></p>
         </div>
-        
+
         <div class="new-features">
             <h2>New Features</h2>
             <div class="slideshow-container">
                 <div class="mySlides fade">
                     <h3>Introducing Open List and Note via SNBA Key</h3>
-                    <p>Forget your note/list password? No problem!</p>
+                    <p class="slide-content">Forget your note/list password? No problem!</p>
                 </div>
                 <div class="mySlides fade">
                     <h3>New Settings in Security Section</h3>
-                    <p>Enhanced security features for your peace of mind.</p>
+                    <p class="slide-content">Enhanced security features for your peace of mind.</p>
                 </div>
                 <div class="mySlides fade">
                     <h3>Remapped More Section</h3>
-                    <p>Improved navigation for a better user experience.</p>
+                    <p class="slide-content">Improved navigation for a better user experience.</p>
                 </div>
                 <div class="mySlides fade">
                     <h3>Small UI Changes Across All Sections</h3>
-                    <p>Enjoy a fresh new look!</p>
+                    <p class="slide-content">Enjoy a fresh new look!</p>
                 </div>
                 <div class="mySlides fade">
                     <h3>Fixed Back Button Bug</h3>
-                    <p>Back button is now fully functional.</p>
+                    <p class="slide-content">Back button is now fully functional.</p>
                 </div>
                 <div class="mySlides fade">
                     <h3>Added Inbox Feature</h3>
-                    <p>Get notified about new updates directly in the app.</p>
+                    <p class="slide-content">Get notified about new updates directly in the app.</p>
                 </div>
                 <div class="mySlides fade">
                     <h3>Bug Fixes</h3>
-                    <p>We've fixed several bugs for a smoother experience.</p>
+                    <p class="slide-content">We've fixed several bugs for a smoother experience.</p>
                 </div>
             </div>
-            <div style="text-align:center">
-                <span class="dot" onclick="currentSlide(1)"></span> 
-                <span class="dot" onclick="currentSlide(2)"></span> 
-                <span class="dot" onclick="currentSlide(3)"></span> 
-                <span class="dot" onclick="currentSlide(4)"></span> 
-                <span class="dot" onclick="currentSlide(5)"></span> 
-                <span class="dot" onclick="currentSlide(6)"></span> 
-                <span class="dot" onclick="currentSlide(7)"></span> 
+
+            <div class="dot-container">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+                <span class="dot" onclick="currentSlide(5)"></span>
+                <span class="dot" onclick="currentSlide(6)"></span>
+                <span class="dot" onclick="currentSlide(7)"></span>
             </div>
         </div>
     </div>
 
     <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const timerElement = document.getElementById("maintenance-timer");
-    const savedEndTime = localStorage.getItem("endTime");
-    let endTime;
+        document.addEventListener("DOMContentLoaded", function () {
+            const timerElement = document.getElementById("maintenance-timer");
+            const savedEndTime = localStorage.getItem("endTime");
+            let endTime;
 
-    if (savedEndTime) {
-        // If there is a saved end time, use it
-        endTime = new Date(savedEndTime);
-    } else {
-        // If no saved end time, set it to 80 hours from now
-        endTime = new Date(Date.now() + 80 * 60 * 60 * 1000); // 80 hours from now
-        localStorage.setItem("endTime", endTime); // Store the end time
-    }
+            if (savedEndTime) {
+                // If there is a saved end time, use it
+                endTime = new Date(savedEndTime);
+            } else {
+                // If no saved end time, set it to 80 hours from now
+                endTime = new Date(Date.now() + 80 * 60 * 60 * 1000); // 80 hours from now
+                localStorage.setItem("endTime", endTime); // Store the end time
+            }
 
-    function updateTimer() {
-        const now = new Date();
-        const remainingTime = endTime - now;
+            function updateTimer() {
+                const now = new Date();
+                const remainingTime = endTime - now;
 
-        if (remainingTime <= 0) {
-            timerElement.innerHTML = "Maintenance completed!";
-            clearInterval(timerInterval);
-            localStorage.removeItem("endTime");
-        } else {
-            const totalHours = Math.floor(remainingTime / (1000 * 60 * 60));
-            const days = Math.floor(totalHours / 24);
-            const hours = totalHours % 24;
+                if (remainingTime <= 0) {
+                    timerElement.innerHTML = "Maintenance completed!";
+                    clearInterval(timerInterval);
+                    localStorage.removeItem("endTime");
+                } else {
+                    const totalHours = Math.floor(remainingTime / (1000 * 60 * 60));
+                    const days = Math.floor(totalHours / 24);
+                    const hours = totalHours % 24;
 
-            timerElement.innerHTML = `${days}d ${hours}h`;
-        }
-    }
+                    timerElement.innerHTML = `${days}d ${hours}h`;
+                }
+            }
 
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+            const timerInterval = setInterval(updateTimer, 1000);
 
-    // Slideshow functionality
-    let slideIndex = 0;
-    showSlides();
+            // Slideshow functionality
+            let slideIndex = 0;
+            showSlides();
 
-    function showSlides() {
-        const slides = document.getElementsByClassName("mySlides");
-        const dots = document.getElementsByClassName("dot");
-        for (let i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";  
-        }
-        slideIndex++;
-        if (slideIndex > slides.length) {slideIndex = 1}    
-        for (let i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[slideIndex - 1].style.display = "block";  
-        dots[slideIndex - 1].className += " active";
-        setTimeout(showSlides, 5000); // Change slide every 5 seconds
-    }
+            function showSlides() {
+                const slides = document.getElementsByClassName("mySlides");
+                const dots = document.getElementsByClassName("dot");
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                slideIndex++;
+                if (slideIndex > slides.length) { slideIndex = 1 }
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " active";
+                setTimeout(showSlides, 5000); // Change slide every 5 seconds
+            }
 
-    window.currentSlide = function(n) {
-        slideIndex = n - 1;
-        showSlides();
-    }
-});
+            window.currentSlide = function (n) {
+                slideIndex = n - 1;
+                showSlides();
+            }
+        });
     </script>
 </body>
 </html>
