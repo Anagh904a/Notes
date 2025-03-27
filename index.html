@@ -5,27 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tisa:wght@400;700&display=swap" rel="stylesheet">
     <title>ColorNotes Inspired Notes App</title>
     <style>
        body {
    
-     font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f3f3f3; display: flex; flex-direction: column; height: 100vh; 
+        font-family: 'Nunito', sans-serif; /* Apply Nunito font to the body */
+        margin: 0; 
+        padding: 0;  
+        display: flex; 
+        flex-direction: column; 
+        height: 100vh; 
+        background-color: #121212; /* Dark background */
+            color: #ffffff; /* White text */
+            position: relative; /* For positioning the button */
 }
 
 h1 {
-    background-color: #4A90E2; /* Blue */
-    color: white;
+    background: linear-gradient(90deg, #ffffff, #d3d3d3);
+            background-clip: text;
+            color: transparent;
+  
     text-align: center;
         padding: 10px;
         margin: 0;
     }
 
+    h2 {
+        text-align: center;
+            background: linear-gradient(90deg, #ffffff, #cccaca);
+            background-clip: text;
+            color: transparent;
+        }
+
  
 
-button:hover {
-    background-color: #9ba731; /* Darker Blue on hover */
-    transform: scale(1.05); /* Slightly enlarge button */
-}
+ 
+
+
 
 
 
@@ -63,6 +80,15 @@ button:hover {
 /* Apply animation to modal content */
 .modal-content {
     animation: fadeIn 0.3s ease forwards;
+
+}
+
+#passwordModal {
+    display: none; 
+}
+
+#deletePasswordModal {
+    display: none;
 }
 
 /* Hide modal with fade-out animation */
@@ -101,136 +127,32 @@ button:hover {
 
        
 
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 55px;
-            background-color: #509ce4; /* Blue */
-            color: white;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
- .nav-button {
-            background: none;
-            border: none;
-            color: rgb(255, 255, 255);
-            font-size: 16px;
-            cursor: pointer;
-            margin-right: 20px;
-        }
-        .nav-button:hover {
-            background: rgb(0, 63, 158);
-        }
+        
+ 
 
         .add-button {
-            position: fixed; /* Fixed position for the button */
-    bottom: 20px; /* Position the button below the nav bar */
-    
-    background-color: #FF6F61; /* Vibrant color for the add button */
-    color: white; /* Text color */
-    border-radius: 50%; /* Make it circular */
-    width: 60px; /* Width of the button */
-    height: 60px; /* Height of the button */
-    display: flex; /* Flexbox for centering */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    font-size: 30px; /* Font size for the plus sign */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-    position: absolute; /* Position it absolutely */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust to center */
-    background-color: #FF6F61; 
-        }
-
-        .add-button:hover {
-            background-color: #ac0707;
+            position: absolute; /* Positioning the button */
+            bottom: 20px; /* Distance from the bottom */
+            right: 20px; /* Distance from the right */
+            background: linear-gradient(90deg, #478bda, #d400ff);
+            border: none;
             color: white;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
 
-        /* Password Modal */
-        #passwordModal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            /* Stay in place */
-
-            left: 0;
-            top: 0;
-            width: 100%;
-            /* Full width */
-            height: 100%;
-            /* Full height */
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-
+        
+            .add-button:hover {
+            background: linear-gradient(90deg, #007AFF, #4A90E2);
         }
 
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            width: 350px;
-            position: absolute;
-        }
-
-        #passwordModal input[type="password"] {
-            width: 95%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-        }
-
-        #passwordModal button {
-            width: 100%;
-            padding: 10px;
-        }
-
-        /* Password Modal */
-        #deletePasswordModal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            /* Stay in place */
-            z-index: 1000;
-            /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%;
-            /* Full width */
-            height: 100%;
-            /* Full height */
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            width: 350px;
-        }
-
-        #deletePasswordModal input[type="password"] {
-            width: 95%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-        }
-
-        #deletePasswordModal button {
-            width: 100%;
-            padding: 10px;
-        }
+ 
 
         #addListSection {
-            background-color: #fff;
+            
             /* White background */
             padding: 20px;
             /* Padding around the content */
@@ -262,18 +184,34 @@ button:hover {
         }
 
         .modal-content {
-            background-color: white;
+            
             padding: 20px;
             border-radius: 5px;
             width: 350px;
             position: absolute;
+         
         }
 
+       
+
         /* Hidden class to hide elements */
-        .hidden {
+        .modal.hidden {
             display: none;
             /* Hide elements with this class */
         }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: rgb(255, 255, 255);
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .nav-button:hover {
+            background: rgb(0, 0, 0);
+        }
+ 
 
         /* Styling for password input fields */
         input[type="password"] {
@@ -299,19 +237,19 @@ button:hover {
             /* Pointer cursor on hover */
             border: none;
             /* No border */
-            background-color: #fbff00; /* Teal */
+            background: linear-gradient(90deg, #478bda, #d400ff);/* Teal */
             color: #000;
             /* Orange background */
             
             /* White text */
             border-radius: 4px;
             /* Rounded corners */
-            transition: background-color 0.3s;
+            transition: background 0.3s;
             /* Smooth transition for hover effect */
         }
 
         button:hover {
-            background-color: #9ba731; /* Darker Blue on hover */
+            background: linear-gradient(90deg, #007AFF, #4A90E2); /* Darker Blue on hover */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -353,7 +291,7 @@ button:hover {
             /* Center items vertically */
             margin: 5px 0;
             /* Space between checklist items */
-            background-color: #ffa500;
+            
         }
 
         .checklist-container input[type="checkbox"] {
@@ -362,12 +300,12 @@ button:hover {
         }
 
         .close-button {
-            background-color: #ff4c4c;
+            background: #ff4c4c;
             /* Red background for close button */
         }
 
         .close-button:hover {
-            background-color: #ff1c1c;
+            background: #ff1c1c;
             /* Darker red on hover */
         }
 
@@ -404,7 +342,7 @@ button:hover {
         }
 
         .checklist-item {
-            background-color: #fdca6c;
+            background-color: #363636;
             /* Orange background */
             padding: 10px;
             /* Padding inside the item */
@@ -428,7 +366,7 @@ button:hover {
         .checklist-item button {
             margin-left: auto;
             /* Push the button to the right */
-            background-color: #ff4500;
+            
             /* Darker orange for the button */
             color: white;
             /* White text */
@@ -449,19 +387,33 @@ button:hover {
             /* Lighter orange on hover */
         }
 
-        .error {
-            color: red;
-            font-size: 14px;
-        }
+        .scan-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
 
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
+.scan-circle {
+    width: 100px;
+    height: 100px;
+    border: 10px solid #4CAF50; /* Green color */
+    border-radius: 50%;
+    border-top: 10px solid transparent; /* Create a spinning effect */
+    animation: spin 1s linear infinite; /* Spin animation */
+}
 
-        a:hover {
-            text-decoration: underline;
-        }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+#resultsContainer {
+    margin-top: 20px;
+}
+     
 
         .container {
 
@@ -488,9 +440,7 @@ button:hover {
             /* Fully visible */
         }
 
-        #Alpha {
-            color: #ff1c1c;
-        }
+    
 
         .calculator-buttons {
             display: grid;
@@ -499,61 +449,7 @@ button:hover {
             margin-top: 10px;
         }
 
-        .top-bar {
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #ff9e2e;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: fixed;
-            border-radius: 5px;
-
-        }
-
-        .top-bar .back-icon {
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-
-
-        .top-bar .edit-btn,
-        .top-bar .menu-btn {
-            font-size: 24px;
-            cursor: pointer;
-            background-color: #ff9e2e;
-        }
-
-        #editNoteButton {
-            background-color: #ff9e2e;
-        }
-
-
-        #editListButton {
-            background-color: #ff9e2e;
-        }
-
-
-        .top-bar input {
-            flex-grow: 1;
-            margin: 0 10px;
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .top-bar button {
-            margin: 0 10px;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+        
 
         /* Content Section */
         .content {
@@ -596,7 +492,7 @@ button:hover {
 
         /* Style for Undo and Redo Buttons */
 #undoButton, #redoButton {
-    background: transparent;  /* Transparent background */
+    background: black;  /* Transparent background */
     color: #333; /* Default text color */
     border: 2px solid #333;  /* Border color */
     padding: 10px 20px;
@@ -611,13 +507,14 @@ button:hover {
 
 /* Hover effect for undo and redo buttons */
 #undoButton:hover, #redoButton:hover {
-    background-color: rgba(51, 51, 51, 0.1);  /* Light background on hover */
+    background: rgba(51, 51, 51, 0.1);  /* Light background on hover */
     color: #000;  /* Dark text color on hover */
 }
 
 /* Disabled state (gray color) for undo and redo buttons */
 #undoButton:disabled, #redoButton:disabled {
-    color: gray;
+    color: #ccc;
+    background: gray;
     border-color: gray;
     cursor: not-allowed;  /* Shows not-allowed cursor */
 }
@@ -628,7 +525,7 @@ button:hover {
 
 
         #addNoteSection {
-            background-color: #fff;
+            
             /* White background */
             padding: 20px;
             /* Padding around the content */
@@ -665,10 +562,10 @@ button:hover {
             margin: 5px 0;
             cursor: pointer;
             border: none;
-            color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
             border-radius: 4px;
             transition: background-color 0.3s;
-            background-color: transparent;
+            background: transparent;
         }
 
         .feature-buttons button i {
@@ -677,7 +574,7 @@ button:hover {
         }
 
         .feature-buttons button:hover {
-            background-color: #ddd;
+            background-color: #000000;
             /* Light gray on hover */
         }
 
@@ -694,16 +591,11 @@ button:hover {
             overflow-y: auto;
         }
 
-        h2 {
-            text-align: center;
-            color: #333;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
+       
 
         /* Styling for the month navigation */
         .month {
-            background-color: #ffd000;
+            background-color: #474747;
             /* Orange color */
             padding: 10px 0;
             text-align: center;
@@ -790,27 +682,27 @@ button:hover {
 
         /* Hover effect for days */
         .days li:hover {
-            background-color: #ff7f32;
+            background-color: #eeeeee;
             /* Hover effect with the same orange color */
             color: white;
         }
 
         /* Styling for today's date */
         .days li.active {
-            background-color: #ff5733;
+            background-color: #8f8f8f;
             /* A distinct background for today's date */
             color: white;
         }
 
         /* Selected day */
         .days li.selected {
-            background-color: #ff7f32;
+            background-color: #363636;
             color: white;
         }
 
         /* Disabled days (out of the current month) */
         .days li.disabled {
-            color: #d3d3d3;
+            color: #000000;
             pointer-events: none;
         }
 
@@ -826,7 +718,7 @@ button:hover {
 
         .prev:hover,
         .next:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .prev {
@@ -891,7 +783,7 @@ button:hover {
         }
 
         .modal-content button {
-            background-color: #4CAF50;
+           
             color: white;
             border: none;
             padding: 10px 20px;
@@ -899,26 +791,13 @@ button:hover {
             cursor: pointer;
         }
 
-        .modal-content button:hover {
-            background-color: #45a049;
-        }
+      
 
 
 
 
 
-        .delete-btn {
-            background-color: #ff1c1c;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .delete-btn:hover {
-            background-color: #df0909;
-        }
+       
 
         #changePasswordButton {
             color: #ffffff;
@@ -948,7 +827,7 @@ button:hover {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #4A90E2; /* Header background color */
+
             color: white;
             padding: 10px 20px;
             position: relative;
@@ -965,22 +844,38 @@ button:hover {
         }
 
         .note {
-            background: #ffffff;
-            border-left: 5px solid #4A90E2; /* Left border */
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative; /* For positioning icons */
-        }
+    border-left: 5px solid #4A90E2;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    background-color: #1e1e1e; /* Dark note background */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-        .note-date {
-            display: block; /* Ensure the date is on a new line */
+.note h4 {
+    margin: 0;
+    color: #ffffff; /* White text for note title */
+}
+
+.note-date {
+    display: block;
     font-size: 14px;
     color: #888;
     margin-top: 5px;
-    text-align: left; /* Align text to the left */
-        }
+}
+
+.delete-btn {
+    background: #ff1c1c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #df0909;
+}
 
         .note .icon {
             position: absolute;
@@ -998,78 +893,15 @@ button:hover {
             color: #FF6F61; /* Pin icon color */
         }
 
-        .toggle-sidebar {
-            background: none;
-            border: none;
-            color: rgb(255, 255, 255);
-            font-size: 16px;
-            cursor: pointer;
-            margin-right: 20px;
-        }
+  
 
-        .toggle-sidebar:hover {
-            background: rgb(0, 63, 158);
-        }
-
-        .fab {
-            position: fixed; /* Fixed position for the button */
-    bottom: 60px; /* Position the button below the nav bar */
-    right: 20px; /* Distance from the right */
-    background-color: #FF6F61; /* Vibrant color for the add button */
-    color: white; /* Text color */
-    border-radius: 50%; /* Make it circular */
-    width: 60px; /* Width of the button */
-    height: 60px; /* Height of the button */
-    display: flex; /* Flexbox for centering */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    font-size: 30px; /* Font size for the plus sign */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-    cursor: pointer; /* Pointer cursor on hover */
-    z-index: 1;
-        }
-
-        .fab:hover {
-            background-color: #FF4C4C; /* Darker shade on hover */
-        }
+    
 
        
 
-        .sidebar {
-    position: fixed; /* Fixed position */
-    top: 0; /* Align to the top */
-    left: 0; /* Align to the left */
-    width: 250px; /* Width of the sidebar */
-    height: 100%; /* Full height */
-    background-color: #0066ff; /* White background */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    padding: 20px; /* Padding inside the sidebar */
-    z-index: 1000; /* Ensure it appears above other elements */
-    transition: transform 1s ease; /* Smooth transition for opening/closing */
-    
-}
+      
 
-.sidebar-hidden {
-    transform: translateX(-100%); /* Hide the sidebar off-screen */
-}
 
-.sidebar h2 {
-    margin-top: 0; /* Remove default margin */
-}
-
-.sidebar button {
-    display: block; /* Block display for buttons */
-    width: 100%; /* Full width */
-    padding: 10px; /* Padding for buttons */
-    border: none; /* No border */
-    background: none; /* No background */
-    text-align: left; /* Align text to the left */
-    cursor: pointer; /* Pointer cursor on hover */
-}
-
-.sidebar button:hover {
-    background-color: #f0f0f0; /* Light gray on hover */
-}
 
 .setting-category {
     margin-bottom: 20px;
@@ -1080,9 +912,21 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: transparent;
+    color: white;
     padding: 10px;
     border-radius: 5px;
+}
+
+.setting-category div {
+    max-height: 0; /* Initially hide the section */
+    overflow: hidden; /* Hide overflow */
+    transition: max-height 0.3s ease-out; /* Transition for max-height */
+}
+
+.setting-category div.open {
+    max-height: 500px; /* Set a max height for the open state */
+    transition: max-height 0.5s ease-in; /* Transition for max-height */
 }
 
 .hidden {
@@ -1148,7 +992,7 @@ button:hover {
 
 .setting-category div {
     padding: 10px;
-    background-color: #ffffff;
+   
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-top: 5px;
@@ -1164,10 +1008,15 @@ button:hover {
         <button class="nav-button" onclick="showSection('moreSection')">
             <i class="fas fa-bars"></i>
         </button>
+
+  
         <h1>Notes</h1>
         <div class="nav-buttons">
             <button class="nav-button" onclick="toggleSearchInput()">
                 <i class="fas fa-search"></i>
+            </button>
+            <button class="nav-button" onclick="showSection('combinedContainer')">
+                <i class="fas fa-home"></i>
             </button>
             <button class="nav-button" onclick= "showSection('settingsSection')"><i class="fas fa-cog"></i></button>
            
@@ -1252,12 +1101,13 @@ button:hover {
         
         <button id="addItemButton" onclick="addItem()"><i class="fas fa-plus"></i>Add Item</button>
         <!-- Button to add item -->
+        <br>
         
         <input type="password" id="listPassword" placeholder="Enter New Password.." class="hidden">
         <div id="checklistContainer"></div> <!-- Container for checklist items -->
-        <button id="addItemButton" onclick="addItem()"><i class="fas fa-plus"></i>Add Item</button>
+        
     </div>
-    </div>
+    
 
     <!-- Add Options Modal -->
     <div id="addOptionsModal" class="modal hidden">
@@ -1315,38 +1165,18 @@ button:hover {
 
 
 
-    <!-- Settings Section -->
-    <div id="settings" class="container">
-        <h2>Settings</h2>
-        <h3>Other Settings</h3>
-        <button onclick="showCredits()">Credits</button>
-        <div id="creditsSection" style="display:none;">
-            <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
-        </div>
-        <h3>Backup/Import</h3>
-        <button onclick="backupNotes()">Backup Notes</button>
-        <input type="file" id="importFile" onchange="prepareImport(event)">
-        <button onclick="importNotes()">Continue Import</button>
-    </div>
+   
 
-    </div>
+   
 
-   <!-- Bottom Navigation Bar -->
-<div class="bottom-nav">
-    <button class="nav-button" onclick="showSection('combinedContainer')">
-        <i class="fas fa-th-list"></i>
+    <button class="add-button" onclick="showAddOptions()">
+        <i class="fas fa-plus"></i> Add
     </button>
+
+   
   
-    <div class="add-button" onclick="showAddOptions()">+</div>
-    <button class="nav-button" onclick="showSection('securitySettings')">
-        <i class="fas fa-shield-alt"></i> <!-- Security Icon -->
-       
-    </button>
-    <!-- The add button will be positioned separately -->
-    <div class="add-button" onclick="showAddOptions()">+</div>
-</div>
+   
 
-<!-- Add Button -->
 
 
     
@@ -1427,17 +1257,89 @@ Calendar
 
     <div id="settingsSection" class="container hidden">
         <button onclick="showSection('moreSection')">Close</button>
-        <h2>Settings</h2>
-
+        <p>Press home to return to home</p>
+        <h2>Credits</h2>
         <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
-
-        <h3>Backup/Import</h3>
+        <br>
+    <hr>
+    <br>
+        <h3 style="text-align: center;">Backup/Import</h3>
         <button onclick="backupNotes()">Backup Notes</button>
         <input type="file" id="importFile" onchange="prepareImport(event)">
         <button onclick="importNotes()">Continue Import</button>
+        <br>
+        <hr>
+        <br>
+    
+        <h2>Security Settings</h2>
+    
+        <!-- Data Management Section -->
+        <div class="setting-category">
+            <h3 onclick="toggleSection('encryptionSection')">
+                <i class="fas fa-lock"></i> Data Management
+                <span class="toggle-icon" id="encryptionToggle">+</span>
+            </h3>
+            <div id="encryptionSection" class="hidden">
+                <button onclick="goBack()">Back</button>
+                <button onclick="clearData()">Clear All Data</button>
+                <button onclick="encryptData()">Encrypt Data</button>
+                <button onclick="decryptData()">Decrypt Data</button>
+                <button onclick="showMessageBox('Server-side features will be added in future updates. Stay tuned')">Allow data management on Server-side</button>
+            </div>
+        </div>
+    
+        <!-- Password Management Section -->
+        <div class="setting-category">
+            <h3 onclick="toggleSection('passwordManagementSection')">
+                <i class="fas fa-key"></i> Password Management
+                <span class="toggle-icon" id="passwordManagementToggle">+</span>
+            </h3>
+            <div id="passwordManagementSection" class="hidden">
+                <button onclick="goBack()">Back</button>
+                <button class="gradient-button" onclick="openSNBAKeySetupModal()">Setup/Reset SNBA Key</button>
+            </div>
+        </div>
+    
+        <!-- Lock Notes Section -->
+        <div class="setting-category">
+            <h3 onclick="toggleSection('lockNotesSection')">
+                <i class="fas fa-lock"></i> Lock Notes
+                <span class="toggle-icon" id="lockNotesToggle">+</span>
+            </h3>
+            <div id="lockNotesSection" class="hidden">
+                <button onclick="goBack()">Back</button>
+                <label>
+                    <input type="checkbox" id="lockNotes" />
+                    Lock notes after inactivity
+                </label>
+            </div>
+        </div>
+    
+
+    <div class="setting-category">
+<h3 onclick="toggleSection('openAntiSection')">
+
+    <i class="fas fa-shield-alt"></i> Scan For Threats
+    <span class="toggle-icon" id="openAntiToggle">+</span>
+</h3>
+<div id="openAntiSection" class="hidden">
+    <button onclick="goBack()">Back</button>
+    <button onclick="showSection('antivirusSection')">Open</button>
+
+</div>
+
+    </div>
     </div>
 
-
+    <div id="antivirusSection" class="container">
+        <h2>Antivirus Scan</h2>
+        <div class="scan-container">
+            <div class="scan-circle" id="scanCircle"></div>
+            <p id="scanStatus">Click the button to start scanning...</p>
+        </div>
+        <button onclick="startScan()">Start Scan</button>
+        <div id="resultsContainer"></div>
+    </div>
 
 
 
@@ -1512,55 +1414,9 @@ Calendar
     </div>
 
     
-<div id="securitySettings" class="container">
-    <h2>Security Settings</h2>
 
-    <!-- Data Encryption Section -->
-    <div class="setting-category">
-        <h3 onclick="toggleSection('encryptionSection')">
-            <i class="fas fa-lock"></i> Data Management
-            <span class="toggle-icon" id="encryptionToggle">+</span>
-        </h3>
-        <div id="encryptionSection" class="hidden">
-            <button onclick="goBack()">Back</button>
-            <button onclick="clearData()">Clear All Data</button>
 
-            <button onclick="encryptData()">Encrypt Data</button>
-            
-            <button onclick="decryptData()">Decrypt Data</button>
-            <button onclick="showMessageBox('Server-side fetaures will be added in future updates. Stay tunned')">Allow data mangement on Server-side</button>
-        </div>
-    </div>
-
-    <!-- Password Management Section -->
-    <div class="setting-category">
-        <h3 onclick="toggleSection('passwordManagementSection')">
-            <i class="fas fa-key"></i> Password Management
-            <span class="toggle-icon" id="passwordManagementToggle">+</span>
-        </h3>
-        <div id="passwordManagementSection" class="hidden">
-            <button onclick="goBack()">Back</button>
-            <button class="gradient-button" onclick="openSNBAKeySetupModal()">Setup/Reset SNBA Key</button>
-        </div>
-    </div>
-
-    <!-- Lock Notes Section -->
-    <div class="setting-category">
-        <h3 onclick="toggleSection('lockNotesSection')">
-            <i class="fas fa-lock"></i> Lock Notes
-            <span class="toggle-icon" id="lockNotesToggle">+</span>
-        </h3>
-        <div id="lockNotesSection" class="hidden">
-            <button onclick="goBack()">Back</button>
-            <label>
-                <input type="checkbox" id="lockNotes" />
-                Lock notes after inactivity
-            </label>
-        </div>
-    </div>
-</div>
-
-<<!-- SNBA Key Setup Modal -->
+<!-- SNBA Key Setup Modal -->
 <div id="snbakeySetupModal" class="modal hidden">
     <div class="modal-content">
         <h3>Setup SNBA Key</h3>
@@ -1634,35 +1490,16 @@ function redo() {
     toggleButtons();
 }
 
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.remove('hidden'); // Toggle visibility
-}
 
-function closeSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.add('hidden'); // Hide sidebar
-}
 
-// Close sidebar if clicked outside
-window.addEventListener('click', function(event) {
-    const sidebar = document.getElementById('sidebar');
-    if (!event.target.matches('.toggle-sidebar') && !sidebar.contains(event.target)) {
-        sidebar.classList.add('hidden'); // Hide sidebar
-    }
-});
+
 
 function toggleSection(sectionId) {
     const section = document.getElementById(sectionId);
+    section.classList.toggle('hidden');
+    section.classList.toggle('open'); // Add or remove the open class
     const toggleIcon = document.getElementById(sectionId + 'Toggle');
-
-    if (section.classList.contains('hidden')) {
-        section.classList.remove('hidden');
-        toggleIcon.textContent = '-'; // Change icon to minus
-    } else {
-        section.classList.add('hidden');
-        toggleIcon.textContent = '+'; // Change icon to plus
-    }
+    toggleIcon.textContent = toggleIcon.textContent === '+' ? '-' : '+';
 }
 
 function goBack() {
@@ -1748,9 +1585,71 @@ function openSNBAKeySetupModal() {
     document.getElementById('snbakeySetupModal').classList.remove('hidden');
 }
 
-// Example usage: Call this function when starting a backup operation
-// Function to show the SNBA key verification modal on page load
+function startScan() {
+    const scanStatus = document.getElementById('scanStatus');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const scanCircle = document.getElementById('scanCircle');
 
+    // Reset results and status
+    resultsContainer.innerHTML = ""; // Clear previous results
+    scanStatus.textContent = "Scanning for sensitive data and SNBA keys...";
+    scanCircle.style.borderColor = "#4CAF50"; // Start with green
+    scanCircle.style.animation = "spin 1s linear infinite"; // Start spinning
+
+    // Retrieve SNBA key and notes from local storage
+    const snbaKey = localStorage.getItem('snbaKey');
+    const notes = JSON.parse(localStorage.getItem('notes')) || []; // Assuming notes are stored as an array of objects
+
+    let foundSensitiveData = [];
+    let threatsCount = 0;
+
+    // Check each note
+    notes.forEach(note => {
+        if (note && !note.password) { // Check if the note is defined and not password-protected
+            const sensitiveKeywords = ["password", "SSN", "credit card", "bank account", "secret"];
+            const noteContent = note.content.toLowerCase();
+            const noteTitle = note.title;
+
+            // Check for sensitive keywords
+            sensitiveKeywords.forEach(keyword => {
+                if (noteContent.includes(keyword.toLowerCase())) {
+                    foundSensitiveData.push(`Sensitive data found in note: "${noteTitle}"`);
+                    threatsCount++;
+                }
+            });
+        }
+    });
+
+    // Prepare results
+    if (snbaKey) {
+        resultsContainer.innerHTML += "<div>SNBA Key is set up.</div>";
+    } else {
+        resultsContainer.innerHTML += "<div>SNBA Key not found.</div>";
+        threatsCount++; // Count this as a threat
+    }
+
+    // Display sensitive data results
+    if (foundSensitiveData.length > 0) {
+        foundSensitiveData.forEach(result => {
+            resultsContainer.innerHTML += `<div>${result}</div>`;
+        });
+    }
+
+    // Update scan circle based on threats found
+    if (threatsCount === 0) {
+        scanCircle.style.borderColor = "#4CAF50"; // Green for no threats
+        scanCircle.style.animation = "none"; // Stop spinning
+        resultsContainer.innerHTML += "<div>No threats found. Your notes are secure!</div>";
+    } else if (threatsCount === 1) {
+        scanCircle.style.borderColor = "orange"; // Half red for one threat
+        scanCircle.style.animation = "none"; // Stop spinning
+    } else {
+        scanCircle.style.borderColor = "red"; // Full red for multiple threats
+        scanCircle.style.animation = "none"; // Stop spinning
+    }
+}
+
+// Call startScan when needed, e.g., on button click
 
 
 // Function to verify the SNBA key
@@ -2154,47 +2053,28 @@ function verifySNBAKey() {
             showSection('addNoteSection');
             document.getElementById('noteContent').value = ""; // Clear the note content
             document.getElementById('notePassword').value = ""; // Clear the password input
-            const mainHeader = document.getElementById('mainHeader');
-            const noteTopBar = document.querySelector('.top-bar');
-            const navBar = document.querySelector('.bottom-nav');
-            const editNoteButton = document.getElementById('editNoteButton');
-
+          
             if (editingNoteIndex !== null) {
                 // Editing an existing note
                 const note = notes[editingNoteIndex]; // Get the note being edited
                 document.getElementById('noteTitle').value = note.title; // Set the input value to the note title
                 document.getElementById('noteContent').value = note.content; // Set the input value to the note content
                 document.getElementById('manageNoteTitle').textContent = `Manage Your ${note.title} Note`; // Update title with the actual note title
-                editNoteButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-                noteTitle.disabled = true;
-                noteContent.disabled = true;
-                mainHeader.classList.add('hidden');
-                navBar.style.display = 'none';
-                noteTopBar.style.display = 'block';
+              
             } else {
                 // Creating a new note
                 document.getElementById('noteTitle').value = ""; // Clear the title input
                 document.getElementById('manageNoteTitle').textContent = "Add New Note"; // Set title for new note
-                mainHeader.classList.add('hidden');
-                navBar.style.display = 'none';
-                noteTopBar.style.display = 'block';
-                editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
-                noteTitle.disabled = false;
-                noteContent.disabled = false;
+                
             }
             closeAddOptions(); // Close the add options modal
         }
 
         // Function to cancel note and reset visibility
         function cancelNote() {
-
-            const mainHeader = document.getElementById('mainHeader');
-            const noteTopBar = document.querySelector('.top-bar');
-            const navBar = document.querySelector('.bottom-nav');
-            mainHeader.classList.remove('hidden');
-            navBar.style.display = 'flex';
-            noteTopBar.style.display = 'none';
-            showSection('combinedContainer');
+const section = document.getElementById('addNoteSection');
+            section.classList.add('hidden');
+          showSection('combinedContainer');
         }
 
         // Add event listener for the Add Note button
@@ -2231,9 +2111,7 @@ function verifySNBAKey() {
             displayNotes();
             updateDataStats();
             showSection('combinedContainer');
-            mainHeader.classList.remove('hidden');
-            navBar.style.display = 'flex';
-            noteTopBar.style.display = 'none';
+           
 
             // Reset editing state
             editingNoteIndex = null; // Reset after saving
@@ -2384,6 +2262,7 @@ function verifySNBAKey() {
 
         // Function to show the add options modal
         function showAddOptions() {
+            console.log("showAddOptions called"); // Debugging line
             const modal = document.getElementById('addOptionsModal');
             modal.classList.remove('hidden');
         }
@@ -2393,6 +2272,7 @@ function verifySNBAKey() {
         function closeAddOptions() {
             const modal = document.getElementById('addOptionsModal');
             modal.classList.add('hidden'); // Hide the modal
+            
 
         }
 
@@ -2403,18 +2283,14 @@ function verifySNBAKey() {
         // Function to show the add list section
         function showAddListSection() {
             // Hide all sections first
-            const mainHeader = document.getElementById('mainHeader');
-            const noteTopBar = document.querySelector('.top-bar');
-            const navBar = document.querySelector('.bottom-nav');
+           
             document.querySelectorAll('.container').forEach(section => {
                 section.classList.add('hidden'); // Hide all sections
             });
 
             // Show the add list section
             document.getElementById('addListSection').classList.remove('hidden'); // Show the add list section
-            document.getElementById('newItem').value = ""; // Clear the new item input
-            const editNoteButton = document.getElementById('editNoteButton');
-            editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
+           
             // Check if we are editing an existing list
             if (editingListIndex !== null) {
                 const list = lists[editingListIndex]; // Get the list being edited
@@ -2422,24 +2298,15 @@ function verifySNBAKey() {
                 currentItems = list.items.slice(); // Copy items to currentItems
                 displayChecklist(); // Display the checklist with items
                 document.getElementById('manageListTitle').textContent = `Manage Your ${list.title} List`; // Update title with the actual list title
-                editNoteButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-                listTitle.disabled = true;
-                newItem.disabled = true;
-                mainHeader.classList.add('hidden');
-                navBar.style.display = 'none';
-                noteTopBar.style.display = 'block';
+               
             } else {
                 // Reset for new list
                 document.getElementById('listTitle').value = ""; // Clear the title input
                 document.getElementById('manageListTitle').textContent = "Manage Your New List"; // Default title for new list
                 currentItems = []; // Reset current items
                 displayChecklist(); // Clear the checklist display
-                editNoteButton.innerHTML = '<i class="fas fa-check"></i>';
-                listTitle.disabled = false;
-                newItem.disabled = false;
-                mainHeader.classList.add('hidden');
-                navBar.style.display = 'none';
-                noteTopBar.style.display = 'block';
+                
+               
             }
 
             closeAddOptions(); // Close any open options
@@ -2449,12 +2316,7 @@ function verifySNBAKey() {
         function cancelList() {
             // Hide the add list section and show the lists section
             document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
-           
-            const navBar = document.querySelector('.bottom-nav');
-           
-            navBar.style.display = 'flex';
-
-            showSection('combinedContainer'); // Show the lists section
+           showSection('combinedContainer'); // Show the lists section
 displayNotes();
 displayLists();
         }
@@ -2489,11 +2351,7 @@ displayLists();
 
             localStorage.setItem('lists', JSON.stringify(lists)); // Save to local storage
             displayLists(); // Refresh the displayed lists
-            const mainHeader = document.getElementById('mainHeader');
-            const list = document.querySelector('.top-bar');
-            const navBar = document.querySelector('.bottom-nav');
-            mainHeader.classList.remove('hidden');
-            navBar.style.display = 'flex';
+           
             showSection('combinedContainer'); // Show the lists section
             editingListIndex = null; // Reset editing state after saving
         }
