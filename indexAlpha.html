@@ -572,40 +572,51 @@ h1 {
     margin-right: 5px;
 }
 
-        .feature-buttons {
-            display: grid;
-            /* Use flexbox for layout */
-            grid-template-columns: repeat(3, 1fr);
-            /* Allow wrapping to the next line */
-            gap: 10px;
-            /* Distribute buttons evenly across the row */
-            margin: 10px 0;
-            /* Margin around the button section */
-        }
+p {
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+}
 
-        .feature-buttons button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            margin: 5px 0;
-            cursor: pointer;
-            border: none;
-            color: rgb(0, 0, 0);
-            border-radius: 4px;
-            transition: background-color 0.3s;
-            background: transparent;
-        }
+.feature-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
 
-        .feature-buttons button i {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
+.feature-item {
+    text-align: center;
+    flex: 1 1 200px; /* Flex-grow, flex-shrink, flex-basis */
+    min-width: 150px; /* Minimum width for smaller screens */
+}
 
-        .feature-buttons button:hover {
-            background-color: #a8a8a8;
-            /* Light gray on hover */
-        }
+.feature-button {
+    background: transparent;
+ /* Blue border */
+    border-radius: 5px;
+    padding: 15px;
+    width: 120px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgb(0, 0, 0); /* Text color */
+}
+
+.feature-button i {
+    font-size: 24px;
+    color: #007bff; /* Blue icon color */
+}
+
+.feature-button:hover {
+    background: rgb(143, 143, 143); /* Blue background on hover */
+  
+}
+
+.feature-description {
+    margin-top: 5px;
+    color: #777; /* Description text color */
+    font-size: 14px;
+}
 
         i {
             margin-right: 8px;
@@ -933,30 +944,62 @@ h1 {
 
 
 
-.setting-category {
-    margin-bottom: 20px;
+   
+
+h2, h3 {
+    color: #333; /* Darker text for headings */
 }
 
-.setting-category h3 {
+.backup-import {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between buttons and input */
+}
+
+.action-button {
+    background-color: #007bff; /* Blue background for action buttons */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.setting-category {
+    margin-top: 15px;
+    border: 1px solid #ddd; /* Light border for categories */
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.setting-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: transparent;
-    color: white;
-    padding: 10px;
+    cursor: pointer;
+}
+
+.toggle-icon {
+    font-size: 18px;
+    color: #007bff; /* Blue color for toggle icons */
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.file-input {
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #ccc; /* Light border for file input */
     border-radius: 5px;
-}
-
-.setting-category div {
-    max-height: 0; /* Initially hide the section */
-    overflow: hidden; /* Hide overflow */
-    transition: max-height 0.3s ease-out; /* Transition for max-height */
-}
-
-.setting-category div.open {
-    max-height: 500px; /* Set a max height for the open state */
-    transition: max-height 0.5s ease-in; /* Transition for max-height */
 }
 
 .hidden {
@@ -966,6 +1009,32 @@ h1 {
 .toggle-icon {
     font-size: 20px;
 }
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab-button.active {
+    background-color: #ccc;
+}
+
+
+
+.tab-content.active {
+    display: block;
+}
+
+
 
 /* Modal styling */
 #snbakeyVerificationModal {
@@ -1389,47 +1458,58 @@ h1 {
 
 
     
-
     <div id="moreSection" class="container hidden">
         <h2>More Features</h2>
+        <p>Explore the additional features of our app that enhance your experience and productivity. Click on any feature to learn more!</p>
         <div class="feature-buttons">
-            <button onclick="toggleFeatureSection('privacyInfoSection')">
-                <i class="fas fa-user-shield"></i>
-                <br>
-                Privacy Info
-            </button>
-            <button onclick="showSection('calculatorSection')">
-                <i class="fas fa-calculator"></i>
-                <br>
-                Calculator
-            </button>
-           
-            <button id="notifyButton">
-                <i class="fas fa-bell"></i>
-                <br>
-                Notifications
-            </button>
-            </button>
-
-
-            <button onclick="showSection('settingsSection')">
-                <i class="fas fa-cog"></i>
-                <br>
-                Settings
-            </button>
-            <button onclick="showSection('inbox')">
-                <i class="fas fa-inbox"></i>
-                <br>
-                Inbox
-            </button>
-           
-            <button onclick="showSection('calendarSection')">
-<i class="fa fa-calendar"></i>
-<br>
-Calendar
-
-            
-
+            <div class="feature-item">
+                <button onclick="toggleFeatureSection('privacyInfoSection')" class="feature-button">
+                    <i class="fas fa-user-shield"></i>
+                    <br>
+                    Privacy Info
+                </button>
+                <p class="feature-description">Manage your privacy settings and control who sees your information.</p>
+            </div>
+            <div class="feature-item">
+                <button onclick="showSection('calculatorSection')" class="feature-button">
+                    <i class="fas fa-calculator"></i>
+                    <br>
+                    Calculator
+                </button>
+                <p class="feature-description">Use our built-in calculator for quick calculations without leaving the app.</p>
+            </div>
+            <div class="feature-item">
+                <button id="notifyButton" class="feature-button">
+                    <i class="fas fa-bell"></i>
+                    <br>
+                    Notifications
+                </button>
+                <p class="feature-description">Stay updated with real-time notifications for important events.</p>
+            </div>
+            <div class="feature-item">
+                <button onclick="showSection('settingsSection')" class="feature-button">
+                    <i class="fas fa-cog"></i>
+                    <br>
+                    Settings
+                </button>
+                <p class="feature-description">Customize your app experience through various settings options.</p>
+            </div>
+            <div class="feature-item">
+                <button onclick="showSection('inbox')" class="feature-button">
+                    <i class="fas fa-inbox"></i>
+                    <br>
+                    Inbox
+                </button>
+                <p class="feature-description">Access your messages and notifications in one convenient inbox.</p>
+            </div>
+            <div class="feature-item">
+                <button onclick="showSection('calendarSection')" class="feature-button">
+                    <i class="fa fa-calendar"></i>
+                    <br>
+                    Calendar
+                </button>
+                <p class="feature-description">Keep track of your events and deadlines with our integrated calendar.</p>
+            </div>
         </div>
     </div>
 
@@ -1525,6 +1605,7 @@ Calendar
                 </label>
             </div>
         </div>
+
     
 
     <div class="setting-category">
@@ -1550,6 +1631,109 @@ Calendar
             
         </div>
     </div>
+    </div>
+
+    <div id="settingsSection" class="container hidden">
+        <button onclick="showSection('moreSection')" class="close-button">Close</button>
+        <p>Press home to return to home</p>
+        
+        <h2>Settings</h2>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('backupImport')">Backup/Import</button>
+            <button class="tab-button" onclick="showTab('securitySettings')">Security Settings</button>
+            <button class="tab-button" onclick="showTab('dataManagement')">Data Management</button>
+            <button class="tab-button" onclick="showTab('passwordManagement')">Password Management</button>
+        <button class="tab-button" onclick="showTab('sct')">Scan threats</button>
+        <button class="tab-button" onclick="showTab('u')">Update</button>
+        
+        </div>
+        
+        <div id="backupImport" class="tab-content active">
+            <h3>Backup/Import</h3>
+            <div class="backup-import">
+                <button onclick="backupNotes()" class="action-button">Backup Notes</button>
+                <input type="file" id="importFile" onchange="prepareImport(event)" class="file-input" />
+                <button onclick="importNotes()" class="action-button">Continue Import</button>
+            </div>
+        </div>
+        
+        <div id="securitySettings" class="tab-content">
+            <h3>Security Settings</h3>
+            <div class="setting-category">
+                <h3 onclick="toggleSection('lockNotesSection')" class="setting-header">
+                    <i class="fas fa-lock"></i> Lock Notes
+                    <span class="toggle-icon" id="lockNotesToggle">+</span>
+                </h3>
+                <div id="lockNotesSection" class="hidden">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="lockNotes" />
+                        Lock notes after inactivity
+                    </label>
+                    <button onclick="saveSettings()" class="action-button">Save Settings</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="dataManagement" class="tab-content">
+            <h3>Data Management</h3>
+            <div class="setting-category">
+                <h3 onclick="toggleSection('encryptionSection')" class="setting-header">
+                    <i class="fas fa-lock"></i> Data Management
+                    <span class="toggle-icon" id="encryptionToggle">+</span>
+                </h3>
+                <div id="encryptionSection" class="hidden">
+                    <button onclick="goBack()" class="action-button">Back</button>
+                    <button onclick="clearData()" class="action-button">Clear All Data</button>
+                    <button onclick="encryptData()" class="action-button">Encrypt Data</button>
+                    <button onclick="decryptData()" class="action-button">Decrypt Data</button>
+                    <button onclick="showMessageBox('Server-side features will be added in future updates. Stay tuned')" class="action-button">Allow data management on Server-side</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="passwordManagement" class="tab-content">
+            <h3>Password Management</h3>
+            <div class="setting-category">
+                <h3 onclick="toggleSection('passwordManagementSection')" class="setting-header">
+                    <i class="fas fa-key"></i> Password Management
+                    <span class="toggle-icon" id="passwordManagementToggle">+</span>
+                </h3>
+                <div id="passwordManagementSection" class="hidden">
+                    <button onclick="goBack()" class="action-button">Back</button>
+                    <button class="action-button" onclick="openSNBAKeySetupModal()">Setup/Reset SNBA Key</button>
+                </div>
+            </div>
+        </div>
+        <div id="sct" class="tab-content">
+            <h3 onclick="toggleSection('openAntiSection')">
+            
+                <i class="fas fa-shield-alt"></i> Scan For Threats
+                <span class="toggle-icon" id="openAntiToggle">+</span>
+            </h3>
+            <div id="openAntiSection" class="hidden">
+                <button onclick="goBack()">Back</button>
+                <button onclick="showSection('antivirusSection')">Open</button>
+            
+            </div>
+            
+                </div>
+                <div id="u" class="tab-content">
+                    <h3 onclick="toggleSection('updateSection')">
+                    <i class="fas fa-check"></i> Update OS
+                    <span class="toggle-icon" id="openAntiToggle">+</span>
+                    </h3>
+                    <div id="updateSection" class="hidden">
+                        <button onclick="showSection('update')">Open section</button>
+                        
+                    </div>
+                </div>
+    
+        <hr>
+        
+        <h2>Credits</h2>
+        <p>Developed by <strong>Anagh Manglick</strong><br>
+        Inspired by <strong>Good Keep Notes</strong> and <strong>ColorNote</strong>, along with my own creativity.</p>
     </div>
 
     <div id="antivirusSection" class="container">
@@ -1868,6 +2052,41 @@ function goBack() {
     });
 }
 
+function showTab(tabId) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+
+    // Show the selected tab content
+    document.getElementById(tabId).classList.add('active');
+
+    // Set the clicked tab button as active
+    const activeButton = Array.from(tabButtons).find(button => button.textContent === tabId.replace(/([A-Z])/g, ' $1').trim());
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+}
+
+// Function to toggle sections within the settings
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.classList.toggle('hidden');
+        const toggleIcon = document.getElementById(sectionId + 'Toggle');
+        if (toggleIcon) {
+            toggleIcon.textContent = toggleIcon.textContent === '+' ? '-' : '+';
+        }
+    }
+}
+
 function clearData() {
     if (confirm("Are you sure you want to clear all data? This action cannot be undone.")) {
         localStorage.removeItem('notes');
@@ -2184,9 +2403,7 @@ function verifySNBAKey() {
         });
 
         function searchNotes() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filteredNotes = notes.filter(note => note && (note.title.toLowerCase().includes(searchTerm) || note.content.toLowerCase().includes(searchTerm)));
-            displayFilteredNotes(filteredNotes);
+            showMessageBox('The Dymatic Search that is in develpment wiill replace this search feature. ')
         }
 
         function formatDate(date) {
@@ -2241,17 +2458,10 @@ function verifySNBAKey() {
         }
 
         function toggleSearchInput() {
-            const currentSection = document.querySelector('.container:not(.hidden)');
+            showMessageBox('The Dymatic Search that is in develpment wiill replace this search feature. ')
 
-            // Check if the current section is the notes section
-            if (currentSection.id !== 'combinedContainer') {
-                showMessageBox("Please be on the home section to use the search feature.");
-                return; // Exit the function if not in the notes section
 
-            }
-
-            const searchInput = document.getElementById('searchInput');
-            searchInput.style.display = searchInput.style.display === 'none' ? 'block' : 'none';
+            
         }
 
 
@@ -2909,4 +3119,4 @@ displayLists();
 
 </body>
 
-</html>                                                                                                                                                                                                                                                                    
+</html>
