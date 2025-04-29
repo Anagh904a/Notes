@@ -203,11 +203,12 @@
       }
 
       .modal-content {
-        color: white;
+        color: rgb(0, 0, 0);
         padding: 20px;
         border-radius: 5px;
         width: 350px;
         position: absolute;
+        background-color: white;
       }
 
       /* Hidden class to hide elements */
@@ -580,7 +581,7 @@
       /* Style for Undo and Redo Buttons */
       #undoButton,
       #redoButton {
-        background: black;
+        background: rgb(255, 255, 255);
         /* Transparent background */
         color: #333;
         /* Default text color */
@@ -600,9 +601,9 @@
       /* Hover effect for undo and redo buttons */
       #undoButton:hover,
       #redoButton:hover {
-        background: rgba(51, 51, 51, 0.1);
+        background: rgba(63, 63, 63, 0.1);
         /* Light background on hover */
-        color: #000;
+        color: #ffffff;
         /* Dark text color on hover */
       }
 
@@ -1427,9 +1428,10 @@
         type="text"
         id="noteTitle"
         placeholder="Enter your note title..."
-      />
+      /> <p>You can use formulaes by using '=Num1 operator Num2' don't use spaces between them.</p>
       <textarea id="noteContent" placeholder="Write your note here...">
       </textarea>
+
 
       <button id="undoButton" onclick="undo()">
         <i class="fas fa-undo"></i>
@@ -2280,6 +2282,44 @@
           document.getElementById("updateModal").classList.add("hidden"); // Hide the modal
         }, 120000); // 2 minutes
       }
+
+      document.getElementById('noteContent').addEventListener('keyup', function (e) {
+  if (e.key === " " || e.key === "Enter") {
+    const textarea = e.target;
+    const text = textarea.value;
+
+    // Use regex to find formula-like patterns: e.g., =5+4, =SUM(1,2)
+    const formulaPattern = /=(SUM|AVG)?\(?[0-9+*/,\s.-]+\)?/gi;
+    const matches = text.match(formulaPattern);
+
+    if (matches) {
+      matches.forEach(match => {
+        const result = evaluateInlineFormula(match.trim());
+        if (result !== null) {
+          textarea.value = textarea.value.replace(match, result);
+        }
+      });
+    }
+  }
+});
+
+function evaluateInlineFormula(formula) {
+  try {
+    if (formula.startsWith('=SUM(')) {
+      const nums = formula.slice(5, -1).split(',').map(Number);
+      return nums.reduce((a, b) => a + b, 0);
+    } else if (formula.startsWith('=AVG(')) {
+      const nums = formula.slice(5, -1).split(',').map(Number);
+      return (nums.reduce((a, b) => a + b, 0) / nums.length).toFixed(2);
+    } else if (formula.startsWith('=')) {
+      return eval(formula.slice(1)); // simple math
+    }
+  } catch (e) {
+    return null;
+  }
+  return null;
+}
+
 
       function toggleSection(sectionId) {
         const section = document.getElementById(sectionId);
