@@ -286,7 +286,7 @@ text-align: center;
       }
 
       .input-field {
-        width: 100%;
+        width: 95%;
         /* Full width */
         padding: 12px;
         /* Padding inside the input */
@@ -878,7 +878,7 @@ text-align: center;
       }
 
       .modal-content input {
-        width: 100%;
+        width: 95%;
         padding: 10px;
         margin-bottom: 20px;
         border: 1px solid #ccc;
@@ -935,9 +935,9 @@ text-align: center;
       padding: 6px 10px;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
       background-color: #f3f3f3;
-      margin-top: 3%;
-      margin-left: 3%;
-      margin-right: 3%;
+      margin-top: 1%;
+      margin-left: 1%;
+      margin-right: 1%;
     }
 
     .top-bar button {
@@ -1447,7 +1447,7 @@ text-align: center;
         type="text"
         id="noteTitle"
         placeholder="Enter your note title..."
-      /> <p>You can use formulaes by using '=Num1 operator Num2' don't use spaces between them.</p>
+      />
       <textarea id="noteContent" placeholder="Write your note here...">
       </textarea>
 
@@ -1508,7 +1508,7 @@ text-align: center;
     <!-- Add Options Modal -->
     <div id="addOptionsModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Add Options</h3>
+        <h3>What to add?</h3>
         <button id="addNoteButton" onclick="showAddNote()">
           <i class="fas fa-list"></i>Add Note
         </button>
@@ -1542,9 +1542,9 @@ text-align: center;
     <!-- Password Modal -->
     <div id="passwordModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter Password To Access The content</h3>
+        <h3>Enter Password To Access This Note</h3>
         <input type="password" id="passwordInput" placeholder="Password" />
-        <button onclick="verifyPassword()">Submit</button>
+        <button onclick="verifyPassword()">Go</button>
         <button onclick="closePasswordModal()">Close</button>
       </div>
     </div>
@@ -1552,13 +1552,13 @@ text-align: center;
     <!-- Delete Password Modal -->
     <div id="deletePasswordModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter Password To Delete The content</h3>
+        <h3>Enter Password To Delete This Note</h3>
         <input
           type="password"
           id="deletePasswordInput"
           placeholder="Password"
         />
-        <button onclick="deleteVerifyPassword()">Submit</button>
+        <button onclick="deleteVerifyPassword()">Go</button>
         <button onclick="closeDeletePasswordModal()">Close</button>
       </div>
     </div>
@@ -1756,7 +1756,7 @@ text-align: center;
         <div id="passwordManagementSection" class="hidden">
           <button onclick="goBack()">Back</button>
           <button class="gradient-button" onclick="openSNBAKeySetupModal()">
-            Setup/Reset SNBA Key
+            Setup/Reset Web Key
           </button>
         </div>
       </div>
@@ -2050,9 +2050,9 @@ text-align: center;
     <!-- List Password Modal -->
     <div id="listPasswordModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter Password to Access the List</h3>
+        <h3>Enter Password to Access This List</h3>
         <input type="password" id="listPasswordInput" placeholder="Password" />
-        <button onclick="verifyListPassword()">Submit</button>
+        <button onclick="verifyListPassword()">Go</button>
         <button onclick="closeListPasswordModal()">Close</button>
       </div>
     </div>
@@ -2060,13 +2060,13 @@ text-align: center;
     <!-- Delete List Password Modal -->
     <div id="deleteListPasswordModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter Password to Delete the List</h3>
+        <h3>Enter Password to Delete This List</h3>
         <input
           type="password"
           id="deleteListPasswordInput"
           placeholder="Password"
         />
-        <button onclick="deleteListVerifyPassword()">Submit</button>
+        <button onclick="deleteListVerifyPassword()">Go</button>
         <button onclick="closeDeleteListPasswordModal()">Close</button>
       </div>
     </div>
@@ -2145,23 +2145,23 @@ text-align: center;
     <!-- SNBA Key Setup Modal -->
     <div id="snbakeySetupModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Setup SNBA Key</h3>
+        <h3>Setup Your Web Key</h3>
         <input
           type="password"
           id="snbakey"
-          placeholder="Enter your SNBA Key"
+          placeholder="Enter your Web Key"
           required
         />
         <input
           type="password"
           id="confirmSnbakey"
-          placeholder="Confirm your SNBA Key"
+          placeholder="Confirm your Web Key"
           required
         />
         <button class="gradient-button" onclick="saveSNBAKey()">
-          Save SNBA Key
+          Save Web Key
         </button>
-        <p>Press above button if you want to remove SNBA key</p>
+        <p>Press above button if you want to remove your web key</p>
         <button onclick="closeSNBAKeySetupModal()">Close</button>
       </div>
     </div>
@@ -2169,16 +2169,18 @@ text-align: center;
     <!-- SNBA Key Verification Modal -->
     <div id="snbakeyVerificationModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter SNBA Key</h3>
+        <h3>Enter Your Saved Web Key To Access The Site<h3>
         <input
           type="password"
           id="snbakeyInput"
-          placeholder="Enter your SNBA Key"
+          placeholder="Enter your Web Key"
           required
         />
         <button class="gradient-button" onclick="verifySNBAKey()">
-          Verify SNBA Key
+          Proceed
         </button>
+        <br>
+        <a href="passwordReset.html">Forgot password?</a>
       </div>
     </div>
 
@@ -2484,7 +2486,7 @@ function evaluateInlineFormula(formula) {
 
         // Reset results and status
         resultsContainer.innerHTML = ""; // Clear previous results
-        scanStatus.textContent = "Scanning for sensitive data and SNBA keys...";
+        scanStatus.textContent = "Scanning for sensitive data and Web keys...";
         scanCircle.style.borderColor = "#4CAF50"; // Start with green
         scanCircle.style.animation = "spin 1s linear infinite"; // Start spinning
 
@@ -2525,7 +2527,7 @@ function evaluateInlineFormula(formula) {
         if (snbaKey) {
           resultsContainer.innerHTML += "<div>SNBA Key is set up.</div>";
         } else {
-          resultsContainer.innerHTML += "<div>SNBA Key not found.</div>";
+          resultsContainer.innerHTML += "<div>Web Key not found.</div>";
           threatsCount++; // Count this as a threat
         }
 
@@ -2577,13 +2579,13 @@ function evaluateInlineFormula(formula) {
         const confirmSnbakey = document.getElementById("confirmSnbakey").value;
 
         if (snbakey !== confirmSnbakey) {
-          showMessageBox("SNBA Keys do not match!");
+          showMessageBox("Web Keys do not match!");
           return;
         }
 
         // Save the SNBA key securely (e.g., encrypt and store in local storage)
         localStorage.setItem("snbakey", snbakey); // Store the SNBA key
-        showMessageBox("Your SNBA key has been set up successfully!");
+        showMessageBox("Your Web key has been set up successfully!");
         closeSNBAKeySetupModal();
       }
 
@@ -2602,12 +2604,12 @@ function evaluateInlineFormula(formula) {
           document
             .getElementById("snbakeyVerificationModal")
             .classList.add("hidden");
-          showMessageBox("SNBA Key verified successfully!"); // Optional: Show a success message
+          showMessageBox("Web Key verified successfully!"); // Optional: Show a success message
           showMessageBox("Welcome Back!");
           // Load the rest of the app or redirect to the main page
         } else {
           // Incorrect SNBA key, prompt the user
-          alert("Incorrect SNBA Key! Please try again.");
+          alert("Incorrect Web Key! Please try again.");
         }
       }
 
