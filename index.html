@@ -358,10 +358,11 @@ text-align: center;
       }
 
       .checklist-item {
-        background-color: #c7c7c7;
+        background-color: transparent;
         /* Orange background */
         padding: 10px;
         /* Padding inside the item */
+        border: 1px solid black;
         border-radius: 5px;
         /* Rounded corners */
         margin: 5px 0;
@@ -691,148 +692,80 @@ text-align: center;
       }
 
       /* General styles for the container */
-      #calendarSection {
-        font-family: "Arial", sans-serif;
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-      }
+    /* Container */
+.calendar-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-      /* Styling for the month navigation */
-      .month {
-        background-color: #474747;
-        /* Orange color */
-        padding: 10px 0;
-        text-align: center;
-        border-radius: 10px;
-        margin-bottom: 20px;
-      }
+/* Header */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-      .month ul {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.3s;
+}
 
-      .month ul li {
-        font-size: 1.2em;
-        color: white;
-        cursor: pointer;
-        user-select: none;
-      }
+.nav-button:hover {
+  color: #000;
+}
 
-      .month ul li#monthYear {
-        font-weight: bold;
-        font-size: 1.5em;
-        color: white;
-        margin-right: 600px;
-      }
+.month-year {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
 
-      /* Hover effects for previous/next buttons */
-      .month ul li:hover {
-        background-color: rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-      }
+/* Weekdays */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 10px;
+}
 
-      /* Styling for the weekdays (Mo, Tu, etc.) */
-      .weekdays {
-        display: flex;
-        justify-content: space-around;
-        list-style-type: none;
-        padding: 0;
-        margin-bottom: 10px;
-        background-color: #f4f4f4;
-        border-radius: 5px;
-      }
+/* Days */
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 10px;
+}
 
-      .weekdays li {
-        width: 35px;
-        text-align: center;
-        font-weight: bold;
-        color: #333;
-      }
+.calendar-days div {
+  padding: 10px 0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  transition: background-color 0.3s;
+}
 
-      /* Styling for the days grid */
-      .days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        /* 7 columns for the days of the week */
-        grid-gap: 5px;
-        /* Space between grid items */
-        padding: 0;
-        list-style-type: none;
-        margin: 0;
-        border: 1px solid #ccc;
-        /* Add border around the entire days grid */
-      }
+.calendar-days div:hover {
+  background-color: #e0e0e0;
+}
 
-      /* Styling for individual day cells */
-      .days li {
-        width: 35px;
-        height: 35px;
-        line-height: 35px;
-        text-align: center;
-        border: 1px solid #ccc;
-        /* Add border around each day */
-        border-radius: 5px;
-        /* Rounded corners for a softer look */
-        cursor: pointer;
-        font-size: 1.1em;
-        color: #333;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
+.today {
+  background-color: #007aff;
+  color: #fff;
+}
 
-      /* Hover effect for days */
-      .days li:hover {
-        background-color: #eeeeee;
-        /* Hover effect with the same orange color */
-        color: white;
-      }
 
-      /* Styling for today's date */
-      .days li.active {
-        background-color: #8f8f8f;
-        /* A distinct background for today's date */
-        color: white;
-      }
-
-      /* Selected day */
-      .days li.selected {
-        background-color: #363636;
-        color: white;
-      }
-
-      /* Disabled days (out of the current month) */
-      .days li.disabled {
-        color: #000000;
-        pointer-events: none;
-      }
-
-      /* Style for previous/next button */
-      .prev,
-      .next {
-        cursor: pointer;
-        font-size: 1.5em;
-        color: white;
-        padding: 5px;
-        border-radius: 50%;
-      }
-
-      .prev:hover,
-      .next:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      .prev {
-        margin-left: 10px;
-      }
-
-      .next {
-        margin-right: 10px;
-      }
 
       #addItemButton {
         color: rgb(0, 0, 0);
@@ -953,10 +886,11 @@ text-align: center;
       flex: 1;
       border: none;
       outline: none;
-      font-size: 14px;
+      font-size: 18px;
       padding: 6px 10px;
       color: #333;
       background-color: transparent;
+      margin-bottom: 0px;
     }
 
     .top-bar input::placeholder {
@@ -1387,9 +1321,7 @@ text-align: center;
       type="text"
       id="searchInput"
       placeholder="Search your data"
-      oninput="showMessageBox('This feature is almost ready. It will be released in next update.')"
-      style="width: 80%; margin: 10px auto; display: flex; background: transparent; 
-      border: none; font-size: 18px;"
+      oninput="searchNotes()"
      >
        
        
@@ -1399,6 +1331,9 @@ text-align: center;
         <button class="button" onclick="showSection('settingsSection')">
           <i class="fas fa-cog"></i>
         </button>
+        <br>
+        <div id="syncStatus">🔄 Syncing notes...</div>
+
       </div>
     
 
@@ -1470,28 +1405,28 @@ text-align: center;
 
     <!-- Add Lists Section -->
     <div id="addListSection" class="container">
-      <button onclick="cancelList()">
-        <i class="fas fa-arrow-left back-icon"></i>Back
+      <button onclick="cancelList()" style="background: transparent;">
+        <i class="fas fa-arrow-left back-icon"></i>
       </button>
-      <button onclick="saveList()"><i class="fas fa-save"></i>Save</button>
-      <button id="manageListPassword" onclick="showListPassword()">
+      <button onclick="saveList()" style="justify-content: right; text-align: right; background: none;"><i class="fas fa-save"></i>Save</button>
+      <button id="manageListPassword" onclick="showListPassword()" style="background: none;">
+      
         <i class="fas fa-lock"></i> Manage Your Password
       </button>
-
-      <h3 id="manageListTitle">Manage Your List</h3>
+<br>
+<br>
       <input
         type="text"
         id="listTitle"
         placeholder="Enter your list title..."
+        style="background: transparent; margin-bottom: 10px; border: none; font-size: 25px;"
       />
       <br />
 
       <input id="newItem" type="text" placeholder="Enter item name..." />
       <!-- Input for new item -->
 
-      <button id="addItemButton" onclick="addItem()">
-        <i class="fas fa-plus"></i>Add Item
-      </button>
+      
       <!-- Button to add item -->
       <br />
 
@@ -1503,6 +1438,7 @@ text-align: center;
       />
       <div id="checklistContainer"></div>
       <!-- Container for checklist items -->
+             <h3 id="manageListTitle" style="display: none;">Manage Your List</h3>
     </div>
 
     <!-- Add Options Modal -->
@@ -1510,10 +1446,10 @@ text-align: center;
       <div class="modal-content">
         <h3>What to add?</h3>
         <button id="addNoteButton" onclick="showAddNote()">
-          <i class="fas fa-list"></i>Add Note
+          <i class="fas fa-sticky-note"></i>Add Note
         </button>
         <button id="addListButton" onclick="showAddListSection()">
-          <i class="fas fa-sticky-note"></i>Add List
+          <i class="fas fa-list"></i>Add List
         </button>
         <button onclick="closeAddOptions()">
           <i class="fas fa-times"></i>Close
@@ -1521,33 +1457,7 @@ text-align: center;
       </div>
     </div>
 
-    <div id="dataManagementSection" class="container hidden">
-      <h2>Data Management</h2>
-      <div id="progressContainer" style="display: none">
-        <p id="progressText">Operation in progress...</p>
-        <progress id="progressBar" value="0" max="100"></progress>
-      </div>
-      <button onclick="backupNotes()">Backup Notes</button>
-      <input type="file" id="importFile" onchange="prepareImport(event)" />
-      <button onclick="importNotes()">Import Notes</button>
-      <br />
-
-      <div id="dataStats">
-        <br />
-        <p>Total Notes: <span id="noteCount">0</span></p>
-        <p>Total Lists: <span id="listCount">0</span></p>
-      </div>
-    </div>
-
-    <!-- Password Modal -->
-    <div id="passwordModal" class="modal hidden">
-      <div class="modal-content">
-        <h3>Enter Password To Access This Note</h3>
-        <input type="password" id="passwordInput" placeholder="Password" />
-        <button onclick="verifyPassword()">Go</button>
-        <button onclick="closePasswordModal()">Close</button>
-      </div>
-    </div>
+   
 
     <!-- Delete Password Modal -->
     <div id="deletePasswordModal" class="modal hidden">
@@ -2071,28 +1981,35 @@ text-align: center;
       </div>
     </div>
 
-    <div id="calendarSection" class="container">
-      <h2>Calendar</h2>
-      <div class="month">
-        <ul>
-          <li class="prev" onclick="changeMonth(-1)">&#10094;</li>
-          <li class="next" onclick="changeMonth(1)">&#10095;</li>
-          <li id="monthYear"></li>
-        </ul>
+    <div id="calendarSection" class="container hidden">
+      <div class="calendar-header">
+        <button class="nav-button" onclick="changeMonth(-1)">&#10094;</button>
+        <div id="monthYear" class="month-year"></div>
+        <button class="nav-button" onclick="changeMonth(1)">&#10095;</button>
       </div>
-
-      <ul class="weekdays">
-        <li>Mo</li>
-        <li>Tu</li>
-        <li>We</li>
-        <li>Th</li>
-        <li>Fr</li>
-        <li>Sa</li>
-        <li>Su</li>
-      </ul>
-
-      <ul class="days" id="daysContainer"></ul>
+    
+      <div class="calendar-weekdays">
+        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+      </div>
+    
+      <div class="calendar-days" id="calendarDays"></div>
     </div>
+
+    <div id="profileSection" class="profile-card hidden">
+      <div class="profile-header">
+        <i class="fas fa-user-circle fa-4x"></i>
+        <h2>Your Profile</h2>
+      </div>
+      <div class="profile-form">
+        <input type="text" id="profileName" placeholder="Your Name" />
+        <input type="email" id="profileEmail" placeholder="Your Email" disabled />
+        <button onclick="saveProfile()" class="gradient-button">Save Changes</button>
+        <p id="profileMsg" style="color: green;"></p>
+      </div>
+    </div>
+    
+    
+    
 
     <!-- Update Modal -->
     <div id="update" class="container hidden">
@@ -2167,29 +2084,36 @@ text-align: center;
     </div>
 
     <!-- SNBA Key Verification Modal -->
-    <div id="snbakeyVerificationModal" class="modal hidden">
-      <div class="modal-content">
-        <h3>Enter Your Saved Web Key To Access The Site<h3>
-        <input
-          type="password"
-          id="snbakeyInput"
-          placeholder="Enter your Web Key"
-          required
-        />
-        <button class="gradient-button" onclick="verifySNBAKey()">
-          Proceed
-        </button>
-        <br>
-        <a href="passwordReset.html">Forgot password?</a>
-      </div>
+    <!-- Auth Modal -->
+<div id="snbakeyVerificationModal" class="modal">
+  <div class="modal-content" style="width: 100%; max-width: 400px;">
+    <h2 id="authTitle">Sign In</h2>
+    <input type="email" id="authEmail" placeholder="Email" required />
+    <input type="password" id="authPassword" placeholder="Password" required />
+    
+    <div id="signupExtra" class="hidden">
+      <input type="password" id="authConfirmPassword" placeholder="Confirm Password" />
     </div>
+
+    <button class="gradient-button" onclick="handleAuth()">Continue</button>
+    <p id="authError" style="color: red;"></p>
+
+    <p style="margin-top: 10px;">
+      <a href="#" onclick="toggleAuth()">Switch to <span id="authToggleText">Sign Up</span></a><br />
+      <a href="passwordReset.html">Forgot password?</a>
+    </p>
+  </div>
+</div>
+
 
     <script>
       let notes = JSON.parse(localStorage.getItem("notes")) || [];
       let editingNoteIndex = null;
       let currentNoteId = null;
       let currentDeleteNoteId = null;
+      let currentItems = []; // Will now store objects like { name: 'item name', checked: true/false }
 
+let editingListIndex = null;
       let historyStack = [];
       let currentIndex = -1;
 
@@ -2524,12 +2448,7 @@ function evaluateInlineFormula(formula) {
         });
 
         // Prepare results
-        if (snbaKey) {
-          resultsContainer.innerHTML += "<div>SNBA Key is set up.</div>";
-        } else {
-          resultsContainer.innerHTML += "<div>Web Key not found.</div>";
-          threatsCount++; // Count this as a threat
-        }
+
 
         // Display sensitive data results
         if (foundSensitiveData.length > 0) {
@@ -2557,61 +2476,12 @@ function evaluateInlineFormula(formula) {
 
       // Function to verify the SNBA key
       window.onload = function () {
-        const storedKey = localStorage.getItem("snbakey"); // Check if SNBA key is stored
-
-        if (storedKey) {
-          // If SNBA key is found, show the verification modal
-          document
-            .getElementById("snbakeyVerificationModal")
-            .classList.remove("hidden");
-        } else {
-          // If no SNBA key is found, show the setup modal
-          document
-            .getElementById("snbakeyVerificationModal")
-            .classList.add("hidden");
-          showMessageBox("Welcome Back!");
-        }
-      };
+       
+      document.getElementById("snbakeyVerificationModal").classList.remove("hidden");
+      } 
 
       // Function to save the SNBA key
-      function saveSNBAKey() {
-        const snbakey = document.getElementById("snbakey").value;
-        const confirmSnbakey = document.getElementById("confirmSnbakey").value;
-
-        if (snbakey !== confirmSnbakey) {
-          showMessageBox("Web Keys do not match!");
-          return;
-        }
-
-        // Save the SNBA key securely (e.g., encrypt and store in local storage)
-        localStorage.setItem("snbakey", snbakey); // Store the SNBA key
-        showMessageBox("Your Web key has been set up successfully!");
-        closeSNBAKeySetupModal();
-      }
-
-      // Function to close the SNBA key setup modal
-      function closeSNBAKeySetupModal() {
-        document.getElementById("snbakeySetupModal").classList.add("hidden");
-      }
-
-      // Function to verify the SNBA key
-      function verifySNBAKey() {
-        const enteredKey = document.getElementById("snbakeyInput").value;
-        const storedKey = localStorage.getItem("snbakey"); // Get the stored SNBA key
-
-        if (enteredKey === storedKey) {
-          // Correct SNBA key, continue loading the app
-          document
-            .getElementById("snbakeyVerificationModal")
-            .classList.add("hidden");
-          showMessageBox("Web Key verified successfully!"); // Optional: Show a success message
-          showMessageBox("Welcome Back!");
-          // Load the rest of the app or redirect to the main page
-        } else {
-          // Incorrect SNBA key, prompt the user
-          alert("Incorrect Web Key! Please try again.");
-        }
-      }
+      
 
       function closeListPasswordModal() {
         document.getElementById("listPasswordModal").style.display = "none";
@@ -2620,6 +2490,7 @@ function evaluateInlineFormula(formula) {
       function closeDeleteListPasswordModal() {
         document.getElementById("deleteListPasswordModal").style.display =
           "none";
+          closeListPasswordModal();
       }
 
       function showCredits() {
@@ -2638,28 +2509,46 @@ function evaluateInlineFormula(formula) {
       }
 
       function backupNotes() {
-        const blob = new Blob([JSON.stringify(notes)], {
-          type: "application/json",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "notes_backup.json";
-        a.click();
-        URL.revokeObjectURL(url);
+  const backupData = {
+    notes: notes,
+    lists: lists,
+  };
+
+  const blob = new Blob([JSON.stringify(backupData)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "backup_data.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function prepareImport(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const importedData = JSON.parse(e.target.result);
+      
+      if (importedData.notes) {
+        notes = [...notes, ...importedData.notes];
       }
 
-      function prepareImport(event) {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const importedNotes = JSON.parse(e.target.result);
-            notes = [...notes, ...importedNotes];
-          };
-          reader.readAsText(file);
-        }
+      if (importedData.lists) {
+        lists = [...lists, ...importedData.lists];
+        localStorage.setItem("lists", JSON.stringify(lists));
+        displayLists(); // Refresh the list display if needed
       }
+
+      localStorage.setItem("notes", JSON.stringify(notes));
+      displayNotes(); // Only if you have such a function
+    };
+    reader.readAsText(file);
+  }
+}
+
 
       document.getElementById("notifyButton").onclick = function () {
         if (Notification.permission === "granted") {
@@ -2691,96 +2580,129 @@ function evaluateInlineFormula(formula) {
 
       // Function to toggle edit note mode
 
-      let currentDate = new Date(); // Initialize current date
+      const monthYear = document.getElementById('monthYear');
+const calendarDays = document.getElementById('calendarDays');
 
-      function displayCalendar() {
-        const monthYear = document.getElementById("monthYear");
-        const daysContainer = document.getElementById("daysContainer");
+let currentDate = new Date();
 
-        // Get the current month and year
-        const month = currentDate.getMonth();
-        const year = currentDate.getFullYear();
+function renderCalendar(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
 
-        // Set the month and year in the header
-        monthYear.innerHTML = `${currentDate.toLocaleString("default", {
-          month: "long",
-        })}<br><span style="font-size:18px">${year}</span>`;
+  // Set month and year
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  monthYear.textContent = `${monthNames[month]} ${year}`;
 
-        // Clear previous days
-        daysContainer.innerHTML = "";
+  // First day of the month
+  const firstDay = new Date(year, month, 1);
+  const startingDay = (firstDay.getDay() + 6) % 7; // Adjusting so Monday = 0
 
-        // Get the first day of the month (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-        const firstDay = new Date(year, month, 1).getDay();
-        const lastDate = new Date(year, month + 1, 0).getDate(); // Last date of the month
+  // Number of days in the month
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        // Fill the days with empty cells for days before the first of the month
-        for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-          daysContainer.innerHTML += "<li></li>"; // Empty cells for days before the first of the month
-        }
+  // Clear previous cells
+  calendarDays.innerHTML = '';
 
-        // Fill the days of the month
-        for (let day = 1; day <= lastDate; day++) {
-          const isToday =
-            day === new Date().getDate() &&
-            month === new Date().getMonth() &&
-            year === new Date().getFullYear();
-          daysContainer.innerHTML += `<li${
-            isToday ? ' class="active"' : ""
-          }>${day}</li>`;
-        }
-      }
+  // Add empty cells for days before the first day
+  for (let i = 0; i < startingDay; i++) {
+    const emptyCell = document.createElement('div');
+    calendarDays.appendChild(emptyCell);
+  }
 
-      // Function to change the month
-      function changeMonth(direction) {
-        currentDate.setMonth(currentDate.getMonth() + direction);
-        displayCalendar(); // Refresh the calendar display
-      }
+  // Add day cells
+  for (let i = 1; i <= daysInMonth; i++) {
+    const dayCell = document.createElement('div');
+    dayCell.textContent = i;
 
-      // Call displayCalendar on page load
-      document.addEventListener("DOMContentLoaded", function () {
-        displayCalendar(); // Display the calendar when the page loads
-      });
+    // Highlight today
+    const today = new Date();
+    if (
+      i === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear()
+    ) {
+      dayCell.classList.add('today');
+    }
 
-      function searchNotes() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const filteredNotes = notes.filter(note => 
-        note.title.toLowerCase().includes(searchTerm)
-      );
+    calendarDays.appendChild(dayCell);
+  }
+}
 
-      // Display filtered notes
-      displayFilteredNotes(filteredNotes);
-    
-      }
+function changeMonth(offset) {
+  currentDate.setMonth(currentDate.getMonth() + offset);
+  renderCalendar(currentDate);
+}
+
+// Initial render
+renderCalendar(currentDate);
+
+
 
       function formatDate(date) {
         const options = { day: "numeric", month: "long", year: "numeric" };
         return date.toLocaleDateString("en-US", options);
       }
 
-      // Function to display filtered notes
-      function displayFilteredNotes(filteredNotes) {
-        const container = document.getElementById("notesContainer");
-        container.innerHTML = ""; // Clear existing notes
-        const noNotesMessage = document.getElementById("noNotesMessage");
+      function searchNotes() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
-        if (filteredNotes.length === 0) {
-          noNotesMessage.classList.remove("hidden"); // Show no notes message
-        } else {
-          noNotesMessage.classList.add("hidden"); // Hide no notes message
-        }
+  // Filter notes safely
+  const filteredNotes = notes.filter(note =>
+    note?.title?.toLowerCase().includes(searchTerm)
+  );
 
-        filteredNotes.forEach((note, index) => {
-          const noteDiv = document.createElement("div");
-          noteDiv.innerHTML = `
-            <div class="note" onclick="openNote(${index})"> 
-                <h4>${note.title}</h4>
-                <span class="note-date">${note.date}</span> <!-- Display the date here -->
-                <button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
-            </div>
-        `;
-          container.appendChild(noteDiv);
-        });
-      }
+  // Filter lists safely
+  const filteredLists = lists.filter(list =>
+    list?.name?.toLowerCase().includes(searchTerm)
+  );
+
+  // Display both
+  displayFilteredNotesAndLists(filteredNotes, filteredLists);
+}
+
+
+// Function to display filtered notes and lists
+function displayFilteredNotesAndLists(filteredNotes, filteredLists) {
+  const container = document.getElementById("notesContainer");
+  container.innerHTML = ""; // Clear existing content
+  const noNotesMessage = document.getElementById("noNotesMessage");
+
+  if (filteredNotes.length === 0 && filteredLists.length === 0) {
+    noNotesMessage.classList.remove("hidden");
+  } else {
+    noNotesMessage.classList.add("hidden");
+  }
+
+  // Display notes
+  filteredNotes.forEach((note, index) => {
+    const noteDiv = document.createElement("div");
+    noteDiv.innerHTML = `
+      <div class="note" onclick="openNote(${index})">
+          <h4>${note.title}</h4>
+          <span class="note-date">${note.date}</span>
+          <button class="delete-btn" onclick="event.stopPropagation(); deleteNote(${index})">Delete</button>
+      </div>
+    `;
+    container.appendChild(noteDiv);
+  });
+
+  // Display lists
+  filteredLists.forEach((list, index) => {
+    const listDiv = document.createElement("div");
+    listDiv.innerHTML = `
+      <div class="note" onclick="openList(${index})">
+          <h4>${list.name}</h4>
+          <span class="note-date">${list.date || "No date"}</span>
+          <button class="delete-btn" onclick="event.stopPropagation(); deleteList(${index})">Delete</button>
+      </div>
+    `;
+    container.appendChild(listDiv);
+  });
+}
+
 
       // Function to close the list password modal
       function toggleFeatureSection(sectionId) {
@@ -2833,7 +2755,9 @@ function evaluateInlineFormula(formula) {
       }
 
       function closeCalculator() {
-        document.getElementById("calculatorSection").classList.add("hidden");
+        document.getElementById("calculatorSection").classList.add("hidden")
+        ;
+        showSection('combinedContainer');
       }
 
       function appendValue(value) {
@@ -3009,7 +2933,7 @@ function evaluateInlineFormula(formula) {
 
         localStorage.setItem("notes", JSON.stringify(notes));
         displayNotes();
-        updateDataStats();
+       
         showSection("combinedContainer");
 
         // Reset editing state
@@ -3053,16 +2977,29 @@ function evaluateInlineFormula(formula) {
       }
 
       function openNote(index) {
-        const note = notes[index];
+  const note = notes[index];
 
-        if (note.password) {
-          document.getElementById("passwordModal").style.display = "flex";
-          document.getElementById("passwordInput").value = "";
-          document.getElementById("passwordModal").dataset.noteIndex = index;
-        } else {
-          showNoteContent(note);
-        }
-      }
+  if (!note) {
+    alert("Note not found.");
+    return;
+  }
+
+  if (note.password) {
+    const modal = document.getElementById("passwordModal");
+    const input = document.getElementById("passwordInput");
+
+    if (modal && input) {
+      modal.style.display = "flex";
+      input.value = "";
+      modal.dataset.noteIndex = index;
+    } else {
+      alert("Your Note is corrupted. Kindly report to developer. We might recover your lost data. Sorry for inconvience. Current version- ");
+    }
+  } else {
+    showNoteContent(note);
+  }
+}
+
 
       document.addEventListener("DOMContentLoaded", function () {
         // Hide all sections initially
@@ -3135,22 +3072,33 @@ function evaluateInlineFormula(formula) {
       // Modify the deleteNote function to include password verification
 
       function deleteNote(index) {
-        const note = notes[index];
-        if (note.password) {
-          // Show the delete password modal if the note has a password
-          document.getElementById("deletePasswordModal").style.display = "flex";
-          document.getElementById("deletePasswordInput").value = ""; // Clear the input
-          document.getElementById("deletePasswordModal").dataset.noteIndex =
-            index; // Store the index
-        } else {
-          // If no password is required, confirm deletion
-          if (confirm("Are you sure you want to delete this note?")) {
-            notes.splice(index, 1); // Remove the note
-            localStorage.setItem("notes", JSON.stringify(notes)); // Update local storage
-            displayNotes(); // Refresh the displayed notes
-          }
-        }
-      }
+  const note = notes[index];
+
+  if (!note) {
+    alert("Note not found.");
+    return;
+  }
+
+  if (note.password) {
+    const modal = document.getElementById("deletePasswordModal");
+    const input = document.getElementById("deletePasswordInput");
+
+    if (modal && input) {
+      modal.style.display = "flex";
+      input.value = "";
+      modal.dataset.noteIndex = index;
+    } else {
+      console.error("Delete password modal or input not found.");
+    }
+  } else {
+    if (confirm("Are you sure you want to delete this note?")) {
+      notes.splice(index, 1);
+      localStorage.setItem("notes", JSON.stringify(notes));
+      displayNotes();
+    }
+  }
+}
+
 
       function closeDeletePasswordModal() {
         document.getElementById("deletePasswordModal").style.display = "none"; // Hide the modal
@@ -3222,44 +3170,36 @@ function evaluateInlineFormula(formula) {
 
       // Function to save a new list
       function saveList() {
-        const title = document.getElementById("listTitle").value.trim();
-        const password = document.getElementById("listPassword").value.trim(); // Get password
-        const date = new Date(); // Get the current date
-        const formattedDate = formatDate(date); // Format the date
+  const title = document.getElementById("listTitle").value.trim();
+  const password = document.getElementById("listPassword").value.trim();
+  const date = new Date();
+  const formattedDate = formatDate(date);
 
-        if (title === "" || currentItems.length === 0) {
-          showMessageBox("List title and items cannot be empty!");
-          return;
-        }
+  if (title === "" || currentItems.length === 0) {
+    showMessageBox("List title and items cannot be empty!");
+    return;
+  }
 
-        if (editingListIndex !== null) {
-          // Update existing list
-          lists[editingListIndex] = {
-            title,
-            items: currentItems.slice(),
-            password,
-            date: formattedDate,
-          }; // Update the existing list and set the new date
-          showMessageBox("List updated successfully!");
-        } else {
-          // Add new list
-          const newList = {
-            title,
-            items: currentItems.slice(),
-            password,
-            date: formattedDate,
-          }; // Create a new list with the date
-          lists.push(newList); // Add the new list to the lists array
-          showMessageBox("List saved successfully!");
-        }
+  const listData = {
+    title,
+    items: JSON.parse(JSON.stringify(currentItems)), // Deep copy
+    password,
+    date: formattedDate,
+  };
 
-        localStorage.setItem("lists", JSON.stringify(lists)); // Save to local storage
-        displayLists(); // Refresh the displayed lists
+  if (editingListIndex !== null) {
+    lists[editingListIndex] = listData;
+    showMessageBox("List updated successfully!");
+  } else {
+    lists.push(listData);
+    showMessageBox("List saved successfully!");
+  }
 
-        showSection("combinedContainer"); // Show the lists section
-        editingListIndex = null; // Reset editing state after saving
-      }
-
+  localStorage.setItem("lists", JSON.stringify(lists));
+  displayLists();
+  showSection("combinedContainer");
+  editingListIndex = null;
+}
       // Function to open a list and pre-fill the add list section
       function openList(index) {
         const list = lists[index];
@@ -3281,6 +3221,7 @@ function evaluateInlineFormula(formula) {
         }
       }
 
+
       document
         .getElementById("addListButton")
         .addEventListener("click", function () {
@@ -3289,7 +3230,7 @@ function evaluateInlineFormula(formula) {
         });
 
       const lists = JSON.parse(localStorage.getItem("lists")) || [];
-      let currentItems = []; // Array to hold current checklist items
+      
 
       // Function to show the lists section
       function showListsSection() {
@@ -3315,19 +3256,19 @@ function evaluateInlineFormula(formula) {
       }
 
       // Function to add an item to the checklist
-      function addItem() {
-        const newItemInput = document.getElementById("newItem");
-        const newItemValue = newItemInput.value.trim();
+     function addItem() {
+  const newItemInput = document.getElementById("newItem");
+  const newItemValue = newItemInput.value.trim();
 
-        if (newItemValue === "") {
-          showMessageBox("Item cannot be empty!");
-          return;
-        }
+  if (newItemValue === "") {
+    showMessageBox("Item cannot be empty!");
+    return;
+  }
 
-        currentItems.push(newItemValue); // Add the new item to the current items array
-        newItemInput.value = ""; // Clear the input field
-        displayChecklist(); // Update the checklist display
-      }
+  currentItems.push({ name: newItemValue, checked: false });
+  newItemInput.value = "";
+  displayChecklist();
+}
       // Event listener for adding item with Enter key
       document
         .getElementById("newItem")
@@ -3347,13 +3288,7 @@ function evaluateInlineFormula(formula) {
         });
 
       // Event listener for submitting password with Enter key
-      document
-        .getElementById("passwordInput")
-        .addEventListener("keypress", function (event) {
-          if (event.key === "Enter") {
-            verifyPassword(); // Call the function to verify password
-          }
-        });
+    
 
       // Function to close the password modal
       function closePasswordModal() {
@@ -3369,23 +3304,28 @@ function evaluateInlineFormula(formula) {
       });
 
       // Function to display the checklist
-      function displayChecklist() {
-        const checklistContainer =
-          document.getElementById("checklistContainer");
-        checklistContainer.innerHTML = ""; // Clear existing items
+     function displayChecklist() {
+  const checklistContainer = document.getElementById("checklistContainer");
+  checklistContainer.innerHTML = "";
 
-        currentItems.forEach((item, index) => {
-          const itemDiv = document.createElement("div");
-          itemDiv.innerHTML = `
-            <div class="checklist-item">
-        <input type="checkbox" id="item-${index}">
-        <label for="item-${index}">${item}</label>
+  currentItems.forEach((item, index) => {
+    const itemDiv = document.createElement("div");
+    itemDiv.innerHTML = `
+      <div class="checklist-item">
+        <input type="checkbox" id="item-${index}" ${item.checked ? "checked" : ""} onchange="toggleCheck(${index})">
+        <label for="item-${index}">${item.name}</label>
         <button onclick="removeItem(${index})">Remove</button>
-    </div>
-        `;
-          checklistContainer.appendChild(itemDiv);
-        });
-      }
+      </div>
+    `;
+    checklistContainer.appendChild(itemDiv);
+  });
+}
+
+function toggleCheck(index) {
+  currentItems[index].checked = !currentItems[index].checked;
+  // Optionally, you can update localStorage or do something here if needed immediately
+}
+
 
       // Function to remove an item from the checklist
       function removeItem(index) {
@@ -3448,5 +3388,89 @@ function evaluateInlineFormula(formula) {
       displayLists();
       displayNotes();
     </script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,  onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+      import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+      
+      const firebaseConfig = {
+        apiKey: "AIzaSyCAnKRiTCTQkCV7T5-pSJdr20ctvy1XzTY",
+        authDomain: "notes-81cd8.firebaseapp.com",
+        projectId: "notes-81cd8",
+        storageBucket: "notes-81cd8.appspot.com",
+        messagingSenderId: "93954393984",
+        appId: "1:93954393984:web:f39d129b6e4bacd1796365",
+      };
+    
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore();
+    
+      let isLogin = true;
+    
+      window.toggleAuth = () => {
+        isLogin = !isLogin;
+        document.getElementById("authTitle").textContent = isLogin ? "Sign In" : "Sign Up";
+        document.getElementById("authToggleText").textContent = isLogin ? "Sign Up" : "Sign In";
+        document.getElementById("signupExtra").classList.toggle("hidden", isLogin);
+        document.getElementById("authError").textContent = "";
+      };
+    
+      window.handleAuth = () => {
+        const email = document.getElementById("authEmail").value;
+        const password = document.getElementById("authPassword").value;
+        const confirmPassword = document.getElementById("authConfirmPassword")?.value;
+    
+        if (!email || !password) {
+          document.getElementById("authError").textContent = "Email and password required.";
+          return;
+        }
+    
+        if (!isLogin && password !== confirmPassword) {
+          document.getElementById("authError").textContent = "Passwords do not match.";
+          return;
+        }
+    
+        if (isLogin) {
+          signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+              document.getElementById("snbakeyVerificationModal").style.display = "none";
+              alert("Logged in!");
+            })
+            .catch(err => {
+              document.getElementById("authError").textContent = err.message;
+            });
+        } else {
+          createUserWithEmailAndPassword(auth, email, password)
+            .then(() => {
+              document.getElementById("snbakeyVerificationModal").style.display = "none";
+              alert("Account created!");
+            })
+            .catch(err => {
+              document.getElementById("authError").textContent = err.message;
+            });
+        }
+      };
+
+      onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const q = query(collection(db, "notes"), where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const note = doc.data();
+        console.log("Note:", note);
+        // Optional: save to localStorage
+        localStorage.setItem(doc.id, JSON.stringify(note));
+      });
+
+      // Update UI sync status
+      const syncStatus = document.getElementById("syncStatus");
+      if (syncStatus) syncStatus.innerText = "✅ Notes synced!";
+    } else {
+      console.log("User not logged in");
+    }
+  });
+    </script>
+    
   </body>
 </html>
