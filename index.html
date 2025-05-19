@@ -1040,56 +1040,73 @@ text-align: center;
       }
 
       /* Modal styling */
-      #snbakeyVerificationModal {
-        position: fixed;
-        /* Fixed position to cover the entire viewport */
-        left: 0;
-        top: 0;
-        width: 100%;
-        /* Full width */
-        height: 100%;
-        /* Full height */
-        background-color: #000;
-        /* Semi-transparent black background */
-        justify-content: center;
-        /* Center horizontally */
-        align-items: center;
-        /* Center vertically */
-        z-index: 1000;
-        /* Ensure it appears above other elements */
-      }
+     /* Modal background (fullscreen overlay) */
+#snbakeyVerificationModal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black; /* semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
-      /* Modal content styling */
-      #snbakeyVerificationModal .modal-content {
-        background-color: white;
-        /* White background for the modal */
-        padding: 20px;
-        /* Padding inside the modal */
-        border-radius: 10px;
-        /* Rounded corners */
-        width: 350px;
-        /* Fixed width */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        /* Subtle shadow for depth */
-      }
+/* Modal content */
+#snbakeyVerificationModal .modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  text-align: center;
+}
 
-      /* Gradient button styling */
-      #snbakeyVerificationModal .gradient-button {
-        background: linear-gradient(90deg, #ff6f61, #ff3d00);
-        /* Gradient background */
-        color: rgb(0, 0, 0);
-        /* White text color */
-        border: none;
-        /* No border */
-        padding: 10px 20px;
-        /* Padding for the button */
-        border-radius: 5px;
-        /* Rounded corners */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        transition: background 0.3s ease;
-        /* Smooth transition for hover effect */
-      }
+/* Input field inside modal */
+#snbakeyVerificationModal input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Gradient button */
+#snbakeyVerificationModal .gradient-button {
+  background: linear-gradient(90deg, #ff6f61, #ff3d00);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#snbakeyVerificationModal .gradient-button:hover {
+  background: linear-gradient(90deg, #ff3d00, #ff6f61);
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  #snbakeyVerificationModal .modal-content {
+    padding: 15px;
+    width: 95%;
+  }
+
+  #snbakeyVerificationModal input,
+  #snbakeyVerificationModal .gradient-button {
+    font-size: 14px;
+  }
+}
+
 
       #snbakeyVerificationModal .gradient-button:hover {
         background: linear-gradient(90deg, #ff3d00, #ff6f61);
@@ -1323,22 +1340,12 @@ text-align: center;
       placeholder="Search your data"
       oninput="searchNotes()"
      >
-       
-       
-        <button class="button" onclick="showSection('combinedContainer')">
-          <i class="fas fa-home"></i>
-        </button>
-        <button class="button" onclick="showSection('settingsSection')">
-          <i class="fas fa-cog"></i>
-        </button>
-        <br>
-        <div id="syncStatus">🔄 Syncing notes...</div>
-
+  
       </div>
     
 
   
-
+ <div id="syncStatus">🔄 Syncing notes...</div>
     <!-- Combined Notes and Lists Section -->
     <div id="combinedContainer" class="container">
       <h2>Your Notes and Lists</h2>
@@ -1504,6 +1511,16 @@ text-align: center;
           </p>
         </div>
         <div class="feature-item">
+           <button class="feature-button" onclick="showSection('combinedContainer')">
+          <i class="fas fa-home"></i>
+          <br>
+          Home
+        </button>
+       <p class="feature-description">
+        Access your all data in one place by home section.
+       </p>
+        </div>
+    <div class="feature-item">
           <button
             onclick="showSection('calculatorSection')"
             class="feature-button"
@@ -3391,7 +3408,7 @@ function toggleCheck(index) {
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
       import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,  onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-      import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+      import { getFirestore, collection, query, where, getDocs, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
       
       const firebaseConfig = {
         apiKey: "AIzaSyCAnKRiTCTQkCV7T5-pSJdr20ctvy1XzTY",
@@ -3452,24 +3469,66 @@ function toggleCheck(index) {
         }
       };
 
-      onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const q = query(collection(db, "notes"), where("uid", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const note = doc.data();
-        console.log("Note:", note);
-        // Optional: save to localStorage
-        localStorage.setItem(doc.id, JSON.stringify(note));
-      });
+    async function addNote(db, auth, title, content) {
+  if (!auth.currentUser) {
+    console.log("User not logged in");
+    return;
+  }
 
-      // Update UI sync status
-      const syncStatus = document.getElementById("syncStatus");
-      if (syncStatus) syncStatus.innerText = "✅ Notes synced!";
-    } else {
-      console.log("User not logged in");
-    }
+  const userId = auth.currentUser.uid;
+  const notesRef = collection(db, "users", userId, "notes");
+
+  try {
+    const docRef = await addDoc(notesRef, {
+      title: title,
+      content: content,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+    console.log("Note added with ID: ", docRef.id);
+  } catch (error) {
+    console.error("Error adding note: ", error);
+  }
+}
+
+async function getNotes(db, auth) {
+  if (!auth.currentUser) {
+    console.log("User not logged in");
+    return;
+  }
+
+  const userId = auth.currentUser.uid;
+  const notesRef = collection(db, "users", userId, "notes");
+
+  const q = query(notesRef);
+  const querySnapshot = await getDocs(q);
+
+  const notes = [];
+  querySnapshot.forEach((doc) => {
+    notes.push({ id: doc.id, ...doc.data() });
   });
+
+  return notes;
+}
+
+async function deleteNote(db, auth, noteId) {
+  if (!auth.currentUser) {
+    console.log("User not logged in");
+    return;
+  }
+
+  const userId = auth.currentUser.uid;
+  const noteDocRef = doc(db, "users", userId, "notes", noteId);
+
+  try {
+    await deleteDoc(noteDocRef);
+    console.log("Note deleted:", noteId);
+  } catch (error) {
+    console.error("Error deleting note:", error);
+  }
+}
+
+
     </script>
     
   </body>
