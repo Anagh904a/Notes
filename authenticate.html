@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Authenticate</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="background"></div>
+  <div class="auth-container">
+    <h2>Authorization Request</h2>
+    <p id="greeting" class="greeting">Hi, <span id="userEmail">user@example.com</span></p>
+    <p><strong>Notes App</strong> would like to access your account with the following permissions:</p>
+    <ul>
+      <li>Read your email address</li>
+      <li>Access and modify your notes</li>
+    </ul>
+    <p class="terms">By clicking "Authorize", you agree to our <a href="#">Terms & Conditions</a>.</p>
+    <button onclick="authorizeApp()">Authorize</button>
+    <button onclick="denyAuthorization()">Cancel</button>
+  </div>
+  <script>
+log = localStorage.getItem('logged');
+if (log === 'true'){
+    window.location.href = "indexAlpha.html";
+} 
+
+  </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCAnKRiTCTQkCV7T5-pSJdr20ctvy1XzTY",
+  authDomain: "notes-81cd8.firebaseapp.com",
+  projectId: "notes-81cd8",
+  storageBucket: "notes-81cd8.appspot.com",
+  messagingSenderId: "93954393984",
+  appId: "1:93954393984:web:f39d129b6e4bacd1796365",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Load user email on authentication page
+onAuthStateChanged(auth, (user) => {
+  if (user && document.getElementById("userEmail")) {
+    document.getElementById("userEmail").textContent = user.email;
+  }
+});
+
+// Handle Login
+window.handleLogin = () => {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+  const errorElement = document.getElementById("loginError");
+
+  if (!email || !password) {
+    errorElement.textContent = "Please enter both email and password.";
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      window.location.href = "authenticate.html";
+    })
+    .catch((error) => {
+      errorElement.textContent = error.message;
+    });
+};
+
+// Handle Sign-Up
+window.handleSignUp = () => {
+  const email = document.getElementById("signupEmail").value;
+  const password = document.getElementById("signupPassword").value;
+  const confirmPassword = document.getElementById("signupConfirmPassword").value;
+  const errorElement = document.getElementById("signupError");
+
+  if (!email || !password || !confirmPassword) {
+    errorElement.textContent = "All fields are required.";
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    errorElement.textContent = "Passwords do not match.";
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      window.location.href = "authenticate.html";
+    })
+    .catch((error) => {
+      errorElement.textContent = error.message;
+    });
+};
+
+// Handle Authorization
+window.authorizeApp = () => {
+  window.location.href = "indexAlpha.html";
+  localStorage.setItem('logged');
+};
+
+// Handle Deny Authorization
+window.denyAuthorization = () => {
+  alert("Authorization denied.");
+  return;
+};
+  </script>
+</body>
+</html>
