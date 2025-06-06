@@ -702,7 +702,10 @@ function deleteListVerifyPassword() {
 function togglePasswordInput() {
   const passwordInput = document.getElementById("notePassword");
   passwordInput.classList.toggle("hidden");
+
+
 }
+
 
 function showSection(sectionId) {
   document.querySelectorAll(".container").forEach((section) => {
@@ -775,6 +778,7 @@ function cancelNote() {
   const section = document.getElementById("addNoteSection");
   section.classList.add("hidden");
   showSection("combinedContainer");
+  document.getElementById("notePassword").classList.add("hidden");
 }
 
 // Add event listener for the Add Note button
@@ -812,7 +816,7 @@ document
     localStorage.setItem('notes', JSON.stringify(notes));
     displayNotes();
     showSection('combinedContainer');
-
+    document.getElementById("notePassword").classList.add("hidden");
 
     // Reset editing state
     editingNoteIndex = null; // Reset after saving
@@ -843,12 +847,13 @@ function displayNotes() {
     const noteDiv = document.createElement("div");
     const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
     const formattedDate = formatDate(noteDate); // Format the date for display
+    const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
     noteDiv.innerHTML = `
- <div class="note" onclick="openNote(${index})">  
- <h4>${note.title}</h4>
-    <span class="note-date">${formattedDate}</span>
-    <button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
-  </div>
+  <div class="note" onclick="openNote(${index})">  
+        <h4>${note.title}${lockIndicator}</h4>
+        <span class="note-date">${formattedDate}</span>
+        <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
+      </div>
     `;
     container.appendChild(noteDiv);
   });
@@ -1019,6 +1024,8 @@ function cancelList() {
   showSection("combinedContainer"); // Show the lists section
   displayNotes();
   displayLists();
+  document.getElementById("listPassword").classList.add("hidden");
+
 }
 
 // Function to show a specific section
@@ -1054,6 +1061,8 @@ localStorage.setItem("lists", JSON.stringify(lists));
 displayLists();
 showSection("combinedContainer");
 editingListIndex = null;
+document.getElementById("listPassword").classList.add("hidden");
+
 }
 // Function to open a list and pre-fill the add list section
 function openList(index) {
@@ -1151,6 +1160,21 @@ function closePasswordModal() {
   document.getElementById("passwordInput").value = ""; // Clear the password input field
 }
 
+function openTab(tabId) {
+  document.querySelectorAll(".tab-content").forEach(tab => tab.classList.add("hidden"));
+  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active-tab"));
+  document.getElementById(tabId).classList.remove("hidden");
+
+  // Activate the clicked tab button
+  const tabButtons = document.querySelectorAll("#settingsTabs button");
+  tabButtons.forEach(btn => {
+    if (btn.getAttribute("onclick").includes(tabId)) {
+      btn.classList.add("active-tab");
+    }
+  });
+}
+
+
 // Event listener for closing the password modal with Escape key
 document.addEventListener("keydown", function (event) {
   if (event.key === "Escape") {
@@ -1202,12 +1226,13 @@ function displayLists() {
     const listDiv = document.createElement("div");
     const listDate = new Date(list.date); // Convert the stored date string back to a Date object
     const formattedDate = formatDate(listDate); // Format the date for display
+    const loclIndicator = list.password && list.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
     listDiv.innerHTML = `
   
   <div class="note" onclick="openList(${index})">    
   <i class="fas fa-list"></i> <!-- List Icon -->
      
-      <h4>${list.title}</h4>
+      <h4>${list.title}${loclIndicator}</h4>
        <span class="list-date">${formattedDate}</span>
   <button class="delete-btn" onclick="deleteList(${index})">Delete</button>
   </div>
