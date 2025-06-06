@@ -646,6 +646,27 @@ text-align: center;
         gap: 15px;
       }
 
+      .tab-btn {
+  padding: 8px 12px;
+  border: none;
+  background-color: lightgray;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.active-tab {
+  background-color: darkgray;
+  font-weight: bold;
+}
+
+.tab-content {
+  display: block;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+
       .feature-item {
         text-align: center;
         flex: 1 1 200px;
@@ -1011,31 +1032,6 @@ text-align: center;
         display: none;
       }
 
-      .toggle-icon {
-        font-size: 20px;
-      }
-
-      .tabs {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 20px;
-      }
-
-      .tab-button {
-        padding: 10px 20px;
-        border: none;
-        background-color: #f1f1f1;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .tab-button.active {
-        background-color: #ccc;
-      }
-
-      .tab-content.active {
-        display: block;
-      }
 
       /* Modal styling */
      /* Modal background (fullscreen overlay) */
@@ -1049,194 +1045,7 @@ text-align: center;
         margin-top: 5px;
       }
 
-      .email-item {
-        padding: 10px;
-        cursor: pointer;
-        border-bottom: 1px solid #555555;
-      }
 
-      .email-item:hover {
-        background-color: #000000;
-        /* Highlight on hover */
-      }
-
-      .content {
-        flex: 1;
-        padding: 20px;
-        background-color: #666666;
-        /* Content background */
-      }
-
-      .email-content {
-        display: none;
-        /* Hidden by default */
-      }
-
-      .email-content h2 {
-        margin: 0 0 10px;
-      }
-
-      .email-content p {
-        margin: 5px 0;
-      }
-
-      #loadingCircle {
-        font-size: 24px;
-        margin-top: 20px;
-        display: none;
-        /* Initially hidden */
-      }
-
-      #loadingCircle i {
-        font-size: 24px;
-        /* Adjust size as needed */
-        animation: spin 1s linear infinite;
-        /* Spin animation */
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* General Styles for the Update Section */
-      #update {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-      }
-
-      /* Heading Style */
-      #update h2 {
-        color: #4caf50;
-        margin-bottom: 20px;
-      }
-
-      /* Button Styles */
-      #update button {
-        display: block;
-        width: 100%;
-        padding: 15px;
-        font-size: 18px;
-        border: none;
-        border-radius: 5px;
-        background-color: #4caf50;
-        color: white;
-        cursor: pointer;
-        margin-top: 20px;
-        transition: background-color 0.3s;
-      }
-
-      #update button:hover {
-        background-color: #45a049;
-      }
-
-      /* Loading Circle Style */
-      #loadingCircle {
-        font-size: 18px;
-        margin-top: 20px;
-      }
-
-      /* Update Modal Styles */
-      #updateModal {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #000000;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-      }
-
-      /* Modal Content Style */
-      #updateModal .modal-content {
-        text-align: center;
-        color: white;
-        background: #000000;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      }
-
-      /* Icon Style in Modal */
-      #updateModal .modal-content i {
-        margin-bottom: 20px;
-      }
-
-      #updateModal .modal.hidden {
-        display: none;
-      }
-
-      /* Progress Bar Style */
-      #modalProgress {
-        width: 80%;
-        height: 20px;
-        margin-top: 20px;
-        border-radius: 5px;
-        background-color: #ddd;
-      }
-
-      #modalProgress::-webkit-progress-bar {
-        background-color: #eee;
-        border-radius: 5px;
-      }
-
-      #modalProgress::-webkit-progress-value {
-        background-color: #4caf50;
-        border-radius: 5px;
-      }
-
-      /* Setup Message Style */
-      #setupMessage {
-        text-align: center;
-        font-size: 20px;
-        color: #ffffff;
-        margin-top: 20px;
-      }
-
-      /* Boot Animation */
-      @keyframes bootAnimation {
-        0% {
-          transform: scale(0.8);
-          opacity: 0;
-        }
-
-        50% {
-          transform: scale(1.1);
-          opacity: 1;
-        }
-
-        100% {
-          transform: scale(1);
-        }
-      }
-
-      .boot-animation {
-        animation: bootAnimation 0.5s ease-in-out forwards;
-        /* Animation duration and easing */
-      }
-
-      #bootAnimation {
-        display: none;
-        /* Initially hidden */
-        color: white;
-        /* White text for boot animation */
-        font-size: 24px;
-        /* Adjust font size as needed */
-        margin-top: 20px;
-        /* Space above the boot animation */
-      }
     </style>
   </head>
 
@@ -1266,6 +1075,15 @@ text-align: center;
       </div>
       <div id="noListsMessage" class="hidden">No lists added.</div>
       <div id="noNotesMessage" class="hidden">No notes added.</div>
+      <button class="add-button" onclick="showAddOptions()">
+        <i class="fas fa-plus"></i> Add
+      </button>
+      <button
+        id="aiButton"
+        onclick="showMessageBox('AI feature is in development. It will be released in AI update.')"
+      >
+        <i class="fas fa-magic"></i>
+      </button>
     </div>
 
     <div id="messageBox">This is an Android-like message box!</div>
@@ -1276,7 +1094,7 @@ text-align: center;
       <button onclick="cancelNote()">
         <i class="fas fa-arrow-left back-icon"></i>Back
       </button>
-      <button onclick="saveNote()"><i class="fas fa-save"></i> Save</button>
+     
 
       <button
         id="changePasswordButton"
@@ -1303,7 +1121,7 @@ text-align: center;
       />
       <textarea id="noteContent" placeholder="Write your note here...">
       </textarea>
-
+     
 
       <button id="undoButton" onclick="undo()">
         <i class="fas fa-undo"></i>
@@ -1312,6 +1130,8 @@ text-align: center;
       <button id="redoButton" onclick="redo()">
         <i class="fas fa-redo"></i>
       </button>
+      <br>
+      <button onclick="saveNote()" style="background: none; font-size: 20px;"><i class="fas fa-save"></i> Save</button>
 
       <input
         type="password"
@@ -1326,7 +1146,7 @@ text-align: center;
       <button onclick="cancelList()" style="background: transparent;">
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
-      <button onclick="saveList()" style="justify-content: right; text-align: right; background: none;"><i class="fas fa-save"></i>Save</button>
+      
       <button id="manageListPassword" onclick="showListPassword()" style="background: none;">
       
         <i class="fas fa-lock"></i> Manage Your Password
@@ -1342,6 +1162,7 @@ text-align: center;
       <br />
 
       <input id="newItem" type="text" placeholder="Enter item name..." />
+      <button onclick="addItem()" style="background: none;"> <i class="fas fa-plus"></i></button>
       <!-- Input for new item -->
 
       
@@ -1355,6 +1176,7 @@ text-align: center;
         class="hidden"
       />
       <div id="checklistContainer"></div>
+      <button onclick="saveList()" style="justify-content: right; text-align: right; background: none; font-size: 20px;"><i class="fas fa-save"></i>Save</button>
       <!-- Container for checklist items -->
              <h3 id="manageListTitle" style="display: none;">Manage Your List</h3>
     </div>
@@ -1398,15 +1220,7 @@ text-align: center;
       </div>
     </div>
 
-    <button class="add-button" onclick="showAddOptions()">
-      <i class="fas fa-plus"></i> Add
-    </button>
-    <button
-      id="aiButton"
-      onclick="showMessageBox('AI feature is in development. It will be released in AI update.')"
-    >
-      <i class="fas fa-magic"></i>
-    </button>
+   
 
     <div id="moreSection" class="container hidden">
       <h2>More Features</h2>
@@ -1551,66 +1365,57 @@ text-align: center;
     </div>
 
     <div id="settingsSection" class="container hidden">
-      <button onclick="showSection('moreSection')">Close</button>
-      <p>Press home to return to home</p>
-      <h2>Credits</h2>
-      <p>
-        Developed by <strong>Anagh Manglick</strong><br />Inspired by Color
-        Notes
-      </p>
-      <br />
-
-      <hr />
-      <br />
-      <h3 style="text-align: center">Backup/Import</h3>
-      <button onclick="backupNotes()">Backup Notes</button>
-      <input type="file" id="importFile" onchange="prepareImport(event)" />
-      <button onclick="importNotes()">Continue Import</button>
-      <button class="button" disabled>Battery Optimization: On</button>
-      <br />
-      <hr />
-      <br />
-
-      <h2>Security Settings</h2>
-
-      <!-- Data Management Section -->
-      <div class="setting-category">
-        <h3 onclick="toggleSection('encryptionSection')">
-          <i class="fas fa-lock"></i> Data Management
-          <span class="toggle-icon" id="encryptionToggle">+</span>
+      <div id="settingsTabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button onclick="openTab('generalTab')" class="tab-btn active-tab">General</button>
+        <button onclick="openTab('backupTab')" class="tab-btn">Backup</button>
+        <button onclick="openTab('securityTab')" class="tab-btn">Security</button>
+        <button onclick="openTab('antivirusTab')" class="tab-btn">Antivirus</button>
+        <button onclick="openTab('updateTab')" class="tab-btn">Update</button>
+      </div>
+    
+      <!-- General Tab -->
+      <div id="generalTab" class="tab-content">
+        <button onclick="showSection('moreSection')">Close</button>
+        <p>Press home to return to home</p>
+        <h2>Credits</h2>
+        <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
+      </div>
+    
+      <!-- Backup Tab -->
+      <div id="backupTab" class="tab-content hidden">
+        <h3>🔁 Backup / Import</h3>
+        <button onclick="backupNotes()">Backup Notes</button><br><br>
+        <input type="file" id="importFile" onchange="prepareImport(event)" />
+        <button onclick="importNotes()">Continue Import</button><br><br>
+        <button class="button" disabled>Battery Optimization: On</button>
+      </div>
+    
+      <!-- Security Tab -->
+      <div id="securityTab" class="tab-content hidden">
+        <h2>🔐 Security Settings</h2>
+    
+        <h3 onclick="toggleSection('encryptionSection')" style="cursor: pointer;">
+          🔒 Data Management <span id="encryptionToggle">+</span>
         </h3>
         <div id="encryptionSection" class="hidden">
           <button onclick="goBack()">Back</button>
           <button onclick="clearData()">Clear All Data</button>
           <button onclick="encryptData()">Encrypt Data</button>
           <button onclick="decryptData()">Decrypt Data</button>
-          <button
-            onclick="showMessageBox('Server-side features like sync are under development. Stay tuned for updates')"
-          >
-            Allow data management on Server-side
-
-          </button>
-          <div id="syncStatus">🔄 Sync is OFF</div>
+          <button onclick="showMessageBox('Server-side features like sync are under development. Stay tuned for updates')">Allow data management on Server-side</button>
+          <div id="syncStatus" style="margin-top: 10px;">🔄 Sync is OFF</div>
         </div>
-      </div>
-
-      <!-- Password Management Section -->
-      <div class="setting-category">
-        <h3 onclick="toggleSection('passwordManagementSection')">
-          <i class="fas fa-key"></i> Password Management
-          <span class="toggle-icon" id="passwordManagementToggle">+</span>
+    
+        <h3 onclick="toggleSection('passwordManagementSection')" style="cursor: pointer;">
+          🔑 Password Management <span id="passwordManagementToggle">+</span>
         </h3>
         <div id="passwordManagementSection" class="hidden">
           <button onclick="goBack()">Back</button>
-         <p>Will be updated soon!</p>
+          <p>Will be updated soon!</p>
         </div>
-      </div>
-
-      <!-- Lock Notes Section -->
-      <div class="setting-category">
-        <h3 onclick="toggleSection('lockNotesSection')">
-          <i class="fas fa-lock"></i> Lock Notes
-          <span class="toggle-icon" id="lockNotesToggle">+</span>
+    
+        <h3 onclick="toggleSection('lockNotesSection')" style="cursor: pointer;">
+          🔐 Lock Notes <span id="lockNotesToggle">+</span>
         </h3>
         <div id="lockNotesSection" class="hidden">
           <button onclick="goBack()">Back</button>
@@ -1620,171 +1425,31 @@ text-align: center;
           </label>
         </div>
       </div>
-
-      <div class="setting-category">
-        <h3 onclick="toggleSection('openAntiSection')">
-          <i class="fas fa-shield-alt"></i> Scan For Threats
-          <span class="toggle-icon" id="openAntiToggle">+</span>
+    
+      <!-- Antivirus Tab -->
+      <div id="antivirusTab" class="tab-content hidden">
+        <h3 onclick="toggleSection('openAntiSection')" style="cursor: pointer;">
+          🛡️ Scan For Threats <span id="openAntiToggle">+</span>
         </h3>
         <div id="openAntiSection" class="hidden">
           <button onclick="goBack()">Back</button>
           <button onclick="showSection('antivirusSection')">Open</button>
         </div>
       </div>
-      <div class="setting-category">
-        <h3 onclick="toggleSection('updateSection')">
-          <i class="fas fa-check"></i> Update OS
-          <span class="toggle-icon" id="openAntiToggle">+</span>
+    
+      <!-- Update Tab -->
+      <div id="updateTab" class="tab-content hidden">
+        <h3 onclick="toggleSection('updateSection')" style="cursor: pointer;">
+          ✅ Update OS <span id="updateToggle">+</span>
         </h3>
         <div id="updateSection" class="hidden">
           <button onclick="showSection('update')">Open section</button>
         </div>
       </div>
     </div>
+    
 
-    <div id="settingsSection" class="container hidden">
-      <button onclick="showSection('moreSection')" class="close-button">
-        Close
-      </button>
-      <p>Press home to return to home</p>
-
-      <h2>Settings</h2>
-
-      <div class="tabs">
-        <button class="tab-button active" onclick="showTab('backupImport')">
-          Backup/Import
-        </button>
-        <button class="tab-button" onclick="showTab('securitySettings')">
-          Security Settings
-        </button>
-        <button class="tab-button" onclick="showTab('dataManagement')">
-          Data Management
-        </button>
-        <button class="tab-button" onclick="showTab('passwordManagement')">
-          Password Management
-        </button>
-        <button class="tab-button" onclick="showTab('sct')">
-          Scan threats
-        </button>
-        <button class="tab-button" onclick="showTab('u')">Update</button>
-      </div>
-
-      <div id="backupImport" class="tab-content active">
-        <h3>Backup/Import</h3>
-        <div class="backup-import">
-          <button onclick="backupNotes()" class="action-button">
-            Backup Notes
-          </button>
-          <input
-            type="file"
-            id="importFile"
-            onchange="prepareImport(event)"
-            class="file-input"
-          />
-          <button onclick="importNotes()" class="action-button">
-            Continue Import
-          </button>
-        </div>
-      </div>
-
-      <div id="securitySettings" class="tab-content">
-        <h3>Security Settings</h3>
-        <div class="setting-category">
-          <h3
-            onclick="toggleSection('lockNotesSection')"
-            class="setting-header"
-          >
-            <i class="fas fa-lock"></i> Lock Notes
-            <span class="toggle-icon" id="lockNotesToggle">+</span>
-          </h3>
-          <div id="lockNotesSection" class="hidden">
-            <label class="checkbox-label">
-              <input type="checkbox" id="lockNotes" />
-              Lock notes after inactivity
-            </label>
-            <button onclick="saveSettings()" class="action-button">
-              Save Settings
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div id="dataManagement" class="tab-content">
-        <h3>Data Management</h3>
-        <div class="setting-category">
-          <h3
-            onclick="toggleSection('encryptionSection')"
-            class="setting-header"
-          >
-            <i class="fas fa-lock"></i> Data Management
-            <span class="toggle-icon" id="encryptionToggle">+</span>
-          </h3>
-          <div id="encryptionSection" class="hidden">
-            <button onclick="goBack()" class="action-button">Back</button>
-            <button onclick="clearData()" class="action-button">
-              Clear All Data
-            </button>
-            <button onclick="encryptData()" class="action-button">
-              Encrypt Data
-            </button>
-            <button onclick="decryptData()" class="action-button">
-              Decrypt Data
-            </button>
-            <button
-              onclick="showMessageBox('Server-side features will be added in future updates. Stay tuned')"
-              class="action-button"
-            >
-              Allow data management on Server-side
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div id="passwordManagement" class="tab-content">
-        <h3>Password Management</h3>
-        <div class="setting-category">
-          <h3
-            onclick="toggleSection('passwordManagementSection')"
-            class="setting-header"
-          >
-            <i class="fas fa-key"></i> Password Management
-            <span class="toggle-icon" id="passwordManagementToggle">+</span>
-          </h3>
-          <div id="passwordManagementSection" class="hidden">
-            <button onclick="goBack()" class="action-button">Back</button>
-            <p>WIll e updted soon!</p>
-          </div>
-        </div>
-      </div>
-      <div id="sct" class="tab-content">
-        <h3 onclick="toggleSection('openAntiSection')">
-          <i class="fas fa-shield-alt"></i> Scan For Threats
-          <span class="toggle-icon" id="openAntiToggle">+</span>
-        </h3>
-        <div id="openAntiSection" class="hidden">
-          <button onclick="goBack()">Back</button>
-          <button onclick="showSection('antivirusSection')">Open</button>
-        </div>
-      </div>
-      <div id="u" class="tab-content">
-        <h3 onclick="toggleSection('updateSection')">
-          <i class="fas fa-check"></i> Update OS
-          <span class="toggle-icon" id="openAntiToggle">+</span>
-        </h3>
-        <div id="updateSection" class="hidden">
-          <button onclick="showSection('update')">Open section</button>
-        </div>
-      </div>
-
-      <hr />
-
-      <h2>Credits</h2>
-      <p>
-        Developed by <strong>Anagh Manglick</strong><br />
-        Inspired by <strong>Good Keep Notes</strong> and
-        <strong>ColorNote</strong>, along with my own creativity.
-      </p>
-    </div>
+    
 
     <div id="antivirusSection" class="container">
       <h2>Antivirus Scan</h2>
@@ -1837,59 +1502,7 @@ text-align: center;
       </div>
     </div>
 
-    <div id="inbox" class="container hidden">
-      <div class="sidebar">
-        <h2>Inbox</h2>
-        <div class="email-item" onclick="showEmail('updateEmail')">
-          Release Notes of update 5.2
-        </div>
-
-        <!-- Additional email items can be added here -->
-      </div>
-
-      <div id="updateEmail" class="email-content">
-        <p><strong>Subject:</strong> 🚀 Big Update released</p>
-        <p><strong>From:</strong> ListVista Team</p>
-        <p><strong>Dear User Community,</strong></p>
-        <p>We hope you're doing well!</p>
-
-        <hr />
-        <h3>🛠 Major App Rebuild in Progress</h3>
-        <p>
-          We’re exited to share that after main UI , now section UI upgradation
-          is <strong> underway </strong> with some more bug fixes for a
-          smoother, faster, and more modern experience.
-        </p>
-        <hr />
-        <h3>🧪 Recent updates</h3>
-        <p>
-          Recently, some sections that are now brand new! are<strong>
-            calculator and more section.</strong
-          >Some other sections that are under development is AI section
-          ,settings section and calendar section.
-        </p>
-
-        <hr />
-        <h3>🔄 Feature Added ad under devlopment:</h3>
-        <p>
-          The newly added AI button indicates that the AI feature is under
-          development, also the long await will be over soon , finally local
-          notofications have started devlopment.
-        </p>
-        <hr />
-        <hr />
-        <h3>🔄 Other Site update info:</h3>
-        <p>The site Projects hub , is also update under development.</p>
-        <hr />
-        <p>
-          Thank you for your continued support and patience. We’re working hard
-          to deliver an awesome experience to everyone, across every device.
-        </p>
-        <p><strong>Warm regards,</strong></p>
-        <p><strong>ListVista</strong></p>
-        <p><strong>Date: 26 april, 2025</strong></p>
-      </div>
-    </div>
+   
     <!-- List Password Modal -->
     <div id="listPasswordModal" class="modal hidden">
       <div class="modal-content">
@@ -1928,69 +1541,12 @@ text-align: center;
       <div class="calendar-days" id="calendarDays"></div>
     </div>
 
-    <div id="profileSection" class="profile-card hidden">
-      <div class="profile-header">
-        <i class="fas fa-user-circle fa-4x"></i>
-        <h2>Your Profile</h2>
-      </div>
-      <div class="profile-form">
-        <input type="text" id="profileName" placeholder="Your Name" />
-        <input type="email" id="profileEmail" placeholder="Your Email" disabled />
-        <button onclick="saveProfile()" class="gradient-button">Save Changes</button>
-        <p id="profileMsg" style="color: green;"></p>
-      </div>
-    </div>
+   
     
     
     
 
-    <!-- Update Modal -->
-    <div id="update" class="container hidden">
-      <h2>Anagh OS Update</h2>
-      <p>
-        Click the button below to check for updates and start the update
-        process.
-      </p>
-      <button id="updateButton" onclick="checkForUpdates()">
-        Check Update
-      </button>
-
-      <!-- Loading Circle (Initially Hidden) -->
-      <div id="loadingCircle" style="display: none">
-        <i class="fas fa-spinner fa-spin"></i> Checking for updates...
-      </div>
-
-      <!-- Update Modal (Initially Hidden) -->
-      <div id="updateModal" class="modal hidden">
-        <div class="modal-content">
-          <i class="fas-fa-sticky-note" style="font-size: 40px"></i>
-          <h2 style="margin-bottom: 20px">Anagh OS</h2>
-          <div
-            id="bootAnimation"
-            style="display: none; text-align: center; margin-top: 50px"
-          >
-            <p style="font-size: 24px; color: white">Booting...</p>
-            <i
-              class="fas fa-spinner fa-spin"
-              style="font-size: 48px; margin-top: 20px"
-            ></i>
-          </div>
-          <progress
-            id="modalProgress"
-            value="0"
-            max="100"
-            style="display: none"
-          ></progress>
-          <div
-            id="setupMessage"
-            class="hidden"
-            style="text-align: center; margin-top: 20px"
-          >
-            Optimization in progress...
-          </div>
-        </div>
-      </div>
-    </div>
+   
 
    
 
