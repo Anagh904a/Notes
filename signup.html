@@ -53,7 +53,7 @@ window.handleLogin = () => {
 
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      window.location.href = "authenticate.html";
+      window.location.href = "indexAlpha.html";
     })
     .catch((error) => {
       errorElement.textContent = error.message;
@@ -79,7 +79,7 @@ window.handleSignUp = () => {
 
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      window.location.href = "authenticate.html";
+      window.location.href = "indexAlpha.html";
     })
     .catch((error) => {
       errorElement.textContent = error.message;
