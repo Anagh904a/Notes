@@ -532,6 +532,27 @@ text-align: center;
         color: #333;
       }
 
+      .success-msg {
+  color: green;
+  margin: 10px 0;
+  font-weight: bold;
+  padding: 6px;
+}
+
+.alert-msg {
+  color: #c0392b;
+  background: #ffe9e9;
+  border-left: 5px solid red;
+  padding: 6px;
+  margin-bottom: 4px;
+  font-family: "Arial", sans-serif;
+  border-radius: 4px;
+}
+
+
+
+
+
       .btn-operator:hover {
         background: #ffcd3c;
         transform: scale(1.05);
@@ -709,6 +730,28 @@ text-align: center;
         margin-right: 8px;
         /* Space between icon and text */
       }
+
+      .scan-circle {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #ccc;
+  border-top: 8px solid #4CAF50;
+  border-radius: 50%;
+  margin: 10px auto;
+  transition: border-color 0.5s ease;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.counters p {
+  font-weight: bold;
+  text-align: center;
+  margin: 5px 0;
+}
+
 
       /* General styles for the container */
     /* Container */
@@ -1045,6 +1088,52 @@ text-align: center;
         margin-top: 5px;
       }
 
+      #ai {
+    animation: fadeIn 0.6s ease forwards;
+    padding: 1rem;
+    max-width: 480px;
+    margin: 1rem auto;
+    background-color: #f7f9fc;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+
+  .ai-feature {
+    margin-bottom: 0.8rem;
+  }
+
+  label {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
+
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* For screen readers */
+  .visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px,1px,1px,1px);
+    white-space: nowrap;
+  }
 
     </style>
   </head>
@@ -1080,12 +1169,43 @@ text-align: center;
       </button>
       <button
         id="aiButton"
-        onclick="showMessageBox('AI feature is in development. It will be released in AI update.')"
+        onclick="showSection('ai')"
       >
         <i class="fas fa-magic"></i>
       </button>
     </div>
-
+    <div id="ai" class="container hidden">
+      <h2 id="aiTitle" style="display: flex; align-items: center; gap: 0.5em; font-weight: bold;">
+        <span style="font-size: 1.5em;">🤖</span> AI Features Management
+      </h2>
+      <p>Manage offline AI-powered helpers for your notes. No internet required.</p>
+      <p>For now, these features are always enabled. Checkboxs don't work yet.</p>
+    
+      <div class="ai-feature">
+        <label for="ai-summary-toggle">
+          <input type="checkbox" id="ai-summary-toggle" />
+          Enable Offline Note Summary
+        </label>
+      </div>
+    
+      <div class="ai-feature">
+        <label for="ai-suggestions-toggle">
+          <input type="checkbox" id="ai-suggestions-toggle" />
+          Enable Smart Suggestions
+        </label>
+      </div>
+    
+      <div class="ai-feature">
+        <label for="ai-spellcheck-toggle">
+          <input type="checkbox" id="ai-spellcheck-toggle" />
+          Enable Spell Check
+        </label>
+      </div>
+    
+     
+   
+    </div>
+    
     <div id="messageBox">This is an Android-like message box!</div>
 
     <!-- Add Note Form -->
@@ -1240,6 +1360,18 @@ text-align: center;
         Access your all data in one place by home section.
        </p>
         </div>
+        <div class="feature-item">
+          <button class="feature-button" onclick="showSection('aiSection')">
+            <i class="fas fa-shield-alt"></i>
+
+            <br>
+            AI Scan 
+          </button>
+        </button>
+        <p class="feature-description">
+          Protect yourself from vulnerblities and other threats with our AI-powered scan feature.
+        </p>
+        </div>
     <div class="feature-item">
           <button
             onclick="showSection('calculatorSection')"
@@ -1295,61 +1427,15 @@ text-align: center;
       </div>
     </div>
 
-    <!-- Feature Sections -->
-    <div id="privacyInfoSection" class="feature-section hidden">
-      <button onclick="closeFeatureSection('privacyInfoSection')">Close</button>
-      <h3>Privacy Information and About Our website</h3>
-      <p>
-        Our website developed by indiviual developer offers a versatile platform
-        designed to help you keep all your important notes, lists, and tasks
-        organized in one place. It features a simple and user-friendly interface
-        that allows you to create, edit, and manage notes with ease. You can
-        categorize your lists into different sections, customize them according
-        to your needs, and add tasks with deadlines. The website also supports
-        organizing notes based on subjects, topics, or any other categories you
-        choose. With various tools and features like reminders, tags, and
-        filters, it helps you stay on top of your work and study plans. The
-        website’s flexible structure ensures that you can create a personalized
-        environment tailored to your individual needs.
-      </p>
 
-      <p>
-        Security is our top priority, and we understand the importance of
-        keeping your personal information safe. All your notes and lists are
-        stored locally on your device, meaning there is no cloud syncing or
-        external backend service that could potentially expose your data. By
-        utilizing local storage, your information stays private and secure
-        within the confines of your device. Additionally, we implement robust
-        encryption techniques to protect your data. Whether you’re typing a note
-        or organizing a list, all data is encrypted in real-time to ensure that
-        no one can access it without your authorization. We also offer password
-        protection for both notes and lists, providing an added layer of
-        security. This feature ensures that only you can view and edit your
-        sensitive content, preventing unauthorized access.
-      </p>
-
-      <p>
-        In addition to the note-taking and list-keeping features, the website is
-        part of a broader educational platform that includes various tools and
-        projects designed for students and educators. This includes the "Notes
-        and Lists Vista," which helps users manage their accounts and access
-        their saved notes and lists, as well as the "School Tools Platform,"
-        which provides a range of educational tools and resources. The website
-        also integrates a collaborative environment for users to exchange ideas
-        and learning materials. With this combination of tools, we aim to
-        provide a comprehensive space for learning, organizing, and improving
-        productivity in educational settings.
-      </p>
-      <button onclick="closeFeatureSection('privacyInfoSection')">Close</button>
-    </div>
+  
 
     <div id="settingsSection" class="container hidden">
       <div id="settingsTabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
         <button onclick="openTab('generalTab')" class="tab-btn active-tab">General</button>
         <button onclick="openTab('backupTab')" class="tab-btn">Backup</button>
         <button onclick="openTab('securityTab')" class="tab-btn">Security</button>
-        <button onclick="openTab('antivirusTab')" class="tab-btn">Antivirus</button>
-        <button onclick="openTab('updateTab')" class="tab-btn">Update</button>
+       
       </div>
     
       <!-- General Tab -->
@@ -1398,47 +1484,33 @@ text-align: center;
         </h3>
         <div id="lockNotesSection" class="hidden">
           <button onclick="goBack()">Back</button>
-          <label>
-            <input type="checkbox" id="lockNotes" />
-            Lock notes after inactivity
-          </label>
+         <p>Under Planning Phase</p>
         </div>
+      </div>
       </div>
     
-      <!-- Antivirus Tab -->
-      <div id="antivirusTab" class="tab-content hidden">
-        <h3 onclick="toggleSection('openAntiSection')" style="cursor: pointer;">
-          🛡️ Scan For Threats <span id="openAntiToggle">+</span>
-        </h3>
-        <div id="openAntiSection" class="hidden">
-          <button onclick="goBack()">Back</button>
-          <button onclick="showSection('antivirusSection')">Open</button>
-        </div>
-      </div>
-    
-      <!-- Update Tab -->
-      <div id="updateTab" class="tab-content hidden">
-        <h3 onclick="toggleSection('updateSection')" style="cursor: pointer;">
-          ✅ Update OS <span id="updateToggle">+</span>
-        </h3>
-        <div id="updateSection" class="hidden">
-          <button onclick="showSection('update')">Open section</button>
-        </div>
-      </div>
-    </div>
+  
     
 
     
 
-    <div id="antivirusSection" class="container">
-      <h2>Antivirus Scan</h2>
-      <div class="scan-container">
-        <div class="scan-circle" id="scanCircle"></div>
-        <p id="scanStatus">Click the button to start scanning...</p>
+      <div id="aiSection" class="container hidden">
+        <h2>AI Scan for Sensitive Data</h2>
+        <P>List Support Coming soon...</P>
+        <div class="scan-container">
+          <div class="scan-circle" id="scanCircle"></div>
+          <p id="scanStatus">Click the button to start scanning...</p>
+        </div>
+        
+        <div class="counters">
+          <p>Total Notes scanned: <span id="notesCount">0</span></p>
+         
+        </div>
+        
+        <button onclick="startAiScan()">Start AI Scan</button>
+        <div id="resultsContainer"></div>
       </div>
-      <button onclick="startScan()">Start Scan</button>
-      <div id="resultsContainer"></div>
-    </div>
+      
 
     <div id="calculatorSection" class="container hidden">
       <div class="calculator-header">
