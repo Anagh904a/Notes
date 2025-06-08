@@ -33,6 +33,22 @@ function showEmail(emailId) {
   document.getElementById(emailId).style.display = "block";
 }
 
+
+function sendAIQuery() {
+  const input = document.getElementById('aiQuery');
+  const response = document.getElementById('aiResponse');
+  const query = input.value.trim();
+
+  if (query === '') return;
+
+  response.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
+  setTimeout(() => {
+    response.innerHTML = `<i class="fas fa-robot"></i> Here’s an explanation for: <strong>${query}</strong>`;
+  }, 1500);
+}
+
+
+
 // Function to handle undo
 function undo() {
   if (currentIndex > 0) {
@@ -55,69 +71,7 @@ function redo() {
   toggleButtons();
 }
 
-function checkForUpdates() {
-  if (localStorage.getItem("updateCheck")) {
-    alert("Your site is up-to-date!");
-    return; // Exit the function if the site is up-to-date
-  }
 
-  document.getElementById("loadingCircle").style.display = "block";
-  document.getElementById("updateButton").style.display = "none";
-
-  // Simulate checking for updates
-  setTimeout(() => {
-    document.getElementById("loadingCircle").style.display = "none";
-    showMessageBox("Shutting down OS site...");
-    startBootAnimation();
-  }, 10000); // 10 seconds for shutdown
-}
-
-function startBootAnimation() {
-  document.getElementById("updateModal").classList.remove("hidden");
-  document.getElementById("bootAnimation").style.display = "block";
-
-  // Show boot animation for 15 seconds
-  setTimeout(() => {
-    document.getElementById("bootAnimation").style.display = "none";
-    startUpdate();
-  }, 15000); // 15 seconds for boot animation
-}
-
-function startUpdate() {
-  localStorage.setItem("updateCheck", "true");
-  document.getElementById("modalProgress").style.display = "block";
-  document.getElementById("modalProgress").value = 0;
-
-  let progress = 0;
-  const updateDuration = 600000; // 10 minutes in milliseconds
-  const updateInterval = setInterval(() => {
-    progress += 100 / (updateDuration / 600); // Increment progress based on total duration
-    document.getElementById("modalProgress").value = Math.min(
-      progress,
-      100
-    ); // Ensure it doesn't exceed 100
-
-    if (progress >= 100) {
-      clearInterval(updateInterval);
-      setTimeout(() => {
-        showOptimizationText();
-      }, 5000); // 5 seconds gap before showing optimization text
-    }
-  }, 600); // Update every 600 milliseconds
-}
-
-function showOptimizationText() {
-  document.getElementById("setupMessage").classList.remove("hidden");
-
-  // Hide the setup message after 2 minutes
-  setTimeout(() => {
-    document.getElementById("setupMessage").classList.add("hidden");
-    showMessageBox("Update successful!");
-    // Optionally, redirect to the main section
-    showSection("combinedContainer");
-    document.getElementById("updateModal").classList.add("hidden"); // Hide the modal
-  }, 120000); // 2 minutes
-}
 
 document.getElementById('noteContent').addEventListener('keyup', function (e) {
 if (e.key === " " || e.key === "Enter") {
@@ -285,73 +239,82 @@ toggleButtons();
 
 
 
-function startScan() {
+function startAiScan() {
   const scanStatus = document.getElementById("scanStatus");
   const resultsContainer = document.getElementById("resultsContainer");
   const scanCircle = document.getElementById("scanCircle");
+  const notesCountElem = document.getElementById("notesCount");
 
-  // Reset results and status
-  resultsContainer.innerHTML = ""; // Clear previous results
-  scanStatus.textContent = "Scanning for sensitive data and Web keys...";
-  scanCircle.style.borderColor = "#4CAF50"; // Start with green
-  scanCircle.style.animation = "spin 1s linear infinite"; // Start spinning
+  // Reset UI
+  resultsContainer.innerHTML = "";
+  scanStatus.textContent = "Initializing AI scan...";
+  scanCircle.style.borderColor = "#4CAF50";
+  scanCircle.style.animation = "spin 1s linear infinite";
+  notesCountElem.textContent = "0";
 
- 
-  const notes = JSON.parse(localStorage.getItem("notes")) || []; // Assuming notes are stored as an array of objects
+  const notes = JSON.parse(localStorage.getItem("notes")) || [];
+  const sensitiveKeywords = [
+    "password", "ssn", "credit card", "bank account", "secret", "pin", "bank",
+    "policy", "account", "pass", "id", "aadhaar", "card", "security", "key",
+    "token", "license", "confidential", "credentials", "auth", "login"
+  ];
 
   let foundSensitiveData = [];
+  let scannedTitles = new Set(); // prevent duplicate messages for same note
   let threatsCount = 0;
+  let index = 0;
+  const startTime = Date.now();
 
-  // Check each note
-  notes.forEach((note) => {
-    if (note && !note.password) {
-      // Check if the note is defined and not password-protected
-      const sensitiveKeywords = [
-        "password",
-        "SSN",
-        "credit card",
-        "bank account",
-        "secret",
-      ];
-      const noteContent = note.content.toLowerCase();
-      const noteTitle = note.title;
+  const scanInterval = setInterval(() => {
+    if (index >= notes.length) {
+      clearInterval(scanInterval);
 
-      // Check for sensitive keywords
-      sensitiveKeywords.forEach((keyword) => {
-        if (noteContent.includes(keyword.toLowerCase())) {
-          foundSensitiveData.push(
-            `Sensitive data found in note: "${noteTitle}"`
-          );
-          threatsCount++;
-        }
-      });
+      const endTime = Date.now();
+      const duration = ((endTime - startTime) / 1000).toFixed(2);
+      scanCircle.style.animation = "none";
+      notesCountElem.textContent = `${notes.length}`;
+
+      if (threatsCount === 0) {
+        scanCircle.style.borderColor = "#4CAF50";
+        scanStatus.textContent = `Scan complete in ${duration}s — No threats found!`;
+        resultsContainer.innerHTML = "<div class='success-msg'>All notes are safe!</div>";
+      } else {
+        scanCircle.style.borderColor = threatsCount === 1 ? "orange" : "red";
+        scanStatus.textContent = `Scan complete in ${duration}s — ${threatsCount} threat${threatsCount > 1 ? "s" : ""} found!`;
+        resultsContainer.innerHTML = foundSensitiveData.join("<br>");
+      }
+
+      // Auto-scroll to results
+      resultsContainer.scrollIntoView({ behavior: "smooth" });
+      return;
     }
-  });
 
-  // Prepare results
+    const note = notes[index];
+    notesCountElem.textContent = `${index + 1}/${notes.length}`;
 
+    if (note && (!note.password || note.password.trim() === "")) {
+      const content = (note.content || "").toLowerCase();
+      const title = note.title || "Untitled";
 
-  // Display sensitive data results
-  if (foundSensitiveData.length > 0) {
-    foundSensitiveData.forEach((result) => {
-      resultsContainer.innerHTML += `<div>${result}</div>`;
-    });
-  }
+      const isSensitive = sensitiveKeywords.some(keyword =>
+        content.includes(keyword.toLowerCase())
+      );
 
-  // Update scan circle based on threats found
-  if (threatsCount === 0) {
-    scanCircle.style.borderColor = "#4CAF50"; // Green for no threats
-    scanCircle.style.animation = "none"; // Stop spinning
-    resultsContainer.innerHTML +=
-      "<div>No threats found. Your notes are secure!</div>";
-  } else if (threatsCount === 1) {
-    scanCircle.style.borderColor = "orange"; // Half red for one threat
-    scanCircle.style.animation = "none"; // Stop spinning
-  } else {
-    scanCircle.style.borderColor = "red"; // Full red for multiple threats
-    scanCircle.style.animation = "none"; // Stop spinning
-  }
+      if (isSensitive && !scannedTitles.has(title)) {
+        foundSensitiveData.push(
+          `<div class="alert-msg">Sensitive data found in: <strong style="color:red;">${title}</strong></div>`
+        );
+        scannedTitles.add(title);
+        threatsCount++;
+      }
+    }
+
+    index++;
+  }, 250); // Scan delay (ms)
 }
+
+
+
 
 // Call startScan when needed, e.g., on button click
 
@@ -539,6 +502,8 @@ list?.name?.toLowerCase().includes(searchTerm)
 // Display both
 displayFilteredNotesAndLists(filteredNotes, filteredLists);
 }
+
+
 
 
 // Function to display filtered notes and lists
@@ -790,7 +755,7 @@ document
   });
 
   function saveNote() {
-    const title = document.getElementById('noteTitle').value.trim();
+     const title = document.getElementById('noteTitle').value.trim();
     const content = document.getElementById('noteContent').value.trim();
     const password = document.getElementById('notePassword').value.trim();
     const date = new Date(); // Get the current date
@@ -800,6 +765,11 @@ document
     if (content === "") {
         showMessageBox("Note content cannot be empty!");
         return;
+    }
+
+   if (title === "") {
+    suggestTitle(content);
+    return;
     }
 
     if (editingNoteIndex !== null) {
@@ -821,6 +791,34 @@ document
     // Reset editing state
     editingNoteIndex = null; // Reset after saving
 }
+
+function suggestTitle(noteContent) {
+  const keywords = {
+    "grocery": "Grocery List",
+    "buy": "Shopping List",
+    "meeting": "Meeting Notes",
+    "exam": "Study Plan",
+    "todo": "To-Do List",
+    "to do": "To-Do List",
+    "shopping": "Shopping List",
+    "study": "Study Plan",
+    "project": "Project Plan",
+    "task": "To-Do List",
+"work": "Work Notes"
+  };
+
+  for (const key in keywords) {
+    if (noteContent.toLowerCase().includes(key)) {
+      alert("Suggested title by AI: " + keywords[key]);
+      return keywords[key];
+    }
+  }
+  console.log("Suggest title called");
+  return "Untitled Note";
+  
+  
+}
+
 
 function showNotification(message) {
   const notificationList = document.getElementById("notificationList");
@@ -1234,7 +1232,7 @@ function displayLists() {
      
       <h4>${list.title}${loclIndicator}</h4>
        <span class="list-date">${formattedDate}</span>
-  <button class="delete-btn" onclick="deleteList(${index})">Delete</button>
+   <button class="delete-btn" onclick="deleteList(${index}); event.stopPropagation();">Delete</button>
   </div>
       `;
     container.appendChild(listDiv);
