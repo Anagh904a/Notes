@@ -660,6 +660,31 @@ text-align: center;
         margin-right: 5px;
       }
 
+      .scan-status-text {
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.progress-bar-container {
+  width: 80%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 10px auto;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4CAF50, #2E7D32);
+  transition: width 0.2s ease;
+}
+
+
       .feature-buttons {
         display: flex;
         flex-wrap: wrap;
@@ -967,7 +992,10 @@ text-align: center;
         background-color: #ffffff;
         /* Dark note background */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding-bottom: 20px;
       }
+
+      
 
       .note h4 {
         margin: 0;
@@ -1175,6 +1203,7 @@ text-align: center;
       </button>
     </div>
     <div id="ai" class="container hidden">
+      <button onclick="showSection('combinedContainer')">Close</button>
       <h2 id="aiTitle" style="display: flex; align-items: center; gap: 0.5em; font-weight: bold;">
         <span style="font-size: 1.5em;">🤖</span> AI Features Management
       </h2>
@@ -1218,7 +1247,7 @@ text-align: center;
 
       <button
         id="changePasswordButton"
-        onclick="togglePasswordInput()"
+        onclick="showNotePassword()"
         style="
           padding: 10px 15px;
           margin: 5px 0;
@@ -1237,9 +1266,9 @@ text-align: center;
       <input
         type="text"
         id="noteTitle"
-        placeholder="Enter your note title..."
+        placeholder="Note title..."
       />
-      <textarea id="noteContent" placeholder="Write your note here...">
+      <textarea id="noteContent" placeholder="Note.....">
       </textarea>
      
 
@@ -1253,12 +1282,16 @@ text-align: center;
       <br>
       <button onclick="saveNote()" style="background: none; font-size: 20px;"><i class="fas fa-save"></i> Save</button>
 
-      <input
-        type="password"
-        id="notePassword"
-        placeholder="Enter New Password.."
-        class="hidden"
-      />
+     
+      <div id="notePasswordModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Enter Password</h3>
+            <input type="password" id="notePassword" placeholder="Enter New Password.." style="display: block" />
+            
+            <button onclick="closeNotePassword()">Save</button>
+        </div>
+    </div>
+
     </div>
 
     <!-- Add Lists Section -->
@@ -1267,21 +1300,22 @@ text-align: center;
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
       
-      <button id="manageListPassword" onclick="showListPassword()" style="background: none;">
+      <button id="manageListPassword" onclick="showList()" style="background: none;">
       
         <i class="fas fa-lock"></i> Manage Your Password
       </button>
 <br>
-<br>
+<br>  
+
       <input
         type="text"
         id="listTitle"
-        placeholder="Enter your list title..."
-        style="background: transparent; margin-bottom: 10px; border: none; font-size: 25px;"
+        placeholder="List title..."
+       
       />
       <br />
 
-      <input id="newItem" type="text" placeholder="Enter item name..." />
+      <input id="newItem" type="text" placeholder="Item name..." />
       <button onclick="addItem()" style="background: none;"> <i class="fas fa-plus"></i></button>
       <!-- Input for new item -->
 
@@ -1289,16 +1323,24 @@ text-align: center;
       <!-- Button to add item -->
       <br />
 
-      <input
-        type="password"
-        id="listPassword"
-        placeholder="Enter New Password.."
-        class="hidden"
-      />
+     
       <div id="checklistContainer"></div>
       <button onclick="saveList()" style="justify-content: right; text-align: right; background: none; font-size: 20px;"><i class="fas fa-save"></i>Save</button>
       <!-- Container for checklist items -->
              <h3 id="manageListTitle" style="display: none;">Manage Your List</h3>
+             <div id="listPasswordModalr" class="modal hidden">
+  <div class="modal-content">
+      <h3>Enter Password</h3>
+      <input
+        type="password"
+        id="listPassword"
+        placeholder="Enter New Password.."
+       style="display: block;"
+      />
+      
+      <button onclick="closeListPassword()">Save</button>
+  </div>
+</div>
     </div>
 
     <!-- Add Options Modal -->
@@ -1319,7 +1361,7 @@ text-align: center;
 
     <div id="passwordModal" class="modal hidden">
       <div class="modal-content">
-          <h3>Enter Password To Access The content</h3>
+          <h3>Enter Password</h3>
           <input type="password" id="passwordInput" placeholder="Password">
           <button onclick="verifyPassword()">Go</button>
           <button onclick="closePasswordModal()">Close</button>
@@ -1329,7 +1371,7 @@ text-align: center;
     <!-- Delete Password Modal -->
     <div id="deletePasswordModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter Password To Delete This Note</h3>
+        <h3>Enter Password</h3>
         <input
           type="password"
           id="deletePasswordInput"
@@ -1506,6 +1548,10 @@ text-align: center;
           <p>Total Notes scanned: <span id="notesCount">0</span></p>
          
         </div>
+
+        <div class="progress-bar-container">
+  <div id="progressBar" class="progress-bar"></div>
+</div>
         
         <button onclick="startAiScan()">Start AI Scan</button>
         <div id="resultsContainer"></div>
@@ -1557,7 +1603,7 @@ text-align: center;
     <!-- List Password Modal -->
     <div id="listPasswordModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter Password to Access This List</h3>
+        <h3>Enter Password</h3>
         <input type="password" id="listPasswordInput" placeholder="Password" />
         <button onclick="verifyListPassword()">Go</button>
         <button onclick="closeListPasswordModal()">Close</button>
@@ -1567,7 +1613,7 @@ text-align: center;
     <!-- Delete List Password Modal -->
     <div id="deleteListPasswordModal" class="modal hidden">
       <div class="modal-content">
-        <h3>Enter Password to Delete This List</h3>
+        <h3>Enter Password</h3>
         <input
           type="password"
           id="deleteListPasswordInput"
@@ -1577,6 +1623,17 @@ text-align: center;
         <button onclick="closeDeleteListPasswordModal()">Close</button>
       </div>
     </div>
+
+   <!-- Modal to show scan results -->
+<div id="aiModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>AI Scan Warning</h2>
+    <div id="modalResultsContainer"></div>
+    <button onclick="closeAiModal()" style="background: red;">Ignore</button>
+    <button onclick="closeAiModal()">Fix</button>
+  </div>
+</div>
+
 
     <div id="calendarSection" class="container hidden">
       <div class="calendar-header">
