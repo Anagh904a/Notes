@@ -9,6 +9,13 @@ let editingListIndex = null;
 let historyStack = [];
 let currentIndex = -1;
 
+document.addEventListener("DOMContentLoaded", function () {
+  startAiScan();
+  
+  setTimeout(copyResultsToModal, 1500);
+  setTimeout(showAiModal, 1500);
+});
+
 function saveState() {
   const noteContent = document.getElementById("noteContent").value;
 
@@ -244,6 +251,7 @@ function startAiScan() {
   const resultsContainer = document.getElementById("resultsContainer");
   const scanCircle = document.getElementById("scanCircle");
   const notesCountElem = document.getElementById("notesCount");
+  const progressBar = document.getElementById("progressBar");
 
   // Reset UI
   resultsContainer.innerHTML = "";
@@ -287,10 +295,14 @@ function startAiScan() {
       // Auto-scroll to results
       resultsContainer.scrollIntoView({ behavior: "smooth" });
       return;
+      console.log('AI SCAN CALLED');
     }
 
     const note = notes[index];
-    notesCountElem.textContent = `${index + 1}/${notes.length}`;
+   const currentTitle = note?.title || `Untitled Note`;
+notesCountElem.textContent = `🧠 Scanning: "${currentTitle}"`;
+progressBar.style.width = `${((index + 1) / notes.length) * 100}%`;
+
 
     if (note && (!note.password || note.password.trim() === "")) {
       const content = (note.content || "").toLowerCase();
@@ -311,6 +323,38 @@ function startAiScan() {
 
     index++;
   }, 250); // Scan delay (ms)
+}
+
+function closeAiModal() {
+  document.getElementById("aiModal").style.display = "none";
+}
+
+function showAiModal(){
+ const results = document.getElementById("resultsContainer").innerHTML;
+    document.getElementById("modalResultsContainer").innerHTML = results;
+  document.getElementById("aiModal").style.display = "flex";
+}
+
+ function copyResultsToModal() {
+    const scanResults = document.getElementById("resultsContainer").innerHTML;
+    document.getElementById("modalResultsContainer").innerHTML = scanResults;
+    document.getElementById("aiModal").classList.remove("hidden");
+  }
+
+function showNotePassword() {
+  document.getElementById("notePasswordModal").style.display = "flex";
+}
+
+function closeNotePassword() {
+  document.getElementById("notePasswordModal").style.display = "none";
+}
+
+function showList() {
+  document.getElementById("listPasswordModalr").style.display = "flex";
+}
+
+function closeListPassword() {
+  document.getElementById("listPasswordModalr").style.display = "none";
 }
 
 
@@ -570,7 +614,6 @@ function closeFeatureSection(sectionId) {
 }
 
 
-
 function showListPassword() {
   const listPasswordInput = document.getElementById("listPassword");
   listPasswordInput.classList.toggle("hidden"); // Toggle visibility of the password input
@@ -696,6 +739,11 @@ window.addEventListener("popstate", function (event) {
   }
 });
 
+window.onload = function () {
+  startAiScan();
+};
+
+
 let isMessageBoxVisible = false; // Flag to track visibility
 function showMessageBox(message) {
   if (isMessageBoxVisible) return; // Prevent showing if already visible
@@ -743,7 +791,7 @@ function cancelNote() {
   const section = document.getElementById("addNoteSection");
   section.classList.add("hidden");
   showSection("combinedContainer");
-  document.getElementById("notePassword").classList.add("hidden");
+  document.getElementById("notePasswordModal").classList.add("hidden");
 }
 
 // Add event listener for the Add Note button
@@ -786,7 +834,7 @@ document
     localStorage.setItem('notes', JSON.stringify(notes));
     displayNotes();
     showSection('combinedContainer');
-    document.getElementById("notePassword").classList.add("hidden");
+    document.getElementById("notePasswordModal").classList.add("hidden");
 
     // Reset editing state
     editingNoteIndex = null; // Reset after saving
@@ -1022,7 +1070,7 @@ function cancelList() {
   showSection("combinedContainer"); // Show the lists section
   displayNotes();
   displayLists();
-  document.getElementById("listPassword").classList.add("hidden");
+  document.getElementById("listPasswordModalr").classList.add("hidden");
 
 }
 
@@ -1059,7 +1107,7 @@ localStorage.setItem("lists", JSON.stringify(lists));
 displayLists();
 showSection("combinedContainer");
 editingListIndex = null;
-document.getElementById("listPassword").classList.add("hidden");
+document.getElementById("listPasswordModalr").classList.add("hidden");
 
 }
 // Function to open a list and pre-fill the add list section
