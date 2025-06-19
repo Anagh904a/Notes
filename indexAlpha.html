@@ -126,56 +126,13 @@
        
       }
 
-      .add-button {
-        position: absolute;
-        /* Positioning the button */
-        bottom: 20px;
-        /* Distance from the bottom */
-        right: 20px;
-        /* Distance from the right */
-        background: linear-gradient(90deg, #849feb, #0059ff);
-        border: none;
-        color: white;
-        padding: 15px 20px;
-        font-size: 1.2em;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
+     
 
-      .add-button:hover {
-        background: linear-gradient(90deg, #007aff, #4a90e2);
-      }
-
-      #aiButton {
-        position: absolute;
-        bottom: 20px;
-        /* Distance from the bottom */
-        left: 20px;
-      
-        /* Positioning the button */
-       
-        /* Distance from the bottom */
-text-align: center;
-        /* Distance from the right */
-        background: linear-gradient(90deg, #849feb, #0059ff);
-        border: none;
-        color: white;
-        padding: 15px 20px;
-        font-size: 1.2em;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-        /* Distance from the left */
-
-   
-        z-index: 1000;
-        /* Ensure it appears above other elements */
-      }
+     
 
       #noNotesMessage {
        margin-left: 20px;
-        border-left: #0084ff 4px solid;
+        border-left: #000000 4px solid;
       }
 
            #noListsMessage {
@@ -217,7 +174,7 @@ text-align: center;
       .modal-content {
         color: rgb(0, 0, 0);
         padding: 20px;
-        border-radius: 5px;
+        border-radius: 15px;
         width: 350px;
         background-color: white;
       }
@@ -227,6 +184,27 @@ text-align: center;
         display: none;
         /* Hide elements with this class */
       }
+
+      /* Modal Button Styles */
+.modal-button {
+    background: #ffffff; /* Pure white background */
+    color: #000000; /* Black icon color */
+    border: 2px solid #000000; /* Black border */
+    border-radius: 50%; /* Fully rounded buttons */
+    width: 56px; /* Increased width */
+    height: 56px; /* Increased height */
+  
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
+    font-size: 24px; /* Icon size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+/* Modal Button Hover Effect */
+.modal-button:hover {
+    background: #f0f0f0; /* Light gray background on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
 
       .nav-button {
         background: none;
@@ -265,22 +243,22 @@ text-align: center;
         /* Pointer cursor on hover */
         border: none;
         /* No border */
-        background: linear-gradient(90deg, #78a9e2, #0059ff);
+        background: black;
         /* Teal */
-        color: #000;
+        color: white;
         /* Orange background */
 
         /* White text */
         border-radius: 4px;
         /* Rounded corners */
-        transition: background 0.3s;
+        
         /* Smooth transition for hover effect */
       }
 
       button:hover {
-        background: linear-gradient(90deg, #007aff, #4a90e2);
+        background: linear-gradient(90deg, #282929, #3f3f3f);
         /* Darker Blue on hover */
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
       }
 
       .input-field {
@@ -607,39 +585,24 @@ text-align: center;
       /* Style for Undo and Redo Buttons */
       #undoButton,
       #redoButton {
-        background: rgb(255, 255, 255);
-        /* Transparent background */
-        color: #333;
-        /* Default text color */
-        border: 2px solid #333;
-        /* Border color */
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin: 10px;
-        transition: all 0.3s ease;
+          transition: all 0.3s ease;
         /* Smooth transition for hover effects */
       }
 
       /* Hover effect for undo and redo buttons */
       #undoButton:hover,
       #redoButton:hover {
-        background: rgba(63, 63, 63, 0.1);
+       
         /* Light background on hover */
         color: #ffffff;
-        /* Dark text color on hover */
+       
       }
 
       /* Disabled state (gray color) for undo and redo buttons */
       #undoButton:disabled,
       #redoButton:disabled {
-        color: #ccc;
-        background: gray;
-        border-color: gray;
-        cursor: not-allowed;
+        color: #757575;
+       cursor: not-allowed;
         /* Shows not-allowed cursor */
       }
 
@@ -905,13 +868,7 @@ text-align: center;
         border-radius: 5px;
       }
 
-      .modal-content button {
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+ 
 
       #changePasswordButton {
         color: #ffffff;
@@ -969,6 +926,8 @@ text-align: center;
       
     }
 
+
+
     .top-bar input {
       flex: 1;
       border: none;
@@ -985,7 +944,7 @@ text-align: center;
     }
 
       .note {
-        border-left: 5px solid #4a90e2;
+        border-left: 5px solid #000000;
         border-radius: 5px;
         padding: 10px;
         margin: 10px;
@@ -1163,14 +1122,101 @@ text-align: center;
     white-space: nowrap;
   }
 
+/* Bottom Navigation Bar */
+.bottom-nav {
+    background-color: #282929;
+  position: fixed; /* Fixed position */
+    bottom: 20px; /* Distance from bottom */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center adjustment */
+   border-radius: 30px;
+    padding: 10px; /* Padding */
+    display: flex; /* Flexbox for layout */
+    justify-content: space-around; /* Space between buttons */
+    width: calc(100% - 85%); /* Full width minus padding */
+}
+
+/* Navigation Button Styles */
+.nav-button {
+    background-color: transparent; /* White background */
+    color: #ffffff; /* Black icon color */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
+    font-size: 20px; /* Icon size */
+    cursor: pointer; /* Pointer cursor on hover */
+    
+}
+
+/* Navigation Button Hover Effect */
+.nav-button:hover {
+    color: #868686; /* Light gray background on hover */
+   background-color: #282929;
+
+}
+
+@media (max-width: 768px) {
+    .bottom-nav {
+        bottom: 10px; /* Adjust distance from bottom */
+       width: calc(100% - 70%); /* Full width minus padding */
+        padding: 8px; /* Adjust padding */
+    }
+    .nav-button {
+        font-size: 18px; /* Slightly smaller icon size */
+    }
+}
+
+@media (max-width: 632px) {
+  .bottom-nav {
+    bottom: 5px; /* Adjust distance from bottom */
+     width: calc(100% - 60%); /* Full width minus padding */
+  }
+}
+@media (max-width: 480px) {
+    .bottom-nav {
+        bottom: 5px; /* Further adjust distance from bottom */
+       width: calc(100% - 50%); /* Full width minus padding */
+       
+        padding: 5px; /* Less padding for mobile */
+    }
+    .nav-button {
+        font-size: 16px; /* Even smaller icon size */
+    }
+}
+
+@media (max-width: 368px) {
+  .bottom-nav {
+    bottom: 5px; /* Adjust distance from bottom */
+    width: calc(100% - 40%); /* Full width minus padding */
+
+  }
+
+}
+
+@media (max-width: 320px) {
+  .bottom-nav {
+    bottom: 5px; /* Adjust distance from bottom */
+    width: calc(100% - 30%); /* Full width minus padding */
+    }
+    }
+
+    @media(max-width: 280px) {
+      .bottom-nav {
+        bottom: 5px; /* Adjust distance from bottom */
+        width: calc(100% - 20%); /* Full width minus padding */
+        }
+      }
     </style>
   </head>
 
+
   <body>
     <div class="top-bar">
-      <button class="button" onclick="showSection('moreSection')">
-        <i class="fas fa-bars"></i>
-      </button>
+     
+        <i style=" padding: 10px 15px;
+        /* Padding for buttons */
+        margin: 5px 0;;" class="fas fa-search"></i>
+     
       <input
       type="text"
       id="searchInput"
@@ -1179,10 +1225,11 @@ text-align: center;
      >
   
       </div>
-    
 
-  
- 
+
+
+
+
     <!-- Combined Notes and Lists Section -->
     <div id="combinedContainer" class="container">
       <h2>Your Notes and Lists</h2>
@@ -1192,18 +1239,24 @@ text-align: center;
       </div>
       <div id="noListsMessage" class="hidden">No lists added.</div>
       <div id="noNotesMessage" class="hidden">No notes added.</div>
-      <button class="add-button" onclick="showAddOptions()">
-        <i class="fas fa-plus"></i> Add
-      </button>
-      <button
-        id="aiButton"
-        onclick="showSection('ai')"
-      >
-        <i class="fas fa-magic"></i>
-      </button>
+ 
+      <nav class="bottom-nav">
+      <button class="nav-button" onclick="showSection('moreSection')">
+         <i class="fas fa-bars"></i>
+    </button>
+    <button id="add-button" class="nav-button" onclick="showAddOptions()">
+        <i class="fas fa-plus"></i>
+    </button>
+  
+     <button class="nav-button" onclick="showSection('ai')">
+      <i class="fas fa-magic"></i>
+    </button>
+</nav>
     </div>
     <div id="ai" class="container hidden">
-      <button onclick="showSection('combinedContainer')">Close</button>
+      <button class="modal-button" onclick="showSection('combinedContainer')">
+        <i class="fas fa-arrow-left back-icon"></i>
+      </button>
       <h2 id="aiTitle" style="display: flex; align-items: center; gap: 0.5em; font-weight: bold;">
         <span style="font-size: 1.5em;">🤖</span> AI Features Management
       </h2>
@@ -1240,27 +1293,12 @@ text-align: center;
     <!-- Add Note Form -->
     <!-- Add Note Form -->
     <div id="addNoteSection" class="container hidden">
-      <button onclick="cancelNote()">
-        <i class="fas fa-arrow-left back-icon"></i>Back
+      <button class="modal-button" onclick="cancelNote()">
+        <i class="fas fa-arrow-left back-icon"></i>
       </button>
      
 
-      <button
-        id="changePasswordButton"
-        onclick="showNotePassword()"
-        style="
-          padding: 10px 15px;
-          margin: 5px 0;
-          cursor: pointer;
-          border: none;
-          background-color: #fbff00; /* Teal */
-          color: #000;
-          border-radius: 4px;
-          transition: background-color 0.3s;
-        "
-      >
-        <i class="fas fa-lock"></i> Manage Your Password
-      </button>
+
 
       <h3 id="manageNoteTitle">Manage Your Note</h3>
       <input
@@ -1272,16 +1310,22 @@ text-align: center;
       </textarea>
      
 
-      <button id="undoButton" onclick="undo()">
+   
+      <button onclick="saveNote()" style="background: none; color:#000; font-size: 20px;"><i class="fas fa-save"></i> Save</button>
+      <nav class="bottom-nav" style="display: flex;">
+       <button id="changePasswordButton" onclick="showNotePassword()" class="nav-button">       
+        <i class="fas fa-lock"></i> 
+      </button>
+        <button class="nav-button" id="undoButton" onclick="undo()">
         <i class="fas fa-undo"></i>
       </button>
 
-      <button id="redoButton" onclick="redo()">
+      <button class="nav-button" id="redoButton" onclick="redo()">
         <i class="fas fa-redo"></i>
       </button>
-      <br>
-      <button onclick="saveNote()" style="background: none; font-size: 20px;"><i class="fas fa-save"></i> Save</button>
-
+  
+    
+</nav>
      
       <div id="notePasswordModal" class="modal hidden">
         <div class="modal-content">
@@ -1296,17 +1340,7 @@ text-align: center;
 
     <!-- Add Lists Section -->
     <div id="addListSection" class="container">
-      <button onclick="cancelList()" style="background: transparent;">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-      
-      <button id="manageListPassword" onclick="showList()" style="background: none;">
-      
-        <i class="fas fa-lock"></i> Manage Your Password
-      </button>
-<br>
-<br>  
-
+<h3 id="manageListTitle" >Manage Your List</h3>
       <input
         type="text"
         id="listTitle"
@@ -1316,18 +1350,29 @@ text-align: center;
       <br />
 
       <input id="newItem" type="text" placeholder="Item name..." />
-      <button onclick="addItem()" style="background: none;"> <i class="fas fa-plus"></i></button>
+      <button onclick="addItem()" class="modal-button"> <i class="fas fa-plus"></i></button>
       <!-- Input for new item -->
-
+ <nav class="bottom-nav" style="display: flex;">
+  <button class="nav-button" onclick="cancelList()">
+        <i class="fas fa-arrow-left back-icon"></i>
+      </button>      
+  
+        <button id="manageListPassword" onclick="showList()" class="nav-button">
+      <i class="fas fa-lock"></i>
+      </button>
+ <button onclick="saveList()" class="nav-button"><i class="fas fa-save"></i></button>
+  
+    
+</nav>
       
       <!-- Button to add item -->
       <br />
 
      
       <div id="checklistContainer"></div>
-      <button onclick="saveList()" style="justify-content: right; text-align: right; background: none; font-size: 20px;"><i class="fas fa-save"></i>Save</button>
+     
       <!-- Container for checklist items -->
-             <h3 id="manageListTitle" style="display: none;">Manage Your List</h3>
+           
              <div id="listPasswordModalr" class="modal hidden">
   <div class="modal-content">
       <h3>Enter Password</h3>
@@ -1347,15 +1392,17 @@ text-align: center;
     <div id="addOptionsModal" class="modal hidden">
       <div class="modal-content">
         <h3>What to add?</h3>
-        <button id="addNoteButton" onclick="showAddNote()">
-          <i class="fas fa-sticky-note"></i>Add Note
+       
+       <button class="modal-button" id="addNoteButton" onclick="showAddNote()">
+          <i class="fas fa-sticky-note"></i>
         </button>
-        <button id="addListButton" onclick="showAddListSection()">
-          <i class="fas fa-list"></i>Add List
+        <button class="modal-button" id="addListButton" onclick="showAddListSection()">
+          <i class="fas fa-list"></i>
         </button>
-        <button onclick="closeAddOptions()">
-          <i class="fas fa-times"></i>Close
+        <button class="modal-button" onclick="closeAddOptions()">
+          <i class="fas fa-times"></i>
         </button>
+        
       </div>
     </div>
 
@@ -1482,8 +1529,10 @@ text-align: center;
     
       <!-- General Tab -->
       <div id="generalTab" class="tab-content">
-        <button onclick="showSection('moreSection')">Close</button>
-        <p>Press home to return to home</p>
+        <button class="modal-button" onclick="showSection('moreSection')">
+        <i class="fas fa-arrow-left back-icon"></i>
+      </button>
+      
         <h2>Credits</h2>
         <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
       </div>
@@ -1537,6 +1586,9 @@ text-align: center;
     
 
       <div id="aiSection" class="container hidden">
+        <button class="modal-button" onclick="showSection('combinedContainer')">
+        <i class="fas fa-arrow-left back-icon"></i>
+      </button>
         <h2>AI Scan for Sensitive Data</h2>
         <P>List Support Coming soon...</P>
         <div class="scan-container">
@@ -1636,6 +1688,9 @@ text-align: center;
 
 
     <div id="calendarSection" class="container hidden">
+      <button class="modal-button" onclick="showSection('combinedContainer')">
+        <i class="fas fa-arrow-left back-icon"></i>
+      </button>
       <div class="calendar-header">
         <button class="nav-button" onclick="changeMonth(-1)">&#10094;</button>
         <div id="monthYear" class="month-year"></div>
