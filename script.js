@@ -226,21 +226,26 @@ function decryptData() {
 
 // Function to toggle button states (enable/disable)
 function toggleButtons() {
-  const undoButton = document.getElementById("undoButton");
-  const redoButton = document.getElementById("redoButton");
+    const undoButton = document.getElementById("undoButton");
+    const redoButton = document.getElementById("redoButton");
 
-  // Enable/Disable Undo button
-  undoButton.disabled = currentIndex <= 0;
+    // Enable/Disable Undo button
+    undoButton.disabled = currentIndex <= 0;
+   
 
-  // Enable/Disable Redo button
-  redoButton.disabled = currentIndex >= historyStack.length - 1;
+    // Enable/Disable Redo button
+    redoButton.disabled = currentIndex >= historyStack.length - 1;
+    
+
+  
 }
+
 
 // Event listener to automatically save the content whenever the user types
 document
   .getElementById("noteContent")
   .addEventListener("input", saveState);
-
+  
 // Initial call to enable/disable buttons on page load
 toggleButtons();
 
@@ -1018,14 +1023,13 @@ function closeAddListSection() {
 
 // Function to show the add options modal
 function showAddOptions() {
-  console.log("showAddOptions called"); // end of part 2 totaal 3 parts
-  const modal = document.getElementById("addOptionsModal");//stsrt of part 3
-  modal.classList.remove("hidden");
+  document.getElementById('addOptionsModal');
+  document.getElementById('addOptionsModal').style.display = 'flex';
 }
 
 function closeAddOptions() {
-  const modal = document.getElementById("addOptionsModal");
-  modal.classList.add("hidden"); // Hide the modal
+  document.getElementById('addOptionsModal');
+  document.getElementById('addOptionsModal').style.display = 'none';
 }
 
 // Function to open a list and pre-fill the add list section
