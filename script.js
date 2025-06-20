@@ -8,6 +8,28 @@ let currentItems = []; // Will now store objects like { name: 'item name', check
 let editingListIndex = null;
 let historyStack = [];
 let currentIndex = -1;
+let holdTimer = null;
+let selectionMode = false;
+let selectedNotes = [];
+
+function setupLongPress(element, index) {
+  element.addEventListener("mousedown", (e) => {
+    holdTimer = setTimeout(() => {
+      enterSelectionMode(index);
+    }, 500);
+  });
+
+  element.addEventListener("mouseup", () => clearTimeout(holdTimer));
+  element.addEventListener("mouseleave", () => clearTimeout(holdTimer));
+}
+
+function enterSelectionMode(index) {
+  selectionMode = true;
+  selectedNotes = [index];
+ displayNotes();
+  showSelectionActions();
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
   startAiScan();
@@ -170,6 +192,34 @@ function toggleSection(sectionId) {
     }
   }
 }
+
+function toggleSelect(index) {
+  if (selectedNotes.includes(index)) {
+    selectedNotes = selectedNotes.filter(i => i !== index);
+  } else {
+    selectedNotes.push(index);
+  }
+}
+
+function showSelectionActions() {
+  document.getElementById("selectionBar").classList.remove("hidden");
+}
+
+function exitSelectionMode() {
+  selectionMode = false;
+  selectedNotes = [];
+  document.getElementById("selectionBar").classList.add("hidden");
+  renderNotes();
+}
+
+function deleteSelectedNotes() {
+  selectedNotes.sort((a, b) => b - a); // delete from end to avoid reindex
+  selectedNotes.forEach(i => notes.splice(i, 1));
+  localStorage.setItem("notes", JSON.stringify(notes));
+  exitSelectionMode();
+}
+
+
 
 function clearData() {
   if (
@@ -831,7 +881,7 @@ document
         showMessageBox("Note updated successfully!");
     } else {
         // Add new note
-        const note = { title, content, password, date }; // Include date
+        const note = { title, content, password, pinned: false, date }; // Include date
         notes.push(note);
         showMessageBox("Note saved successfully!");
     }
@@ -900,11 +950,17 @@ function displayNotes() {
     const formattedDate = formatDate(noteDate); // Format the date for display
     const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
     noteDiv.innerHTML = `
-  <div class="note" onclick="openNote(${index})">  
-        <h4>${note.title}${lockIndicator}</h4>
-        <span class="note-date">${formattedDate}</span>
-        <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
-      </div>
+     ${selectionMode ? `<input type="checkbox" onchange="toggleSelect(${index})" checked>` : ''}
+ <div class="note" onclick="openNote(${index})">
+  <div class="note-header">
+    <h4>${note.title}</h4>
+    ${lockIndicator}
+
+  </div>
+  <span class="note-date">${formattedDate}</span>
+ 
+  <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
+</div>
     `;
     container.appendChild(noteDiv);
   });
@@ -1278,15 +1334,16 @@ function displayLists() {
     const formattedDate = formatDate(listDate); // Format the date for display
     const loclIndicator = list.password && list.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
     listDiv.innerHTML = `
-  
   <div class="note" onclick="openList(${index})">    
-  <i class="fas fa-list"></i> <!-- List Icon -->
-     
-      <h4>${list.title}${loclIndicator}</h4>
-       <span class="list-date">${formattedDate}</span>
+  <i class="fas fa-list"></i>
+  <div class="note-header">
+    <h4>${list.title}</h4>
+    ${loclIndicator}
+    </div>
+  <span class="list-date">${formattedDate}</span>
    <button class="delete-btn" onclick="deleteList(${index}); event.stopPropagation();">Delete</button>
   </div>
-      `;
+  `;
     container.appendChild(listDiv);
   });
 }
