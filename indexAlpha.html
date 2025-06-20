@@ -1,1801 +1,1376 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="This is a notes app built by anagh , its completely free" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter&amp;display=swap" rel="stylesheet"/>
-    <title>Sticky Notes By Anagh</title>
-    <style>
-      .button:disabled {
-        background-color: #888;
-        /* Greyed out button */
-        cursor: not-allowed;
-      }
 
-      .urgent {
-        color: #ff0000;
-        /* Red color for urgent messages */
-        font-weight: bold;
-      }
-
-      body {
-        font-family: 'Inter', sans-serif;
-
-        margin: 0;
-        padding: 0;
-        background-color: #f3f3f3;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-      }
-
-      h1 {
-        background: linear-gradient(90deg, #000000, #3f3f3f);
-        background-clip: text;
-        color: transparent;
-
-        text-align: center;
-        padding: 10px;
-        margin: 0;
-      }
-
-      h2 {
-        text-align: center;
-        background: linear-gradient(90deg, #000000, #3f3f3f);
-        background-clip: text;
-        color: transparent;
-      }
-
-      * {
-        -webkit-tap-highlight-color: transparent;
-        outline: none;
-      }
-
-      /* Fade-in animation for modals */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* Fade-out animation for modals */
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        to {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-      }
-
-      /* Apply animation to modal content */
-      .modal-content {
-        animation: fadeIn 0.3s ease forwards;
-        color: white;
-      }
-
-     
-
-      #deletePasswordModal {
-        display: none;
-      }
-
-      /* Hide modal with fade-out animation */
-
-      .delete-button {
-        position: relative;
-        margin-left: 94%;
-      }
-
-      textarea {
-        width: 97%;
-        height: 120px;
-        margin: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-      }
-
-      input[type="password"] {
-        padding: 5px;
-        margin: 10px 0;
-        width: 80%;
-      }
-
-      .container {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-       
-      }
-
-     
-
-     
-
-      #noNotesMessage {
-       margin-left: 20px;
-        border-left: #000000 4px solid;
-      }
-
-           #noListsMessage {
-        margin-left: 20px;
-        border-left: #0084ff 4px solid;
-      }
-
-
-      #addListSection {
-        /* White background */
-        padding: 20px;
-        /* Padding around the content */
-        border-radius: 8px;
-        /* Rounded corners */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        /* Shadow for depth */
-
-        /* Space above the section */
-      }
-
-      /* General modal styling */
-      .modal {
-        display: flex;
-        /* Use flexbox for centering */
-        position: fixed;
-        /* Stay in place */
-        color: white;
-        left: 0;
-        top: 0;
-        width: 100%;
-        /* Full width */
-        height: 100%;
-        /* Full height */
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-      }
-
-      .modal-content {
-        color: rgb(0, 0, 0);
-        padding: 20px;
-        border-radius: 15px;
-        width: 350px;
-        background-color: white;
-      }
-
-      /* Hidden class to hide elements */
-      .modal.hidden {
-        display: none;
-        /* Hide elements with this class */
-      }
-
-      /* Modal Button Styles */
-.modal-button {
-    background: #ffffff; /* Pure white background */
-    color: #000000; /* Black icon color */
-    border: 2px solid #000000; /* Black border */
-    border-radius: 50%; /* Fully rounded buttons */
-    width: 56px; /* Increased width */
-    height: 56px; /* Increased height */
-  
-    align-items: center; /* Center icon vertically */
-    justify-content: center; /* Center icon horizontally */
-    font-size: 24px; /* Icon size */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
-}
-/* Modal Button Hover Effect */
-.modal-button:hover {
-    background: #f0f0f0; /* Light gray background on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-      .nav-button {
-        background: none;
-        border: none;
-        color: rgb(58, 57, 57);
-        font-size: 16px;
-        cursor: pointer;
-        margin-right: 20px;
-      }
-
-      .nav-button:hover {
-        background: rgb(167, 167, 167);
-      }
-
-      /* Styling for password input fields */
-      input[type="password"] {
-        width: 100%;
-        /* Full width */
-        padding: 10px;
-        /* Padding inside the input */
-        margin: 10px 0;
-        /* Margin above and below */
-        border: 1px solid #ccc;
-        /* Light gray border */
-        border-radius: 4px;
-        /* Rounded corners */
-      }
-
-      /* Button styling */
-      button {
-        padding: 10px 15px;
-        /* Padding for buttons */
-        margin: 5px 0;
-        /* Margin around buttons */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        border: none;
-        /* No border */
-        background: black;
-        /* Teal */
-        color: white;
-        /* Orange background */
-
-        /* White text */
-        border-radius: 4px;
-        /* Rounded corners */
-        
-        /* Smooth transition for hover effect */
-      }
-
-      button:hover {
-        background: linear-gradient(90deg, #282929, #3f3f3f);
-        /* Darker Blue on hover */
-        
-      }
-
-      .input-field {
-        width: 95%;
-        /* Full width */
-        padding: 12px;
-        /* Padding inside the input */
-        margin: 10px 0;
-        /* Margin above and below */
-        border: 1px solid #ccc;
-        /* Light gray border */
-        border-radius: 4px;
-        /* Rounded corners */
-        transition: border-color 0.3s, box-shadow 0.3s;
-        /* Smooth transition for focus effects */
-      }
-
-      .input-field:focus {
-        border-color: #ffa500;
-        /* Change border color on focus */
-        box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
-        /* Add a subtle shadow effect */
-        outline: none;
-        /* Remove default outline */
-      }
-
-    
-
-      .checklist-container div {
-        display: flex;
-        /* Flexbox for checklist items */
-        align-items: center;
-        /* Center items vertically */
-        margin: 5px 0;
-        /* Space between checklist items */
-      }
-
-      .checklist-container input[type="checkbox"] {
-        margin-right: 10px;
-        /* Space between checkbox and label */
-      }
-
-      .close-button {
-        background: #ff4c4c;
-        /* Red background for close button */
-      }
-
-      .close-button:hover {
-        background: #ff1c1c;
-        /* Darker red on hover */
-      }
-
-      input {
-        margin-bottom: 10px;
-        /* Space below each input */
-        padding: 12px;
-        /* Increased padding for better touch targets */
-        font-size: 16px;
-        /* Consistent font size */
-        border: 1px solid #ddd;
-        /* Light gray border */
-        border-radius: 5px;
-        /* Rounded corners */
-        transition: border-color 0.3s, box-shadow 0.3s;
-        /* Smooth transition for focus effects */
-      }
-
-      
-
-      input[type="password"] {
-        font-family: Arial, sans-serif;
-        /* Ensure consistent font for password input */
-      }
-
-      .checklist-item {
-        background-color: transparent;
-        /* Orange background */
-        padding: 10px;
-        /* Padding inside the item */
-        border: 1px solid black;
-        border-radius: 5px;
-        /* Rounded corners */
-        margin: 5px 0;
-        /* Space between items */
-        display: flex;
-        /* Flexbox for alignment */
-        align-items: center;
-        /* Center items vertically */
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        /* Subtle shadow for depth */
-      }
-
-      .checklist-item input[type="checkbox"] {
-        margin-right: 10px;
-        /* Space between checkbox and label */
-      }
-
-      .checklist-item button {
-        margin-left: auto;
-        /* Push the button to the right */
-        background: red;
-        /* Darker orange for the button */
-        color: white;
-        /* White text */
-        border: none;
-        /* No border */
-        padding: 5px 10px;
-        /* Padding for the button */
-        border-radius: 4px;
-        /* Rounded corners for the button */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        transition: background-color 0.3s;
-        /* Smooth transition for hover effect */
-      }
-
-      .checklist-item button:hover {
-        background-color: #ff6347;
-        /* Lighter orange on hover */
-      }
-
-      .scan-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 20px 0;
-      }
-
-      .scan-circle {
-        width: 100px;
-        height: 100px;
-        border: 10px solid #4caf50;
-        /* Green color */
-        border-radius: 50%;
-        border-top: 10px solid transparent;
-        /* Create a spinning effect */
-        animation: spin 1s linear infinite;
-        /* Spin animation */
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      .container {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-      }
-
-      #messageBox {
-        display: none;
-        /* Hiddon by default */
-        background-color: #808080;
-        /* Grey color */
-        color: white;
-        padding: 15px;
-        border-radius: 20px;
-        position: fixed;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: opacity 1s ease;
-        /* Fade effect */
-        opacity: 1;
-        /* Fully visible */
-      }
-
-      /* Base Container */
-
-      /* Header */
-      .calculator-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .calculator-header h3 {
-        font-size: 20px;
-        color: #333;
-        margin: 0;
-      }
-
-      .btn-close {
-        background: none;
-        border: none;
-        font-size: 20px;
-        cursor: pointer;
-        color: #888;
-        transition: color 0.3s;
-      }
-
-      .btn-close:hover {
-        color: #ff4d4d;
-      }
-
-      /* Display */
-      .display {
-        width: 95%;
-        height: 60px;
-        font-size: 28px;
-        text-align: right;
-        padding: 10px 15px;
-        margin-bottom: 20px;
-        border: none;
-        border-radius: 15px;
-
-        color: #333;
-      }
-
-      /* Grid layout */
-      .calculator-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 10px;
-      }
-
-      /* Buttons base */
-      .btn {
-        height: 60px;
-        font-size: 22px;
-        border: none;
-        border-radius: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.3s, transform 0.2s;
-      }
-
-      /* Number Buttons */
-      .btn-number {
-        background: #e0e0e0;
-        color: #333;
-      }
-
-      .btn-number:hover {
-        background: #d5d5d5;
-        transform: scale(1.05);
-      }
-
-      /* Operator Buttons */
-      .btn-operator {
-        background: #ffd966;
-        color: #333;
-      }
-
-      .success-msg {
-  color: green;
-  margin: 10px 0;
-  font-weight: bold;
-  padding: 6px;
-}
-
-.alert-msg {
-  color: #c0392b;
-  background: #ffe9e9;
-  border-left: 5px solid red;
-  padding: 6px;
-  margin-bottom: 4px;
-  font-family: "Arial", sans-serif;
-  border-radius: 4px;
-}
-
-
-
-
-
-      .btn-operator:hover {
-        background: #ffcd3c;
-        transform: scale(1.05);
-      }
-
-      /* Clear Button */
-      .btn-clear {
-        background: #f28b82;
-        color: white;
-      }
-
-      .btn-clear:hover {
-        background: #e57373;
-        transform: scale(1.05);
-      }
-
-      /* Equal Button */
-      .btn-equal {
-        background: #4caf50;
-        color: white;
-        grid-row: span 2;
-      }
-
-      .btn-equal:hover {
-        background: #45a049;
-        transform: scale(1.05);
-      }
-
-      /* Zero Button (Big Zero) */
-      .btn-zero {
-        background: #e0e0e0;
-        grid-column: span 2;
-        font-size: 22px;
-        color: #333;
-      }
-
-      .btn-zero:hover {
-        background: #d5d5d5;
-        transform: scale(1.05);
-      }
-
-      .list-date {
-        display: block;
-        /* Ensure the date is on a new line */
-        font-size: 14px;
-        color: #888;
-        margin-top: 5px;
-        text-align: left;
-        /* Align text to the left */
-      }
-
-      /* Style for Undo and Redo Buttons */
-      #undoButton,
-      #redoButton {
-          transition: all 0.3s ease;
-        /* Smooth transition for hover effects */
-      }
-
-      /* Hover effect for undo and redo buttons */
-      #undoButton:hover,
-      #redoButton:hover {
-       
-        /* Light background on hover */
-        color: #ffffff;
-       
-      }
-
-      /* Disabled state (gray color) for undo and redo buttons */
-      #undoButton:disabled,
-      #redoButton:disabled {
-        color: #757575;
-       cursor: not-allowed;
-        /* Shows not-allowed cursor */
-      }
-
-      #addNoteSection {
-        /* White background */
-        padding: 20px;
-        /* Padding around the content */
-        border-radius: 8px;
-        /* Rounded corners */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        /* Shadow for depth */
-
-        /* Space above the section */
-      }
-
-      #undoButton i,
-      #redoButton i {
-        margin-right: 5px;
-      }
-
-      .scan-status-text {
-  font-size: 14px;
-  margin-top: 10px;
-  text-align: center;
-  color: #4CAF50;
-  font-weight: bold;
-}
-
-.progress-bar-container {
-  width: 80%;
-  height: 10px;
-  background-color: #ddd;
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 10px auto;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #4CAF50, #2E7D32);
-  transition: width 0.2s ease;
-}
-
-
-      .feature-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-      }
-
-      .tab-btn {
-  padding: 8px 12px;
-  border: none;
-  background-color: lightgray;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.active-tab {
-  background-color: darkgray;
-  font-weight: bold;
-}
-
-.tab-content {
-  display: block;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-
-      .feature-item {
-        text-align: center;
-        flex: 1 1 200px;
-        /* Flex-grow, flex-shrink, flex-basis */
-        min-width: 150px;
-        /* Minimum width for smaller screens */
-      }
-
-      .feature-button {
-        background: transparent;
-        /* Blue border */
-        border-radius: 5px;
-        padding: 15px;
-        width: 120px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: rgb(0, 0, 0);
-        /* Text color */
-      }
-
-      .feature-button i {
-        font-size: 24px;
-        color: #007bff;
-        /* Blue icon color */
-      }
-
-      .feature-button:hover {
-        background: rgb(143, 143, 143);
-        /* Blue background on hover */
-      }
-
-      .feature-description {
-        margin-top: 5px;
-        color: #777;
-        /* Description text color */
-        font-size: 14px;
-      }
-
-      i {
-        margin-right: 8px;
-        /* Space between icon and text */
-      }
-
-      .scan-circle {
-  width: 80px;
-  height: 80px;
-  border: 8px solid #ccc;
-  border-top: 8px solid #4CAF50;
-  border-radius: 50%;
-  margin: 10px auto;
-  transition: border-color 0.5s ease;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.counters p {
-  font-weight: bold;
-  text-align: center;
-  margin: 5px 0;
-}
-
-
-      /* General styles for the container */
-    /* Container */
-.calendar-container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Header */
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.nav-button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #555;
-  transition: color 0.3s;
-}
-
-.nav-button:hover {
-  color: #000;
-}
-
-.month-year {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-}
-
-/* Weekdays */
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: bold;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-/* Days */
-.calendar-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  gap: 10px;
-}
-
-.calendar-days div {
-  padding: 10px 0;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  color: #333;
-  transition: background-color 0.3s;
-}
-
-.calendar-days div:hover {
-  background-color: #e0e0e0;
-}
-
-.today {
-  background-color: #007aff;
-  color: #fff;
-}
-
-
-
-      #addItemButton {
-        color: rgb(0, 0, 0);
-        /* White text */
-        border: none;
-        /* No border */
-        border-radius: 25px;
-        /* Rounded corners */
-        padding: 10px 20px;
-        /* Padding for the button */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        transition: background-color 0.3s;
-        /* Smooth transition */
-        height: 40px;
-        /* Set height to match the input field */
-        display: flex;
-        /* Flexbox for centering */
-        align-items: center;
-        /* Center vertically */
-        justify-content: center;
-        /* Center horizontally */
-      }
-
-      #checklistContainer {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      #checklistContainer li {
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
-      }
-
-      #checklistContainer li:last-child {
-        border-bottom: none;
-      }
-
-      .modal-content h2 {
-        margin: 0 0 20px;
-        color: #333;
-      }
-
-      .modal-content input {
-        width: 95%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
-
- 
-
-      #changePasswordButton {
-        color: #ffffff;
-      }
-
-      .settings-button {
-        background: transparent;
-        /* Transparent background */
-        border: none;
-        /* No border */
-        color: black;
-        font-size: 24px;
-        /* Size of the icon */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        position: j;
-        right: 20px;
-        /* Distance from the right */
-        top: 50%;
-        /* Center vertically */
-        transform: translateY(-50%);
-        /* Adjust for vertical centering */
-        transition: color 0.3s ease, background-color 0.3s ease;
-        /* Smooth transition for hover effect */
-      }
-
-      .settings-button:hover {
-        color: #ff6f61;
-        /* Change color on hover */
-        background-color: rgba(255, 255, 255, 0.2);
-        /* Light background on hover with transparency */
-        border-radius: 5px;
-        /* Optional: rounded corners for the hover effect */
-      }
-
-      .top-bar {
-        display: flex;
-      align-items: center;
-      border: 1px solid #ccc;
-      border-radius: 6px; /* Less rounded */
-      padding: 6px 10px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-      background-color: #f3f3f3;
-      margin-top: 1%;
-      margin-left: 1%;
-      margin-right: 1%;
-    }
-
-    .top-bar button {
-      background: none;
-      border: none;
-      font-size: 18px;
-      color: #555;
-      cursor: pointer;
-      
-    }
-
-
-
-    .top-bar input {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-size: 18px;
-      padding: 6px 10px;
-      color: #333;
-      background-color: transparent;
-      margin-bottom: 0px;
-    }
-
-    .top-bar input::placeholder {
-      color: #999;
-    }
-
-      .note {
-        border-left: 5px solid #000000;
-        border-radius: 5px;
-        padding: 10px;
-        margin: 10px;
-        background-color: #ffffff;
-        /* Dark note background */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        padding-bottom: 20px;
-      }
-
-      
-
-      .note h4 {
-        margin: 0;
-        color: #000000;
-        /* White text for note title */
-      }
-
-      .note-date {
-        display: block;
-        font-size: 14px;
-        color: #888;
-        margin-top: 5px;
-      }
-
-      .delete-btn {
-        background: #ff1c1c;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .delete-btn:hover {
-        background: #df0909;
-      }
-
-      .note .icon {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        font-size: 18px;
-        color: #4a90e2;
-        /* Icon color */
-      }
-
-      .note .pin-icon {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 18px;
-        color: #ff6f61;
-        /* Pin icon color */
-      }
-
-      .backup-import {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        /* Space between buttons and input */
-      }
-
-      .action-button {
-        background-color: #007bff;
-        /* Blue background for action buttons */
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      .action-button:hover {
-        background-color: #0056b3;
-        /* Darker blue on hover */
-      }
-
-      .setting-category {
-        margin-top: 15px;
-        border: 1px solid #ddd;
-        /* Light border for categories */
-        border-radius: 5px;
-        padding: 10px;
-      }
-
-      .setting-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-      }
-
-      .toggle-icon {
-        font-size: 18px;
-        color: #007bff;
-        /* Blue color for toggle icons */
-      }
-
-      .checkbox-label {
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-      }
-
-      .file-input {
-        margin-top: 10px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        /* Light border for file input */
-        border-radius: 5px;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-
-      /* Modal styling */
-     /* Modal background (fullscreen overlay) */
-
-
-      .setting-category div {
-        padding: 10px;
-
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-top: 5px;
-      }
-
-      #ai {
-    animation: fadeIn 0.6s ease forwards;
-    padding: 1rem;
-    max-width: 480px;
-    margin: 1rem auto;
-    background-color: #f7f9fc;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
-    color: #333;
-  }
-
-  .ai-feature {
-    margin-bottom: 0.8rem;
-  }
-
-  label {
-    cursor: pointer;
-    user-select: none;
-  }
-
-  input[type="checkbox"] {
-    margin-right: 0.5rem;
-    cursor: pointer;
-  }
-
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(15px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* For screen readers */
-  .visually-hidden {
-    position: absolute !important;
-    height: 1px; width: 1px;
-    overflow: hidden;
-    clip: rect(1px,1px,1px,1px);
-    white-space: nowrap;
-  }
-
-/* Bottom Navigation Bar */
-.bottom-nav {
-    background-color: #282929;
-  position: fixed; /* Fixed position */
-    bottom: 20px; /* Distance from bottom */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center adjustment */
-   border-radius: 30px;
-    padding: 10px; /* Padding */
-    display: flex; /* Flexbox for layout */
-    justify-content: space-around; /* Space between buttons */
-    width: calc(100% - 85%); /* Full width minus padding */
-}
-
-/* Navigation Button Styles */
-.nav-button {
-    background-color: transparent; /* White background */
-    color: #ffffff; /* Black icon color */
-    display: flex; /* Flexbox for centering */
-    align-items: center; /* Center icon vertically */
-    justify-content: center; /* Center icon horizontally */
-    font-size: 20px; /* Icon size */
-    cursor: pointer; /* Pointer cursor on hover */
-    
-}
-
-/* Navigation Button Hover Effect */
-.nav-button:hover {
-    color: #868686; /* Light gray background on hover */
-   background-color: #282929;
-
-}
-
-@media (max-width: 768px) {
-    .bottom-nav {
-        bottom: 10px; /* Adjust distance from bottom */
-       width: calc(100% - 70%); /* Full width minus padding */
-        padding: 8px; /* Adjust padding */
-    }
-    .nav-button {
-        font-size: 18px; /* Slightly smaller icon size */
-    }
-}
-
-@media (max-width: 632px) {
-  .bottom-nav {
-    bottom: 5px; /* Adjust distance from bottom */
-     width: calc(100% - 60%); /* Full width minus padding */
-  }
-}
-@media (max-width: 480px) {
-    .bottom-nav {
-        bottom: 5px; /* Further adjust distance from bottom */
-       width: calc(100% - 50%); /* Full width minus padding */
-       
-        padding: 5px; /* Less padding for mobile */
-    }
-    .nav-button {
-        font-size: 16px; /* Even smaller icon size */
-    }
-}
-
-@media (max-width: 368px) {
-  .bottom-nav {
-    bottom: 5px; /* Adjust distance from bottom */
-    width: calc(100% - 40%); /* Full width minus padding */
-
-  }
-
-}
-
-@media (max-width: 320px) {
-  .bottom-nav {
-    bottom: 5px; /* Adjust distance from bottom */
-    width: calc(100% - 30%); /* Full width minus padding */
-    }
-    }
-
-    @media(max-width: 280px) {
-      .bottom-nav {
-        bottom: 5px; /* Adjust distance from bottom */
-        width: calc(100% - 20%); /* Full width minus padding */
-        }
-      }
-    </style>
-  </head>
-
-
-  <body>
-    <div class="top-bar">
-     
-        <i style=" padding: 10px 15px;
-        /* Padding for buttons */
-        margin: 5px 0;;" class="fas fa-search"></i>
-     
-      <input
-      type="text"
-      id="searchInput"
-      placeholder="Search your data"
-      oninput="searchNotes()"
-     >
-  
-      </div>
-
-
-
-
-
-    <!-- Combined Notes and Lists Section -->
-    <div id="combinedContainer" class="container">
-      <h2>Your Notes and Lists</h2>
-      <div id="notesContainer"></div>
-      <div id="listsSection">
-        <div id="listsContainerContent"></div>
-      </div>
-      <div id="noListsMessage" class="hidden">No lists added.</div>
-      <div id="noNotesMessage" class="hidden">No notes added.</div>
- 
-      <nav class="bottom-nav">
-      <button class="nav-button" onclick="showSection('moreSection')">
-         <i class="fas fa-bars"></i>
-    </button>
-    <button id="add-button" class="nav-button" onclick="showAddOptions()">
-        <i class="fas fa-plus"></i>
-    </button>
-  
-     <button class="nav-button" onclick="showSection('ai')">
-      <i class="fas fa-magic"></i>
-    </button>
-</nav>
-    </div>
-    <div id="ai" class="container hidden">
-      <button class="modal-button" onclick="showSection('combinedContainer')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-      <h2 id="aiTitle" style="display: flex; align-items: center; gap: 0.5em; font-weight: bold;">
-        <span style="font-size: 1.5em;">🤖</span> AI Features Management
-      </h2>
-      <p>Manage offline AI-powered helpers for your notes. No internet required.</p>
-      <p>For now, these features are always enabled. Checkboxs don't work yet.</p>
-    
-      <div class="ai-feature">
-        <label for="ai-summary-toggle">
-          <input type="checkbox" id="ai-summary-toggle" />
-          Enable Offline Note Summary
-        </label>
-      </div>
-    
-      <div class="ai-feature">
-        <label for="ai-suggestions-toggle">
-          <input type="checkbox" id="ai-suggestions-toggle" />
-          Enable Smart Suggestions
-        </label>
-      </div>
-    
-      <div class="ai-feature">
-        <label for="ai-spellcheck-toggle">
-          <input type="checkbox" id="ai-spellcheck-toggle" />
-          Enable Spell Check
-        </label>
-      </div>
-    
-     
-   
-    </div>
-    
-    <div id="messageBox">This is an Android-like message box!</div>
-
-    <!-- Add Note Form -->
-    <!-- Add Note Form -->
-    <div id="addNoteSection" class="container hidden">
-      <button class="modal-button" onclick="cancelNote()">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-     
-
-
-
-      <h3 id="manageNoteTitle">Manage Your Note</h3>
-      <input
-        type="text"
-        id="noteTitle"
-        placeholder="Note title..."
-      />
-      <textarea id="noteContent" placeholder="Note.....">
-      </textarea>
-     
-
-   
-      <button onclick="saveNote()" style="background: none; color:#000; font-size: 20px;"><i class="fas fa-save"></i> Save</button>
-      <nav class="bottom-nav" style="display: flex;">
-       <button id="changePasswordButton" onclick="showNotePassword()" class="nav-button">       
-        <i class="fas fa-lock"></i> 
-      </button>
-        <button class="nav-button" id="undoButton" onclick="undo()">
-        <i class="fas fa-undo"></i>
-      </button>
-
-      <button class="nav-button" id="redoButton" onclick="redo()">
-        <i class="fas fa-redo"></i>
-      </button>
-  
-    
-</nav>
-     
-      <div id="notePasswordModal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Enter Password</h3>
-            <input type="password" id="notePassword" placeholder="Enter New Password.." style="display: block" />
-            
-            <button onclick="closeNotePassword()">Save</button>
-        </div>
-    </div>
-
-    </div>
-
-    <!-- Add Lists Section -->
-    <div id="addListSection" class="container">
-<h3 id="manageListTitle" >Manage Your List</h3>
-      <input
-        type="text"
-        id="listTitle"
-        placeholder="List title..."
-       
-      />
-      <br />
-
-      <input id="newItem" type="text" placeholder="Item name..." />
-      <button onclick="addItem()" class="modal-button"> <i class="fas fa-plus"></i></button>
-      <!-- Input for new item -->
- <nav class="bottom-nav" style="display: flex;">
-  <button class="nav-button" onclick="cancelList()">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>      
-  
-        <button id="manageListPassword" onclick="showList()" class="nav-button">
-      <i class="fas fa-lock"></i>
-      </button>
- <button onclick="saveList()" class="nav-button"><i class="fas fa-save"></i></button>
-  
-    
-</nav>
-      
-      <!-- Button to add item -->
-      <br />
-
-     
-      <div id="checklistContainer"></div>
-     
-      <!-- Container for checklist items -->
-           
-             <div id="listPasswordModalr" class="modal hidden">
-  <div class="modal-content">
-      <h3>Enter Password</h3>
-      <input
-        type="password"
-        id="listPassword"
-        placeholder="Enter New Password.."
-       style="display: block;"
-      />
-      
-      <button onclick="closeListPassword()">Save</button>
-  </div>
-</div>
-    </div>
-
-    <!-- Add Options Modal -->
-    <div id="addOptionsModal" class="modal hidden">
-      <div class="modal-content">
-        <h3>What to add?</h3>
-       
-       <button class="modal-button" id="addNoteButton" onclick="showAddNote()">
-          <i class="fas fa-sticky-note"></i>
-        </button>
-        <button class="modal-button" id="addListButton" onclick="showAddListSection()">
-          <i class="fas fa-list"></i>
-        </button>
-        <button class="modal-button" onclick="closeAddOptions()">
-          <i class="fas fa-times"></i>
-        </button>
-        
-      </div>
-    </div>
-
-    <div id="passwordModal" class="modal hidden">
-      <div class="modal-content">
-          <h3>Enter Password</h3>
-          <input type="password" id="passwordInput" placeholder="Password">
-          <button onclick="verifyPassword()">Go</button>
-          <button onclick="closePasswordModal()">Close</button>
-      </div>
-  </div>
-
-    <!-- Delete Password Modal -->
-    <div id="deletePasswordModal" class="modal hidden">
-      <div class="modal-content">
-        <h3>Enter Password</h3>
-        <input
-          type="password"
-          id="deletePasswordInput"
-          placeholder="Password"
-        />
-        <button onclick="deleteVerifyPassword()">Go</button>
-        <button onclick="closeDeletePasswordModal()">Close</button>
-      </div>
-    </div>
-
-   
-
-    <div id="moreSection" class="container hidden">
-      <h2>More Features</h2>
-      <p>
-        Explore the additional features of our app that enhance your experience
-        and productivity. Click on any feature to learn more!
-      </p>
-      <div class="feature-buttons">
-        
-        <div class="feature-item">
-           <button class="feature-button" onclick="showSection('combinedContainer')">
-          <i class="fas fa-home"></i>
-          <br>
-          Home
-        </button>
-       <p class="feature-description">
-        Access your all data in one place by home section.
-       </p>
-        </div>
-        <div class="feature-item">
-          <button class="feature-button" onclick="showSection('aiSection')">
-            <i class="fas fa-shield-alt"></i>
-
-            <br>
-            AI Scan 
-          </button>
-        </button>
-        <p class="feature-description">
-          Protect yourself from vulnerblities and other threats with our AI-powered scan feature.
-        </p>
-        </div>
-    <div class="feature-item">
-          <button
-            onclick="showSection('calculatorSection')"
-            class="feature-button"
-          >
-            <i class="fas fa-calculator"></i>
-            <br />
-            Calculator
-          </button>
-          <p class="feature-description">
-            Use our built-in calculator for quick calculations without leaving
-            the app.
-          </p>
-        </div>
-        <div class="feature-item">
-          <button id="notifyButton" class="feature-button">
-            <i class="fas fa-bell"></i>
-            <br />
-            Notifications
-          </button>
-          <p class="feature-description">
-            Stay updated with real-time notifications for important events.
-          </p>
-        </div>
-        <div class="feature-item">
-          <button
-            onclick="showSection('settingsSection')"
-            class="feature-button"
-          >
-            <i class="fas fa-cog"></i>
-            <br />
-            Settings
-          </button>
-          <p class="feature-description">
-            Customize your app experience through various settings options.
-          </p>
-        </div>
-       
-        <div class="feature-item">
-          <button
-            onclick="showSection('calendarSection')"
-            class="feature-button"
-          >
-            <i class="fa fa-calendar"></i>
-            <br />
-            Calendar
-          </button>
-          <p class="feature-description">
-            Keep track of your events and deadlines with our integrated
-            calendar.
-          </p>
-        </div>
-      </div>
-    </div>
-
-
-  
-
-    <div id="settingsSection" class="container hidden">
-      <div id="settingsTabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <button onclick="openTab('generalTab')" class="tab-btn active-tab">General</button>
-        <button onclick="openTab('backupTab')" class="tab-btn">Backup</button>
-        <button onclick="openTab('securityTab')" class="tab-btn">Security</button>
-       
-      </div>
-    
-      <!-- General Tab -->
-      <div id="generalTab" class="tab-content">
-        <button class="modal-button" onclick="showSection('moreSection')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-      
-        <h2>Credits</h2>
-        <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
-      </div>
-    
-      <!-- Backup Tab -->
-      <div id="backupTab" class="tab-content hidden">
-        <h3>🔁 Backup / Import</h3>
-        <button onclick="backupNotes()">Backup Notes</button><br><br>
-        <input type="file" id="importFile" onchange="prepareImport(event)" />
-        <button onclick="importNotes()">Continue Import</button><br><br>
-        <button class="button" disabled>Battery Optimization: On</button>
-      </div>
-    
-      <!-- Security Tab -->
-      <div id="securityTab" class="tab-content hidden">
-        <h2>🔐 Security Settings</h2>
-    
-        <h3 onclick="toggleSection('encryptionSection')" style="cursor: pointer;">
-          🔒 Data Management <span id="encryptionToggle">+</span>
-        </h3>
-        <div id="encryptionSection" class="hidden">
-          <button onclick="goBack()">Back</button>
-          <button onclick="clearData()">Clear All Data</button>
-          <button onclick="encryptData()">Encrypt Data</button>
-          <button onclick="decryptData()">Decrypt Data</button>
-          <button onclick="showMessageBox('Server-side features like sync are under development. Stay tuned for updates')">Allow data management on Server-side</button>
-          <div id="syncStatus" style="margin-top: 10px;">🔄 Sync is OFF</div>
-        </div>
-    
-        <h3 onclick="toggleSection('passwordManagementSection')" style="cursor: pointer;">
-          🔑 Password Management <span id="passwordManagementToggle">+</span>
-        </h3>
-        <div id="passwordManagementSection" class="hidden">
-          <button onclick="goBack()">Back</button>
-          <p>Will be updated soon!</p>
-        </div>
-    
-        <h3 onclick="toggleSection('lockNotesSection')" style="cursor: pointer;">
-          🔐 Lock Notes <span id="lockNotesToggle">+</span>
-        </h3>
-        <div id="lockNotesSection" class="hidden">
-          <button onclick="goBack()">Back</button>
-         <p>Under Planning Phase</p>
-        </div>
-      </div>
-      </div>
-    
-  
-    
-
-    
-
-      <div id="aiSection" class="container hidden">
-        <button class="modal-button" onclick="showSection('combinedContainer')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-        <h2>AI Scan for Sensitive Data</h2>
-        <P>List Support Coming soon...</P>
-        <div class="scan-container">
-          <div class="scan-circle" id="scanCircle"></div>
-          <p id="scanStatus">Click the button to start scanning...</p>
-        </div>
-        
-        <div class="counters">
-          <p>Total Notes scanned: <span id="notesCount">0</span></p>
-         
-        </div>
-
-        <div class="progress-bar-container">
-  <div id="progressBar" class="progress-bar"></div>
-</div>
-        
-        <button onclick="startAiScan()">Start AI Scan</button>
-        <div id="resultsContainer"></div>
-      </div>
-      
-
-    <div id="calculatorSection" class="container hidden">
-      <div class="calculator-header">
-        <h3>Calculator</h3>
-        <button class="btn-close" onclick="closeCalculator()">✖</button>
-      </div>
-
-      <input
-        type="text"
-        id="calc-display"
-        class="display"
-        placeholder="0"
-        readonly
-      />
-
-      <div class="calculator-grid">
-        <button class="btn btn-clear" onclick="clearDisplay()">C</button>
-        <button class="btn btn-operator" onclick="appendValue('/')">÷</button>
-        <button class="btn btn-operator" onclick="appendValue('*')">×</button>
-        <button class="btn btn-operator" onclick="appendValue('-')">−</button>
-
-        <button class="btn btn-number" onclick="appendValue('7')">7</button>
-        <button class="btn btn-number" onclick="appendValue('8')">8</button>
-        <button class="btn btn-number" onclick="appendValue('9')">9</button>
-        <button class="btn btn-operator" onclick="appendValue('+')">+</button>
-
-        <button class="btn btn-number" onclick="appendValue('4')">4</button>
-        <button class="btn btn-number" onclick="appendValue('5')">5</button>
-        <button class="btn btn-number" onclick="appendValue('6')">6</button>
-        <button class="btn btn-equal" onclick="calculate()" rowspan="2">
-          =
-        </button>
-
-        <button class="btn btn-number" onclick="appendValue('1')">1</button>
-        <button class="btn btn-number" onclick="appendValue('2')">2</button>
-        <button class="btn btn-number" onclick="appendValue('3')">3</button>
-
-        <button class="btn btn-zero" onclick="appendValue('0')">0</button>
-        <button class="btn btn-number" onclick="appendValue('.')">.</button>
-      </div>
-    </div>
-
-   
-    <!-- List Password Modal -->
-    <div id="listPasswordModal" class="modal hidden">
-      <div class="modal-content">
-        <h3>Enter Password</h3>
-        <input type="password" id="listPasswordInput" placeholder="Password" />
-        <button onclick="verifyListPassword()">Go</button>
-        <button onclick="closeListPasswordModal()">Close</button>
-      </div>
-    </div>
-
-    <!-- Delete List Password Modal -->
-    <div id="deleteListPasswordModal" class="modal hidden">
-      <div class="modal-content">
-        <h3>Enter Password</h3>
-        <input
-          type="password"
-          id="deleteListPasswordInput"
-          placeholder="Password"
-        />
-        <button onclick="deleteListVerifyPassword()">Go</button>
-        <button onclick="closeDeleteListPasswordModal()">Close</button>
-      </div>
-    </div>
-
-   <!-- Modal to show scan results -->
-<div id="aiModal" class="modal hidden">
-  <div class="modal-content">
-    <h2>AI Scan Warning</h2>
-    <div id="modalResultsContainer"></div>
-    <button onclick="closeAiModal()" style="background: red;">Ignore</button>
-    <button onclick="closeAiModal()">Fix</button>
-  </div>
-</div>
-
-
-    <div id="calendarSection" class="container hidden">
-      <button class="modal-button" onclick="showSection('combinedContainer')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-      <div class="calendar-header">
-        <button class="nav-button" onclick="changeMonth(-1)">&#10094;</button>
-        <div id="monthYear" class="month-year"></div>
-        <button class="nav-button" onclick="changeMonth(1)">&#10095;</button>
-      </div>
-    
-      <div class="calendar-weekdays">
-        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
-      </div>
-    
-      <div class="calendar-days" id="calendarDays"></div>
-    </div>
-
-   
-    
-    
-    
-
-   
-
-   
-
-
-    <script src="script.js"></script>
-     
-   
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-      import { getFirestore, collection, query, where, getDocs, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
-      
-      const firebaseConfig = {
-        apiKey: "AIzaSyCAnKRiTCTQkCV7T5-pSJdr20ctvy1XzTY",
-        authDomain: "notes-81cd8.firebaseapp.com",
-        projectId: "notes-81cd8",
-        storageBucket: "notes-81cd8.appspot.com",
-        messagingSenderId: "93954393984",
-        appId: "1:93954393984:web:f39d129b6e4bacd1796365",
-      };
-    
-      const app = initializeApp(firebaseConfig);
-    const db = getFirestore();
-    
- 
-
-    async function addNote(db, auth, title, content) {
-  if (!auth.currentUser) {
-    console.log("User not logged in");
-    return;
-  }
-
-  const userId = auth.currentUser.uid;
-  const notesRef = collection(db, "users", userId, "notes");
-
-  try {
-    const docRef = await addDoc(notesRef, {
-      title: title,
-      content: content,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    });
-    console.log("Note added with ID: ", docRef.id);
-  } catch (error) {
-    console.error("Error adding note: ", error);
-  }
-}
-
-async function getNotes(db, auth) {
-  if (!auth.currentUser) {
-    console.log("User not logged in");
-    return;
-  }
-
-  const userId = auth.currentUser.uid;
-  const notesRef = collection(db, "users", userId, "notes");
-
-  const q = query(notesRef);
-  const querySnapshot = await getDocs(q);
-
-  const notes = [];
-  querySnapshot.forEach((doc) => {
-    notes.push({ id: doc.id, ...doc.data() });
+//part 1 of total code
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+let editingNoteIndex = null;
+let currentNoteId = null;
+let currentDeleteNoteId = null;
+let currentItems = []; // Will now store objects like { name: 'item name', checked: true/false }
+let editingListIndex = null;
+let historyStack = [];
+let currentIndex = -1;
+let holdTimer = null;
+let selectionMode = false;
+let selectedNotes = [];
+
+function setupLongPress(element, index) {
+  element.addEventListener("mousedown", (e) => {
+    holdTimer = setTimeout(() => {
+      enterSelectionMode(index);
+    }, 500);
   });
 
-  return notes;
+  element.addEventListener("mouseup", () => clearTimeout(holdTimer));
+  element.addEventListener("mouseleave", () => clearTimeout(holdTimer));
 }
 
-async function deleteNote(db, auth, noteId) {
-  if (!auth.currentUser) {
-    console.log("User not logged in");
+function enterSelectionMode(index) {
+  selectionMode = true;
+  selectedNotes = [index];
+ displayNotes();
+  showSelectionActions();
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  startAiScan();
+  
+  setTimeout(copyResultsToModal, 1500);
+  setTimeout(showAiModal, 1500);
+});
+
+function saveState() {
+  const noteContent = document.getElementById("noteContent").value;
+
+  // If the current index is not the last element in the stack, remove any "future" states
+  if (currentIndex < historyStack.length - 1) {
+    historyStack = historyStack.slice(0, currentIndex + 1);
+  }
+
+  // Add the current content to the history stack
+  historyStack.push(noteContent);
+  currentIndex++;
+
+  toggleButtons();
+}
+
+function showEmail(emailId) {
+  // Hide all email contents
+  const contents = document.querySelectorAll(".email-content");
+  contents.forEach((content) => (content.style.display = "none"));
+
+  // Show the selected email content
+  document.getElementById(emailId).style.display = "block";
+}
+
+
+function sendAIQuery() {
+  const input = document.getElementById('aiQuery');
+  const response = document.getElementById('aiResponse');
+  const query = input.value.trim();
+
+  if (query === '') return;
+
+  response.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
+  setTimeout(() => {
+    response.innerHTML = `<i class="fas fa-robot"></i> Here’s an explanation for: <strong>${query}</strong>`;
+  }, 1500);
+}
+
+
+
+// Function to handle undo
+function undo() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    const previousState = historyStack[currentIndex];
+    // Restore the previous state
+    document.getElementById("noteContent").value = previousState;
+  }
+  toggleButtons();
+}
+
+// Function to handle redo
+function redo() {
+  if (currentIndex < historyStack.length - 1) {
+    currentIndex++;
+    const nextState = historyStack[currentIndex];
+    // Restore the next state
+    document.getElementById("noteContent").value = nextState;
+  }
+  toggleButtons();
+}
+
+
+
+document.getElementById('noteContent').addEventListener('keyup', function (e) {
+if (e.key === " " || e.key === "Enter") {
+const textarea = e.target;
+const text = textarea.value;
+
+// Use regex to find formula-like patterns: e.g., =5+4, =SUM(1,2)
+const formulaPattern = /=(SUM|AVG)?\(?[0-9+*/,\s.-]+\)?/gi;
+const matches = text.match(formulaPattern);
+
+if (matches) {
+matches.forEach(match => {
+  const result = evaluateInlineFormula(match.trim());
+  if (result !== null) {
+    textarea.value = textarea.value.replace(match, result);
+  }
+});
+}
+}
+});
+
+function evaluateInlineFormula(formula) {
+try {
+if (formula.startsWith('=SUM(')) {
+const nums = formula.slice(5, -1).split(',').map(Number);
+return nums.reduce((a, b) => a + b, 0);
+} else if (formula.startsWith('=AVG(')) {
+const nums = formula.slice(5, -1).split(',').map(Number);
+return (nums.reduce((a, b) => a + b, 0) / nums.length).toFixed(2);
+} else if (formula.startsWith('=')) {
+return eval(formula.slice(1)); // simple math
+}
+} catch (e) {
+return null;
+}
+return null;
+}
+
+
+
+function goBack() {
+  // Hide all sections when going back
+  const sections = document.querySelectorAll(".setting-category div");
+  sections.forEach((section) => {
+    section.classList.add("hidden");
+  });
+
+  // Reset toggle icons to plus
+  const toggleIcons = document.querySelectorAll(".toggle-icon");
+  toggleIcons.forEach((icon) => {
+    icon.textContent = "+";
+  });
+}
+
+function showTab(tabId) {
+  // Hide all tab contents
+  const tabContents = document.querySelectorAll(".tab-content");
+  tabContents.forEach((content) => {
+    content.classList.remove("active");
+  });
+
+  // Remove active class from all tab buttons
+  const tabButtons = document.querySelectorAll(".tab-button");
+  tabButtons.forEach((button) => {
+    button.classList.remove("active");
+  });
+
+  // Show the selected tab content
+  document.getElementById(tabId).classList.add("active");
+
+  // Set the clicked tab button as active
+  const activeButton = Array.from(tabButtons).find(
+    (button) =>
+      button.textContent === tabId.replace(/([A-Z])/g, " $1").trim()
+  );
+  if (activeButton) {
+    activeButton.classList.add("active");
+  }
+}
+
+// Function to toggle sections within the settings
+function toggleSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.classList.toggle("hidden");
+    const toggleIcon = document.getElementById(sectionId + "Toggle");
+    if (toggleIcon) {
+      toggleIcon.textContent = toggleIcon.textContent === "+" ? "-" : "+";
+    }
+  }
+}
+
+function toggleSelect(index) {
+  if (selectedNotes.includes(index)) {
+    selectedNotes = selectedNotes.filter(i => i !== index);
+  } else {
+    selectedNotes.push(index);
+  }
+}
+
+function showSelectionActions() {
+  document.getElementById("selectionBar").classList.remove("hidden");
+}
+
+function exitSelectionMode() {
+  selectionMode = false;
+  selectedNotes = [];
+  document.getElementById("selectionBar").classList.add("hidden");
+  renderNotes();
+}
+
+function deleteSelectedNotes() {
+  selectedNotes.sort((a, b) => b - a); // delete from end to avoid reindex
+  selectedNotes.forEach(i => notes.splice(i, 1));
+  localStorage.setItem("notes", JSON.stringify(notes));
+  exitSelectionMode();
+}
+
+
+
+function clearData() {
+  if (
+    confirm(
+      "Are you sure you want to clear all data? This action cannot be undone."
+    )
+  ) {
+    localStorage.removeItem("notes");
+    localStorage.removeItem("lists");
+    notes = [];
+    lists = [];
+    displayNotes();
+    displayLists();
+    showMessageBox("All data cleared successfully!");
+  }
+}
+
+function encryptData() {
+  const encryptedNotes = btoa(JSON.stringify(notes)); // Base64 encode the notes
+  const encryptedLists = btoa(JSON.stringify(lists)); // Base64 encode the lists
+  showMessageBox(
+    "This feature is buggy and may not work as expected. Use with cuation your old data may be deleted"
+  );
+  localStorage.setItem("encryptedNotes", encryptedNotes);
+  localStorage.setItem("encryptedLists", encryptedLists);
+  showMessageBox("Data encrypted successfully!");
+}
+
+function decryptData() {
+  const encryptedNotes = localStorage.getItem("encryptedNotes");
+  const encryptedLists = localStorage.getItem("encryptedLists");
+  showMessageBox(
+    "This feature is buggy and may not work as expected. Use with cuation your old data may be deleted"
+  );
+
+  if (encryptedNotes) {
+    notes = JSON.parse(atob(encryptedNotes)); // Base64 decode the notes
+  } else {
+    notes = [];
+  }
+
+  if (encryptedLists) {
+    lists = JSON.parse(atob(encryptedLists)); // Base64 decode the lists
+  } else {
+    lists = [];
+  }
+
+  localStorage.setItem("notes", JSON.stringify(notes)); // Save decrypted notes back to local storage
+  localStorage.setItem("lists", JSON.stringify(lists)); // Save decrypted lists back to local storage
+  displayNotes();
+  displayLists();
+  showMessageBox("Data decrypted successfully!");
+}
+
+// Function to toggle button states (enable/disable)
+function toggleButtons() {
+    const undoButton = document.getElementById("undoButton");
+    const redoButton = document.getElementById("redoButton");
+
+    // Enable/Disable Undo button
+    undoButton.disabled = currentIndex <= 0;
+   
+
+    // Enable/Disable Redo button
+    redoButton.disabled = currentIndex >= historyStack.length - 1;
+    
+
+  
+}
+
+
+// Event listener to automatically save the content whenever the user types
+document
+  .getElementById("noteContent")
+  .addEventListener("input", saveState);
+  
+// Initial call to enable/disable buttons on page load
+toggleButtons();
+
+
+
+function startAiScan() {
+  const scanStatus = document.getElementById("scanStatus");
+  const resultsContainer = document.getElementById("resultsContainer");
+  const scanCircle = document.getElementById("scanCircle");
+  const notesCountElem = document.getElementById("notesCount");
+  const progressBar = document.getElementById("progressBar");
+
+  // Reset UI
+  resultsContainer.innerHTML = "";
+  scanStatus.textContent = "Initializing AI scan...";
+  scanCircle.style.borderColor = "#4CAF50";
+  scanCircle.style.animation = "spin 1s linear infinite";
+  notesCountElem.textContent = "0";
+
+  const notes = JSON.parse(localStorage.getItem("notes")) || [];
+  const sensitiveKeywords = [
+    "password", "ssn", "credit card", "bank account", "secret", "pin", "bank",
+    "policy", "account", "pass", "id", "aadhaar", "card", "security", "key",
+    "token", "license", "confidential", "credentials", "auth", "login"
+  ];
+
+  let foundSensitiveData = [];
+  let scannedTitles = new Set(); // prevent duplicate messages for same note
+  let threatsCount = 0;
+  let index = 0;
+  const startTime = Date.now();
+
+  const scanInterval = setInterval(() => {
+    if (index >= notes.length) {
+      clearInterval(scanInterval);
+
+      const endTime = Date.now();
+      const duration = ((endTime - startTime) / 1000).toFixed(2);
+      scanCircle.style.animation = "none";
+      notesCountElem.textContent = `${notes.length}`;
+
+      if (threatsCount === 0) {
+        scanCircle.style.borderColor = "#4CAF50";
+        scanStatus.textContent = `Scan complete in ${duration}s — No threats found!`;
+        resultsContainer.innerHTML = "<div class='success-msg'>All notes are safe!</div>";
+      } else {
+        scanCircle.style.borderColor = threatsCount === 1 ? "orange" : "red";
+        scanStatus.textContent = `Scan complete in ${duration}s — ${threatsCount} threat${threatsCount > 1 ? "s" : ""} found!`;
+        resultsContainer.innerHTML = foundSensitiveData.join("<br>");
+      }
+
+      // Auto-scroll to results
+      resultsContainer.scrollIntoView({ behavior: "smooth" });
+      return;
+      console.log('AI SCAN CALLED');
+    }
+
+    const note = notes[index];
+   const currentTitle = note?.title || `Untitled Note`;
+notesCountElem.textContent = `🧠 Scanning: "${currentTitle}"`;
+progressBar.style.width = `${((index + 1) / notes.length) * 100}%`;
+
+
+    if (note && (!note.password || note.password.trim() === "")) {
+      const content = (note.content || "").toLowerCase();
+      const title = note.title || "Untitled";
+
+      const isSensitive = sensitiveKeywords.some(keyword =>
+        content.includes(keyword.toLowerCase())
+      );
+
+      if (isSensitive && !scannedTitles.has(title)) {
+        foundSensitiveData.push(
+          `<div class="alert-msg">Sensitive data found in: <strong style="color:red;">${title}</strong></div>`
+        );
+        scannedTitles.add(title);
+        threatsCount++;
+      }
+    }
+
+    index++;
+  }, 250); // Scan delay (ms)
+}
+
+function closeAiModal() {
+  document.getElementById("aiModal").style.display = "none";
+}
+
+function showAiModal(){
+ const results = document.getElementById("resultsContainer").innerHTML;
+    document.getElementById("modalResultsContainer").innerHTML = results;
+  document.getElementById("aiModal").style.display = "flex";
+}
+
+ function copyResultsToModal() {
+    const scanResults = document.getElementById("resultsContainer").innerHTML;
+    document.getElementById("modalResultsContainer").innerHTML = scanResults;
+    document.getElementById("aiModal").classList.remove("hidden");
+  }
+
+function showNotePassword() {
+  document.getElementById("notePasswordModal").style.display = "flex";
+}
+
+function closeNotePassword() {
+  document.getElementById("notePasswordModal").style.display = "none";
+}
+
+function showList() {
+  document.getElementById("listPasswordModalr").style.display = "flex";
+}
+
+function closeListPassword() {
+  document.getElementById("listPasswordModalr").style.display = "none";
+}
+
+
+
+
+// Call startScan when needed, e.g., on button click
+
+
+
+
+
+
+function closeListPasswordModal() {
+  document.getElementById("listPasswordModal").style.display = "none";
+}
+
+function closeDeleteListPasswordModal() {
+  document.getElementById("deleteListPasswordModal").style.display =
+    "none";
+    closeListPasswordModal();
+}
+
+function showCredits() {
+  const credits = document.getElementById("creditsSection");
+  credits.style.display =
+    credits.style.display === "none" ? "block" : "none";
+}
+
+function updateDataStats() {
+  const noteCount = document.getElementById("noteCount");
+  const listCount = document.getElementById("listCount");
+
+  // Count the number of notes and lists
+  noteCount.textContent = notes.length; // Update the note count
+  listCount.textContent = lists.length; // Update the list count
+}
+
+function backupNotes() {
+const backupData = {
+notes: notes,
+lists: lists,
+};
+
+const blob = new Blob([JSON.stringify(backupData)], {
+type: "application/json",
+});
+const url = URL.createObjectURL(blob);
+const a = document.createElement("a");
+a.href = url;
+a.download = "backup_data.json";
+a.click();
+URL.revokeObjectURL(url);
+}
+
+function prepareImport(event) {
+const file = event.target.files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = (e) => {
+const importedData = JSON.parse(e.target.result);
+
+if (importedData.notes) {
+  notes = [...notes, ...importedData.notes];
+}
+
+if (importedData.lists) {
+  lists = [...lists, ...importedData.lists];
+  localStorage.setItem("lists", JSON.stringify(lists));
+  displayLists(); // Refresh the list display if needed
+}
+
+localStorage.setItem("notes", JSON.stringify(notes));
+displayNotes(); // Only if you have such a function
+};
+reader.readAsText(file);
+}
+}
+
+
+document.getElementById("notifyButton").onclick = function () {
+  if (Notification.permission === "granted") {
+    new Notification("Reminder!", {
+      body: "Don't forget to check your notes!",
+    });
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        new Notification("Reminder!", {
+          body: "Don't forget to check your notes!",
+        });
+      }
+    });
+  }
+};
+
+function importNotes() {
+  const fileInput = document.getElementById("importFile");
+  if (!fileInput.files.length) {
+    showMessageBox("No file selected!");
     return;
   }
 
-  const userId = auth.currentUser.uid;
-  const noteDocRef = doc(db, "users", userId, "notes", noteId);
+  localStorage.setItem("notes", JSON.stringify(notes));
+  displayNotes();
+  showMessageBox("Notes imported successfully!");
+}
 
+// Function to toggle edit note mode
+
+const monthYear = document.getElementById('monthYear');
+const calendarDays = document.getElementById('calendarDays');
+
+let currentDate = new Date();
+
+function renderCalendar(date) {
+const year = date.getFullYear();
+const month = date.getMonth();
+
+// Set month and year
+const monthNames = [
+'January', 'February', 'March', 'April', 'May', 'June',
+'July', 'August', 'September', 'October', 'November', 'December'
+];
+monthYear.textContent = `${monthNames[month]} ${year}`;
+
+// First day of the month
+const firstDay = new Date(year, month, 1);
+const startingDay = (firstDay.getDay() + 6) % 7; // Adjusting so Monday = 0
+
+// Number of days in the month
+const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+// Clear previous cells
+calendarDays.innerHTML = '';
+
+// Add empty cells for days before the first day
+for (let i = 0; i < startingDay; i++) {
+const emptyCell = document.createElement('div');
+calendarDays.appendChild(emptyCell);
+}
+
+// Add day cells
+for (let i = 1; i <= daysInMonth; i++) {   //end of part 1 wait fpr oter parts total 3 parts , 
+const dayCell = document.createElement('div');//start of part 2 
+dayCell.textContent = i;
+
+// Highlight today
+const today = new Date();
+if (
+i === today.getDate() &&
+month === today.getMonth() && //part 2 of total code , tehre are total 3 parts , when u will undertnd te cde and debug it kindly combine all thhree parts
+year === today.getFullYear()
+) {
+dayCell.classList.add('today');
+}
+
+calendarDays.appendChild(dayCell);
+}
+}
+
+function changeMonth(offset) {
+currentDate.setMonth(currentDate.getMonth() + offset);
+renderCalendar(currentDate);
+}
+
+// Initial render
+renderCalendar(currentDate);
+
+
+
+function formatDate(date) {
+  const options = { day: "numeric", month: "long", year: "numeric" };
+  return date.toLocaleDateString("en-US", options);
+}
+
+function searchNotes() {
+const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+// Filter notes safely
+const filteredNotes = notes.filter(note =>
+note?.title?.toLowerCase().includes(searchTerm)
+);
+
+// Filter lists safely
+const filteredLists = lists.filter(list =>
+list?.name?.toLowerCase().includes(searchTerm)
+);
+
+// Display both
+displayFilteredNotesAndLists(filteredNotes, filteredLists);
+}
+
+
+
+
+// Function to display filtered notes and lists
+function displayFilteredNotesAndLists(filteredNotes, filteredLists) {
+const container = document.getElementById("notesContainer");
+container.innerHTML = ""; // Clear existing content
+const noNotesMessage = document.getElementById("noNotesMessage");
+
+if (filteredNotes.length === 0 && filteredLists.length === 0) {
+noNotesMessage.classList.remove("hidden");
+} else {
+noNotesMessage.classList.add("hidden");
+}
+
+// Display notes
+filteredNotes.forEach((note, index) => {
+const noteDiv = document.createElement("div");
+noteDiv.innerHTML = `
+<div class="note" onclick="openNote(${index})">
+    <h4>${note.title}</h4>
+    <span class="note-date">${note.date}</span>
+    <button class="delete-btn" onclick="event.stopPropagation(); deleteNote(${index})">Delete</button>
+</div>
+`;
+container.appendChild(noteDiv);
+});
+
+// Display lists
+filteredLists.forEach((list, index) => {
+const listDiv = document.createElement("div");
+listDiv.innerHTML = `
+<div class="note" onclick="openList(${index})">
+    <h4>${list.name}</h4>
+    <span class="note-date">${list.date || "No date"}</span>
+    <button class="delete-btn" onclick="event.stopPropagation(); deleteList(${index})">Delete</button>
+</div>
+`;
+container.appendChild(listDiv);
+});
+}
+
+
+// Function to close the list password modal
+function toggleFeatureSection(sectionId) {
+  const sections = [
+    "privacyInfoSection",
+    "calculatorSection",
+    "notificationPanel",
+  ]; // Add all feature section IDs here
+  sections.forEach((section) => {
+    const element = document.getElementById(section);
+    if (section === sectionId) {
+      element.classList.toggle("hidden"); // Toggle the selected section
+    } else {
+      element.classList.add("hidden"); // Hide other sections
+    }
+  });
+}
+
+// Function to close a specific feature section
+function closeFeatureSection(sectionId) {
+  const element = document.getElementById(sectionId);
+  element.classList.add("hidden"); // Hide the specified section
+}
+
+
+function showListPassword() {
+  const listPasswordInput = document.getElementById("listPassword");
+  listPasswordInput.classList.toggle("hidden"); // Toggle visibility of the password input
+}
+
+// Function to verify the password for accessing the list
+function verifyListPassword() {
+  const password = document.getElementById("listPasswordInput").value;
+  const listIndex =
+    document.getElementById("listPasswordModal").dataset.listIndex; // Assuming you set this when opening the modal
+  const list = lists[listIndex]; // Get the list being accessed
+
+  if (password === list.password) {
+    document.getElementById("listPasswordModal").style.display = "none"; // Close the modal
+    document.getElementById("listTitle").value = list.title;
+    currentItems = list.items.slice(); // Copy items to currentItems
+    displayChecklist(); // Display the checklist with items
+    editingListIndex = listIndex; // Update the editing list index
+    showAddListSection(); // Implement this function to display the list content
+    document.getElementById("listPassword").value = list.password;
+  } else {
+    showMessageBox("Incorrect password!"); // Show an error message
+  }
+}
+
+function closeCalculator() {
+  document.getElementById("calculatorSection").classList.add("hidden")
+  ;
+  showSection('combinedContainer');
+}
+
+function appendValue(value) {
+  const display = document.getElementById("calc-display");
+  if (display.value === "0" || display.value === "Error") {
+    display.value = value;
+  } else {
+    display.value += value;
+  }
+}
+
+function calculate() {
+  const display = document.getElementById("calc-display");
   try {
-    await deleteDoc(noteDocRef);
-    console.log("Note deleted:", noteId);
-  } catch (error) {
-    console.error("Error deleting note:", error);
+    display.value = eval(display.value);
+  } catch {
+    display.value = "Error";
+  }
+}
+
+function clearDisplay() {
+  document.getElementById("calc-display").value = "0";
+}
+
+// Function to show alert when a feature is not implemented
+function showAlert(feature) {
+  alert(`${feature} feature is not implemented yet.`);
+}
+// Function to show the delete password modal
+
+// Function to close the delete list password mod
+
+// Function to verify the password for deleting the list
+// Function to verify the password for deleting the list
+function deleteListVerifyPassword() {
+  const passwordInput = document.getElementById(
+    "deleteListPasswordInput"
+  ).value;
+  const index = document.getElementById("deleteListPasswordModal").dataset
+    .listIndex; // Get the index of the list being deleted
+
+  console.log("List Index:", index); // Debugging line
+
+  const list = lists[index]; // Get the list being deleted
+
+  if (!list) {
+    console.error("List not found at index:", index); // Log an error if the list is undefined
+    return; // Exit the function if the list is not found
+  }
+
+  if (passwordInput === list.password) {
+    // If the password is correct, delete the list
+    lists.splice(index, 1);
+    localStorage.setItem("lists", JSON.stringify(lists));
+    document.getElementById("deleteListPasswordModal").style.display =
+      "none";
+    document.getElementById("listPasswordModal").style.display = "none";
+    displayLists();
+  } else {
+    showMessageBox("Incorrect password!"); // Show an error message
+  }
+}
+
+// Function to toggle the password input field
+function togglePasswordInput() {
+  const passwordInput = document.getElementById("notePassword");
+  passwordInput.classList.toggle("hidden");
+
+
+}
+
+
+function showSection(sectionId) {
+  document.querySelectorAll(".container").forEach((section) => {
+    section.classList.add("hidden"); // Hide all sections
+  });
+  document.getElementById(sectionId).classList.remove("hidden"); // Show the selected section
+
+  // Manage history stack
+  if (historyStack[historyStack.length - 1] !== sectionId) {
+    historyStack.push(sectionId);
+  }
+
+  currentSection = sectionId; // Update current section
+}
+
+// Event listener for the Android back button functionality
+window.addEventListener("popstate", function (event) {
+  if (historyStack.length > 1) {
+    historyStack.pop(); // Remove the current section
+    const previousSection = historyStack.pop(); // Get the previous section
+    showSection(previousSection); // Show the previous section
+    historyStack.push(previousSection); // Push it back to maintain history
+  }
+});
+
+window.onload = function () {
+  startAiScan();
+};
+
+
+let isMessageBoxVisible = false; // Flag to track visibility
+function showMessageBox(message) {
+  if (isMessageBoxVisible) return; // Prevent showing if already visible
+
+  const messageBox = document.getElementById("messageBox");
+  messageBox.textContent = message; // Set the message text
+  messageBox.style.display = "block"; // Show the message box
+  isMessageBoxVisible = true; // Set the flag to true
+
+  // Fade out effect after 3 seconds
+  setTimeout(function () {
+    messageBox.style.opacity = "0"; // Start fading out
+    setTimeout(function () {
+      messageBox.style.display = "none"; // Hide the message box after fading out
+      messageBox.style.opacity = "1"; // Reset opacity for next display
+      isMessageBoxVisible = false; // Reset the flag to allow showing again
+    }, 1000); // Wait for the fade out transition to complete
+  }, 1000); // Show for 3 seconds
+}
+
+function showAddNote() {
+  showSection("addNoteSection");
+  document.getElementById("noteContent").value = ""; // Clear the note content
+  document.getElementById("notePassword").value = ""; // Clear the password input
+
+  if (editingNoteIndex !== null) {
+    // Editing an existing note
+    const note = notes[editingNoteIndex]; // Get the note being edited
+    document.getElementById("noteTitle").value = note.title; // Set the input value to the note title
+    document.getElementById("noteContent").value = note.content; // Set the input value to the note content
+    document.getElementById(
+      "manageNoteTitle"
+    ).textContent = `Manage Your ${note.title} Note`; // Update title with the actual note title
+  } else {
+    // Creating a new note
+    document.getElementById("noteTitle").value = ""; // Clear the title input
+    document.getElementById("manageNoteTitle").textContent =
+      "Add New Note"; // Set title for new note
+  }
+  closeAddOptions(); // Close the add options modal
+}
+
+// Function to cancel note and reset visibility
+function cancelNote() {
+  const section = document.getElementById("addNoteSection");
+  section.classList.add("hidden");
+  showSection("combinedContainer");
+  document.getElementById("notePasswordModal").classList.add("hidden");
+}
+
+// Add event listener for the Add Note button
+document
+  .getElementById("addNoteButton")
+  .addEventListener("click", function () {
+    editingNoteIndex = null; // Reset the editing index for a new note
+    showAddNote(); // Show the add note section
+  });
+
+  function saveNote() {
+     const title = document.getElementById('noteTitle').value.trim();
+    const content = document.getElementById('noteContent').value.trim();
+    const password = document.getElementById('notePassword').value.trim();
+    const date = new Date(); // Get the current date
+    const formattedDate = formatDate(date); // Format the date
+
+
+    if (content === "") {
+        showMessageBox("Note content cannot be empty!");
+        return;
+    }
+
+   if (title === "") {
+    suggestTitle(content);
+    return;
+    }
+
+    if (editingNoteIndex !== null) {
+        // Update existing note
+        notes[editingNoteIndex] = { title, content, password, date }; // Include date
+        showMessageBox("Note updated successfully!");
+    } else {
+        // Add new note
+        const note = { title, content, password, pinned: false, date }; // Include date
+        notes.push(note);
+        showMessageBox("Note saved successfully!");
+    }
+
+    localStorage.setItem('notes', JSON.stringify(notes));
+    displayNotes();
+    showSection('combinedContainer');
+    document.getElementById("notePasswordModal").classList.add("hidden");
+
+    // Reset editing state
+    editingNoteIndex = null; // Reset after saving
+}
+
+function suggestTitle(noteContent) {
+  const keywords = {
+    "grocery": "Grocery List",
+    "buy": "Shopping List",
+    "meeting": "Meeting Notes",
+    "exam": "Study Plan",
+    "todo": "To-Do List",
+    "to do": "To-Do List",
+    "shopping": "Shopping List",
+    "study": "Study Plan",
+    "project": "Project Plan",
+    "task": "To-Do List",
+"work": "Work Notes"
+  };
+
+  for (const key in keywords) {
+    if (noteContent.toLowerCase().includes(key)) {
+      alert("Suggested title by AI: " + keywords[key]);
+      return keywords[key];
+    }
+  }
+  console.log("Suggest title called");
+  return "Untitled Note";
+  
+  
+}
+
+
+function showNotification(message) {
+  const notificationList = document.getElementById("notificationList");
+  const notificationItem = document.createElement("div");
+  notificationItem.textContent = message;
+  notificationList.appendChild(notificationItem);
+  document.getElementById("notificationModal").style.display = "block";
+}
+
+function closeNotificationModal() {
+  document.getElementById("notificationModal").style.display = "none";
+}
+
+function displayNotes() {
+  const container = document.getElementById("notesContainer");
+  container.innerHTML = "";
+  const noNotesMessage = document.getElementById("noNotesMessage"); // Get the no notes message element
+  if (notes.length === 0) {
+    noNotesMessage.classList.remove("hidden"); // Show the no notes message
+  } else {
+    noNotesMessage.classList.add("hidden");
+  } // Hide the no notes message
+  notes.forEach((note, index) => {
+    const noteDiv = document.createElement("div");
+    const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
+    const formattedDate = formatDate(noteDate); // Format the date for display
+    const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
+    noteDiv.innerHTML = `
+     ${selectionMode ? `<input type="checkbox" onchange="toggleSelect(${index})" checked>` : ''}
+ <div class="note" onclick="openNote(${index})">
+  <div class="note-header">
+    <h4>${note.title}</h4>
+    ${lockIndicator}
+
+  </div>
+  <span class="note-date">${formattedDate}</span>
+ 
+  <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
+</div>
+    `;
+    container.appendChild(noteDiv);
+  });
+}
+
+function openNote(index) {
+  const note = notes[index];
+  if (note.password) {
+      document.getElementById('passwordModal').style.display = 'flex';
+      document.getElementById('passwordInput').value = "";
+      document.getElementById('passwordModal').dataset.noteIndex = index;
+  } else {
+      showNoteContent(note);
   }
 }
 
 
-    </script>
-    
-  </body>
-</html>
+document.addEventListener("DOMContentLoaded", function () {
+  // Hide all sections initially
+  document.querySelectorAll(".container").forEach((section) => {
+    section.classList.add("hidden"); // Hide all sections
+  });
+
+  // Show only the notes section on page load
+  showSection("combinedContainer"); // Show the notes section
+
+  // Load notes and lists from local storage
+  displayNotes();
+  displayLists();
+});
+
+function showListsSection() {
+  showSection("combinedContainer"); // Show the lists container
+  displayLists(); // Refresh the displayed lists
+  document.getElementById("addListSection").classList.add("hidden"); // Ensure add list section is hidden
+}
+
+function verifyPassword() {
+  const password = document.getElementById("passwordInput").value;
+  const index =
+    document.getElementById("passwordModal").dataset.noteIndex;
+  const note = notes[index];
+
+  if (password === note.password) {
+    document.getElementById("passwordModal").style.display = "none";
+    showNoteContent(note);
+  } else {
+    showMessageBox("Incorrect password!");
+  }
+}
+
+function deleteVerifyPassword() {
+  const passwordInput = document.getElementById(
+    "deletePasswordInput"
+  ).value;
+  const index = document.getElementById("deletePasswordModal").dataset
+    .noteIndex; // Get the index of the note being deleted
+  const note = notes[index]; // Get the note being deleted
+
+  if (passwordInput === note.password) {
+    // If the password is correct, delete the note
+    notes.splice(index, 1);
+    localStorage.setItem("notes", JSON.stringify(notes)); // Update local storage
+    displayNotes(); // Refresh the displayed notes
+    closeDeletePasswordModal(); // Close the modal
+  } else {
+    showMessageBox("Incorrect password!"); // Show an error message
+  }
+}
+
+function showNoteContent(note) {
+  document.getElementById("noteTitle").value = note.title;
+  document.getElementById("noteContent").value = note.content;
+  document.getElementById("notePassword").value = note.password;
+  document.getElementById(
+    "manageNoteTitle"
+  ).textContent = `Manage Your ${note.title}`; // Update the title to reflect the note being managed
+  showSection("addNoteSection");
+  // Set the index of the note being edited
+  editingNoteIndex = notes.findIndex(
+    (n) => n.title === note.title && n.content === note.content
+  );
+  closeAddOptions();
+}
+
+// Modify the deleteNote function to include password verification
+
+function deleteNote(index) {
+  const note = notes[index];
+  if (note.password) {
+
+      document.getElementById('deletePasswordModal').style.display = 'flex';
+      document.getElementById('passwordModal').style.display = 'hidden';
+      document.getElementById('deletePasswordInput').value = "";
+      document.getElementById('deletePasswordModal').dataset.noteIndex = index;
+  } else {
+      if (confirm("Are you sure you want to delete this note?")) {
+          notes.splice(index, 1);
+          localStorage.setItem('notes', JSON.stringify(notes));
+          displayNotes();
+      }
+  }
+}
+
+
+function closeDeletePasswordModal() {
+  document.getElementById("deletePasswordModal").style.display = "none"; // Hide the modal
+  document.getElementById("deletePasswordInput").value = ""; // Clear the input
+  document.getElementById('passwordModal').style.display = 'none';
+}
+
+function closeAddListSection() {
+  document.getElementById("addListSection").classList.add("hidden"); // Hide the add list section
+  showSection("combinedContainer"); // Show the lists section
+}
+
+// Function to show the add options modal
+function showAddOptions() {
+  document.getElementById('addOptionsModal');
+  document.getElementById('addOptionsModal').style.display = 'flex';
+}
+
+function closeAddOptions() {
+  document.getElementById('addOptionsModal');
+  document.getElementById('addOptionsModal').style.display = 'none';
+}
+
+// Function to open a list and pre-fill the add list section
+
+// Function to show the add list section
+// Function to show the add list section
+function showAddListSection() {
+  // Hide all sections first
+
+  document.querySelectorAll(".container").forEach((section) => {
+    section.classList.add("hidden"); // Hide all sections
+  });
+
+  // Show the add list section
+  document.getElementById("addListSection").classList.remove("hidden"); // Show the add list section
+
+  // Check if we are editing an existing list
+  if (editingListIndex !== null) {
+    const list = lists[editingListIndex]; // Get the list being edited
+    document.getElementById("listTitle").value = list.title; // Set the input value to the list title
+    currentItems = list.items.slice(); // Copy items to currentItems
+    displayChecklist(); // Display the checklist with items
+    document.getElementById(
+      "manageListTitle"
+    ).textContent = `Manage Your ${list.title} List`; // Update title with the actual list title
+  } else {
+    // Reset for new list
+    document.getElementById("listTitle").value = ""; // Clear the title input
+    document.getElementById("manageListTitle").textContent =
+      "Manage Your New List"; // Default title for new list
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+  }
+
+  closeAddOptions(); // Close any open options
+}
+
+// Function to cancel adding a list
+function cancelList() {
+  // Hide the add list section and show the lists section
+  document.getElementById("addListSection").classList.add("hidden"); // Hide the add list section
+  showSection("combinedContainer"); // Show the lists section
+  displayNotes();
+  displayLists();
+  document.getElementById("listPasswordModalr").classList.add("hidden");
+
+}
+
+// Function to show a specific section
+
+// Function to save a new list
+function saveList() {
+const title = document.getElementById("listTitle").value.trim();
+const password = document.getElementById("listPassword").value.trim();
+const date = new Date();
+const formattedDate = formatDate(date);
+
+if (title === "" || currentItems.length === 0) {
+showMessageBox("List title and items cannot be empty!");
+return;
+}
+
+const listData = {
+title,
+items: JSON.parse(JSON.stringify(currentItems)), // Deep copy
+password,
+date: formattedDate,
+};
+
+if (editingListIndex !== null) {
+lists[editingListIndex] = listData;
+showMessageBox("List updated successfully!");
+} else {
+lists.push(listData);
+showMessageBox("List saved successfully!");
+}
+
+localStorage.setItem("lists", JSON.stringify(lists));
+displayLists();
+showSection("combinedContainer");
+editingListIndex = null;
+document.getElementById("listPasswordModalr").classList.add("hidden");
+
+}
+// Function to open a list and pre-fill the add list section
+function openList(index) {
+  const list = lists[index];
+
+  // Check if the list has a password
+  if (list.password) {
+    // Store the index of the list being accessed in the modal
+    document.getElementById("listPasswordModal").dataset.listIndex =
+      index;
+    document.getElementById("listPasswordModal").style.display = "flex";
+  } else {
+    // If no password is required, proceed to open the list
+    document.getElementById("listTitle").value = list.title;
+    currentItems = list.items.slice(); // Copy items to currentItems
+    displayChecklist(); // Display the checklist with items
+    editingListIndex = index;
+    showAddListSection(); // Show the add list section
+    document.getElementById("listPassword").value = list.password;
+  }
+}
+
+
+document
+  .getElementById("addListButton")
+  .addEventListener("click", function () {
+    editingListIndex = null; // Reset the editing index for a new list
+    showAddListSection(); // Show the add list section for a new list
+  });
+
+const lists = JSON.parse(localStorage.getItem("lists")) || [];
+
+
+// Function to show the lists section
+function showListsSection() {
+  showSection("combinedContainer");
+  displayLists(); // Refresh the displayed lists
+}
+
+function showListContent(list) {
+  // Implement the logic to display the list content
+  // For example, you might want to show the items in the list
+  const checklistContainer =
+    document.getElementById("checklistContainer");
+  checklistContainer.innerHTML = ""; // Clear previous items
+
+  list.items.forEach((item) => {
+    const itemDiv = document.createElement("div");
+    itemDiv.textContent = item; // Display each item
+    checklistContainer.appendChild(itemDiv);
+  });
+
+  // Show the section that contains the list content
+  showSection("checklistContainer"); // Assuming you have a section to show the checklist
+}
+
+// Function to add an item to the checklist
+function addItem() {
+const newItemInput = document.getElementById("newItem");
+const newItemValue = newItemInput.value.trim();
+
+if (newItemValue === "") {
+showMessageBox("Item cannot be empty!");
+return;
+}
+
+currentItems.push({ name: newItemValue, checked: false });
+newItemInput.value = "";
+displayChecklist();
+}
+// Event listener for adding item with Enter key
+document
+  .getElementById("newItem")
+  .addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      addItem();
+    }
+  });
+
+// Event listener for switching to note content with Enter key
+document
+  .getElementById("noteTitle")
+  .addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      document.getElementById("noteContent").focus(); // Switch focus to note content
+    }
+  });
+
+// Event listener for submitting password with Enter key
+
+
+// Function to close the password modal
+function closePasswordModal() {
+  document.getElementById("passwordModal").style.display = "none";
+  document.getElementById("passwordInput").value = ""; // Clear the password input field
+}
+
+function openTab(tabId) {
+  document.querySelectorAll(".tab-content").forEach(tab => tab.classList.add("hidden"));
+  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active-tab"));
+  document.getElementById(tabId).classList.remove("hidden");
+
+  // Activate the clicked tab button
+  const tabButtons = document.querySelectorAll("#settingsTabs button");
+  tabButtons.forEach(btn => {
+    if (btn.getAttribute("onclick").includes(tabId)) {
+      btn.classList.add("active-tab");
+    }
+  });
+}
+
+
+// Event listener for closing the password modal with Escape key
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    closePasswordModal(); // Close the modal
+  }
+});
+
+// Function to display the checklist
+function displayChecklist() {
+const checklistContainer = document.getElementById("checklistContainer");
+checklistContainer.innerHTML = "";
+
+currentItems.forEach((item, index) => {
+const itemDiv = document.createElement("div");
+itemDiv.innerHTML = `
+<div class="checklist-item">
+  <input type="checkbox" id="item-${index}" ${item.checked ? "checked" : ""} onchange="toggleCheck(${index})">
+  <label for="item-${index}">${item.name}</label>
+  <button onclick="removeItem(${index})">Remove</button>
+</div>
+`;
+checklistContainer.appendChild(itemDiv);
+});
+}
+
+function toggleCheck(index) {
+currentItems[index].checked = !currentItems[index].checked;
+// Optionally, you can update localStorage or do something here if needed immediately
+}
+
+
+// Function to remove an item from the checklist
+function removeItem(index) {
+  currentItems.splice(index, 1); // Remove the item from the array
+  displayChecklist(); // Update the checklist display
+}
+
+// Function to display lists
+function displayLists() {
+  const container = document.getElementById("listsContainerContent");
+  container.innerHTML = ""; // Clear existing lists
+  const noListsMessage = document.getElementById("noListsMessage"); // Get
+  if (lists.length === 0) {
+    noListsMessage.classList.remove("hidden"); // Show the no lists message
+  } else {
+    noListsMessage.classList.add("hidden");
+  } // Hide the no lists message
+  lists.forEach((list, index) => {
+    const listDiv = document.createElement("div");
+    const listDate = new Date(list.date); // Convert the stored date string back to a Date object
+    const formattedDate = formatDate(listDate); // Format the date for display
+    const loclIndicator = list.password && list.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
+    listDiv.innerHTML = `
+  <div class="note" onclick="openList(${index})">    
+  <i class="fas fa-list"></i>
+  <div class="note-header">
+    <h4>${list.title}</h4>
+    ${loclIndicator}
+    </div>
+  <span class="list-date">${formattedDate}</span>
+   <button class="delete-btn" onclick="deleteList(${index}); event.stopPropagation();">Delete</button>
+  </div>
+  `;
+    container.appendChild(listDiv);
+  });
+}
+
+// Function to delete a list
+function deleteList(index) {
+  const list = lists[index];
+
+  // Check if the list has a password
+  if (list.password) {
+    // Show the password modal for deletion
+    document.getElementById("deleteListPasswordModal").style.display =
+      "flex";
+    document.getElementById("deleteListPasswordModal").dataset.listIndex =
+      index; // Set the index here
+  } else {
+    // If no password is required, confirm deletion
+    if (confirm("Are you sure you want to delete this list?")) {
+      lists.splice(index, 1); // Remove the list
+      localStorage.setItem("lists", JSON.stringify(lists)); // Update local storage
+      displayLists(); // Refresh the displayed lists
+    }
+  }
+}
+
+// Function to cancel adding a list
+
+// Call displayLists on page load
+displayLists();
+displayNotes();    //end of part 3 , code eended , udertand ths code by combiningall three pats 
