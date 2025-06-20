@@ -205,12 +205,45 @@ function showSelectionActions() {
   document.getElementById("selectionBar").classList.remove("hidden");
 }
 
-function exitSelectionMode() {
-  selectionMode = false;
-  selectedNotes = [];
-  document.getElementById("selectionBar").classList.add("hidden");
-  renderNotes();
+window.addEventListener("load", () => {
+  const seen = localStorage.getItem("notesAppOnboarded");
+  const overlay = document.getElementById("onboardingOverlay");
+
+  if (!seen && overlay) {
+    overlay.style.display = "flex";
+  }
+});
+
+function applySortFilter() {
+  const sortValue = document.getElementById("sortSelect").value;
+
+  const notesContainer = document.getElementById("notesContainer");
+  const listsSection = document.getElementById("listContainerContent");
+
+  if (sortValue === "notes") {
+    // Clear lists
+    if (listsSection) listsSection.innerHTML = "";
+    displayNotes(); // Render only notes
+    showSection("combinedContainer");
+  } else if (sortValue === "lists") {
+    // Clear notes
+    if (notesContainer) notesContainer.innerHTML = "";
+    displayLists(); // Render only lists
+    showSection("combinedContainer");
+  } else if (sortValue === "all") {
+   displayNotes();
+   displayLists();
+    showSection("combinedContainer");
+  } else if (sortValue === "date_newest" || sortValue === "date_oldest") {
+    alert("Sorting by date is disabled in this mode.");
+  }
 }
+
+function showSearch() {
+  const bar = document.getElementById("sch");
+  bar.toggle
+}
+
 
 function deleteSelectedNotes() {
   selectedNotes.sort((a, b) => b - a); // delete from end to avoid reindex
@@ -644,6 +677,10 @@ container.appendChild(listDiv);
 });
 }
 
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  sidebar.classList.toggle("show");
+}
 
 // Function to close the list password modal
 function toggleFeatureSection(sectionId) {
@@ -950,7 +987,7 @@ function displayNotes() {
     const formattedDate = formatDate(noteDate); // Format the date for display
     const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
     noteDiv.innerHTML = `
-     ${selectionMode ? `<input type="checkbox" onchange="toggleSelect(${index})" checked>` : ''}
+   
  <div class="note" onclick="openNote(${index})">
   <div class="note-header">
     <h4>${note.title}</h4>
