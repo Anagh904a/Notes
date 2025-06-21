@@ -11,6 +11,7 @@ let currentIndex = -1;
 let holdTimer = null;
 let selectionMode = false;
 let selectedNotes = [];
+let notesDirectoryHandle = null;
 
 function setupLongPress(element, index) {
   element.addEventListener("mousedown", (e) => {
@@ -31,12 +32,161 @@ function enterSelectionMode(index) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
-  startAiScan();
-  
-  setTimeout(copyResultsToModal, 1500);
-  setTimeout(showAiModal, 1500);
+
+let backupDirHandle = null;
+
+// Prompt once and store basic reference
+async function requestBackupFolder() {
+  try {
+    backupDirHandle = await window.showDirectoryPicker();
+    // Store a flag only (cannot store actual handle directly)
+    localStorage.setItem("backupGranted", "true");
+    alert("Folder access granted.");
+  } catch (err) {
+    alert("Storage access denied! Your data may get lost in case of app/browser update.");
+  }
+}
+
+// Restore backup folder handle (user must re-select)
+async function getSavedFolderHandle() {
+  if (backupDirHandle) return backupDirHandle;
+
+  const allowed = localStorage.getItem("backupGranted");
+  if (!allowed) return null;
+
+  try {
+    // Ask again, since no persistent handle storage
+    backupDirHandle = await window.showDirectoryPicker();
+    return backupDirHandle;
+  } catch {
+    return null;
+  }
+}
+
+// Get file handle
+async function getBackupFileHandle() {
+  const folderHandle = await getSavedFolderHandle();
+  if (!folderHandle) return null;
+
+  try {
+    return await folderHandle.getFileHandle("backup_data.json", { create: false });
+  } catch {
+    return null;
+  }
+}
+
+// Restore data from backup_data.json
+async function restoreBackup() {
+  const folderHandle = await getSavedFolderHandle();
+  if (!folderHandle) {
+    alert("Could not access your backup folder.");
+    return;
+  }
+
+  try {
+    const fileHandle = await folderHandle.getFileHandle("backup_data.json");
+    const file = await fileHandle.getFile();
+    const content = await file.text();
+    const data = JSON.parse(content);
+
+    if (data.notes) {
+      localStorage.setItem("notes", JSON.stringify(data.notes));
+    }
+    if (data.lists) {
+      localStorage.setItem("lists", JSON.stringify(data.lists));
+    }
+
+    alert("Backup restored successfully!");
+    location.reload();
+  } catch (err) {
+    console.error("Restore failed:", err);
+    alert("Failed to restore backup.");
+  }
+}
+
+// Ask for folder and create empty backup file
+async function askForBackupFolder() {
+  try {
+    const folderHandle = await window.showDirectoryPicker();
+    localStorage.setItem("backupGranted", "true");
+    backupDirHandle = folderHandle;
+
+    const fileHandle = await folderHandle.getFileHandle("backup_data.json", { create: true });
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify({ notes: [], lists: [] }));
+    await writable.close();
+
+    alert("Backup folder linked!");
+  } catch (err) {
+    alert("Storage permission denied. Backup will be unavailable.");
+  }
+}
+
+// ✅ Auto-restore if no notes/lists
+window.addEventListener("DOMContentLoaded", async () => {
+  const notes = JSON.parse(localStorage.getItem("notes") || "[]");
+  const lists = JSON.parse(localStorage.getItem("lists") || "[]");
+
+  if (notes.length === 0 && lists.length === 0) {
+    const backupFile = await getBackupFileHandle();
+    if (backupFile) {
+      const userWants = confirm("We found your backup. Would you like to restore it?");
+      if (userWants) {
+        await restoreBackup();
+      }
+    }
+  }
 });
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const toggle = document.getElementById("aiToggle");
+
+  // 🔒 Load saved settings or default to enabled = true
+  let scannerSettings = JSON.parse(localStorage.getItem("aiScannerSettings")) || {
+    enabled: true,
+    lastScan: null
+  };
+
+  // ✅ Force default to true if `enabled` is undefined or null
+  if (scannerSettings.enabled === undefined || scannerSettings.enabled === null) {
+    scannerSettings.enabled = true;
+    localStorage.setItem("aiScannerSettings", JSON.stringify(scannerSettings));
+  }
+
+  // Set toggle position on page
+  toggle.checked = scannerSettings.enabled;
+
+  // 🚀 Run AI scan if enabled
+  if (scannerSettings.enabled) {
+    startAiScan();
+    scannerSettings.lastScan = new Date().toISOString();
+    localStorage.setItem("aiScannerSettings", JSON.stringify(scannerSettings));
+
+    setTimeout(() => {
+      copyResultsToModal();
+      showAiModal(); // Only shows if enabled
+    }, 1500);
+  }
+
+  // 🔁 Listen for user toggle changes
+  toggle.addEventListener("change", function () {
+    scannerSettings.enabled = toggle.checked;
+    localStorage.setItem("aiScannerSettings", JSON.stringify(scannerSettings));
+
+    if (toggle.checked) {
+      startAiScan();
+      setTimeout(() => {
+        copyResultsToModal();
+        showAiModal();
+      }, 1500);
+    }
+  });
+});
+
+
 
 function saveState() {
   const noteContent = document.getElementById("noteContent").value;
@@ -480,21 +630,24 @@ function updateDataStats() {
   listCount.textContent = lists.length; // Update the list count
 }
 
-function backupNotes() {
-const backupData = {
-notes: notes,
-lists: lists,
-};
+async function autoBackupToFile() {
+  if (!backupDirHandle) {
+    console.warn("No backup folder selected.");
+    return;
+  }
 
-const blob = new Blob([JSON.stringify(backupData)], {
-type: "application/json",
-});
-const url = URL.createObjectURL(blob);
-const a = document.createElement("a");
-a.href = url;
-a.download = "backup_data.json";
-a.click();
-URL.revokeObjectURL(url);
+  try {
+    // Create or replace the backup file
+    const fileHandle = await backupDirHandle.getFileHandle("backup_data.json", { create: true });
+    const writable = await fileHandle.createWritable();
+
+    await writable.write(JSON.stringify({ notes, lists }));
+    await writable.close();
+
+    console.log("Backup updated successfully.");
+  } catch (err) {
+    console.error("Auto-backup failed:", err);
+  }
 }
 
 function prepareImport(event) {
@@ -927,7 +1080,7 @@ document
     displayNotes();
     showSection('combinedContainer');
     document.getElementById("notePasswordModal").classList.add("hidden");
-
+autoBackupToFile();
     // Reset editing state
     editingNoteIndex = null; // Reset after saving
 }
@@ -971,6 +1124,43 @@ function showNotification(message) {
 function closeNotificationModal() {
   document.getElementById("notificationModal").style.display = "none";
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tabButtons = document.querySelectorAll("#settingsTabs button");
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        // Remove 'active' from all buttons
+        tabButtons.forEach((btn) => btn.classList.remove("active"));
+
+        // Add 'active' to the clicked button
+        this.classList.add("active");
+
+        // OPTIONAL: Call showSection or handle tab content switching here
+        // Example: showSection(this.dataset.target);
+      });
+    });
+  });
+
+  async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function setMasterPassword(password) {
+  const hashed = await hashPassword(password);
+  localStorage.setItem("masterPasswordHash", hashed);
+  alert("Master password set successfully!");
+}
+
+function isMasterPasswordSet() {
+  return localStorage.getItem("masterPasswordHash") !== null;
+}
+
+
 
 function displayNotes() {
   const container = document.getElementById("notesContainer");
@@ -1046,6 +1236,7 @@ function verifyPassword() {
     showNoteContent(note);
   } else {
     showMessageBox("Incorrect password!");
+    document.getElementById('resetPass').style.display = 'flex';
   }
 }
 
@@ -1205,7 +1396,7 @@ displayLists();
 showSection("combinedContainer");
 editingListIndex = null;
 document.getElementById("listPasswordModalr").classList.add("hidden");
-
+autoBackupToFile();
 }
 // Function to open a list and pre-fill the add list section
 function openList(index) {
