@@ -104,8 +104,8 @@
       }
 
       textarea {
-        width: 97%;
-        height: 120px;
+        width: 95%;
+        height: calc(100% - 40%);
         margin: 10px;
         padding: 10px;
         border: 1px solid #ccc;
@@ -138,7 +138,7 @@
 
            #noListsMessage {
         margin-left: 20px;
-        border-left: #0084ff 4px solid;
+        border-left: #000000 4px solid;
       }
 
 
@@ -1059,62 +1059,132 @@
         transition: background-color 0.3s ease;
       }
 
+      #settingsSection.container {
+  padding: 20px;
+  background: linear-gradient(to bottom right, #f9f9f9, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  margin: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Settings Tabs Container */
+#settingsTabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Tab Button Style */
+#settingsTabs button {
+  padding: 10px 16px;
+  background: #eaeaea;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#settingsTabs button:hover {
+  background: #dcdcdc;
+  color: #000;
+}
+
+#settingsTabs button.active {
+  background-color: #8B5CF6;
+  color: white;
+}
+
       .action-button:hover {
         background-color: #0056b3;
         /* Darker blue on hover */
       }
 
       .setting-category {
-        margin-top: 15px;
-        border: 1px solid #ddd;
-        /* Light border for categories */
-        border-radius: 5px;
-        padding: 10px;
-      }
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
 
-      .setting-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-      }
+.setting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
 
-      .toggle-icon {
-        font-size: 18px;
-        color: #007bff;
-        /* Blue color for toggle icons */
-      }
+.setting-header:hover {
+  color: #000;
+}
 
-      .checkbox-label {
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-      }
+.toggle-icon {
+  font-size: 18px;
+  color: #4a90e2;
+  transition: transform 0.3s ease;
+}
 
-      .file-input {
-        margin-top: 10px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        /* Light border for file input */
-        border-radius: 5px;
-      }
+.setting-category.open .toggle-icon {
+  transform: rotate(90deg);
+}
 
-      .hidden {
-        display: none;
-      }
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #444;
+}
 
+.checkbox-label input {
+  margin-right: 10px;
+}
 
-      /* Modal styling */
-     /* Modal background (fullscreen overlay) */
+.file-input {
+  margin-top: 12px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  background-color: #fff;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
 
+.file-input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
 
-      .setting-category div {
-        padding: 10px;
+.hidden {
+  display: none;
+}
 
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-top: 5px;
-      }
+.setting-category div {
+  padding: 10px;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+  transition: background-color 0.2s ease;
+}
+
+.setting-category div:hover {
+  background-color: #f1f1f1;
+}
+
 
       #ai {
     animation: fadeIn 0.6s ease forwards;
@@ -1282,14 +1352,14 @@
 .sort-container {
   padding: 0 16px;
   margin-top: 10px;
-  left: 50%; /* Center horizontally */
+  
    position: relative;
    border-radius: 30px;
     padding: 10px; /* Padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
-margin-left: -100;
+
 
 }
 
@@ -1297,12 +1367,70 @@ margin-left: -100;
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  width: 15%;
+  width: 100%;
    display: flex;
     justify-content: space-between;
     align-items: center;
 
 }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .2s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .2s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-label {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+
 
 
     </style>
@@ -1345,8 +1473,8 @@ margin-left: -100;
       <div id="listsSection">
         <div id="listsContainerContent"></div>
       </div>
-      <div id="noListsMessage" class="hidden">No lists added.</div>
-      <div id="noNotesMessage" class="hidden">No notes added.</div>
+      <div id="noListsMessage" class="hidden">No lists yet.. Add</div>
+      <div id="noNotesMessage" class="hidden">This space is lonely. Add a note!</div>
  
       <nav class="bottom-nav">
       <button class="nav-button" onclick="showSection('moreSection')">
@@ -1418,12 +1546,13 @@ margin-left: -100;
         id="noteTitle"
         placeholder="Note title..."
       />
+      <button onclick="saveNote()" style="background: none; color:#000; font-size: 16px;"><i class="fas fa-save"></i> Save</button>
       <textarea id="noteContent" placeholder="Note.....">
       </textarea>
      
 
    
-      <button onclick="saveNote()" style="background: none; color:#000; font-size: 20px;"><i class="fas fa-save"></i> Save</button>
+     
       <nav class="bottom-nav" style="display: flex;">
        <button id="changePasswordButton" onclick="showNotePassword()" class="nav-button">       
         <i class="fas fa-lock"></i> 
@@ -1527,7 +1656,7 @@ margin-left: -100;
           <input type="password" id="passwordInput" placeholder="Password">
           <button onclick="verifyPassword()">Go</button>
           <button onclick="closePasswordModal()">Close</button>
-      </div>
+        
   </div>
 
     <!-- Delete Password Modal -->
@@ -1676,6 +1805,8 @@ margin-left: -100;
         </h3>
         <div id="encryptionSection" class="hidden">
           <button onclick="goBack()">Back</button>
+          <button onclick="requestBackupFolder()">Grant Storage Access</button>
+
           <button onclick="clearData()">Clear All Data</button>
           <button onclick="encryptData()">Encrypt Data</button>
           <button onclick="decryptData()">Decrypt Data</button>
@@ -1686,9 +1817,19 @@ margin-left: -100;
         <h3 onclick="toggleSection('passwordManagementSection')" style="cursor: pointer;">
           🔑 Password Management <span id="passwordManagementToggle">+</span>
         </h3>
+
         <div id="passwordManagementSection" class="hidden">
           <button onclick="goBack()">Back</button>
-          <p>Will be updated soon!</p>
+          <p>This is master password will be used to open a 
+            Locked note/list in case you forgot orignal password</p>
+           <h3>Master Password</h3>
+  <input type="password" id="setPasswordInput" placeholder="Set New Password">
+  <button onclick="setMasterPassword()">Save Password</button>
+
+  <h4 style="margin-top:20px;">Change Password</h4>
+  <input type="password" id="oldPassword" placeholder="Current Password">
+  <input type="password" id="newPassword" placeholder="New Password">
+  <button onclick="changeMasterPassword()">Change Password</button>
         </div>
     
         <h3 onclick="toggleSection('lockNotesSection')" style="cursor: pointer;">
@@ -1698,8 +1839,26 @@ margin-left: -100;
           <button onclick="goBack()">Back</button>
          <p>Under Planning Phase</p>
         </div>
+        <h3 onclick="toggleSection('aiScanSettings')" style="cursor: pointer;">
+          🔍 AI Scan Settings <span>+</span>
+        </h3>
+        <div id="aiScanSettings" class="hidden">
+          <button onclick="goBack()">Back</button>
+          <div class="toggle-container">
+    <label class="toggle-switch">
+      <input type="checkbox" id="aiToggle">
+      <span class="slider"></span>
+    </label>
+    <div>
+      <span class="toggle-label">AI Scanner Warning on Start-up</span>
+      <p style="margin: 0; font-size: 12px; color: gray;">Recommended</p>
+    </div>
+  </div>
+
+          </div>
       </div>
       </div>
+    
     
   
     
