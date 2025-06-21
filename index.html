@@ -68,8 +68,22 @@
             Continue
           </button>
         </div>
-        
+
         <div id="step3" class="hidden transition-opacity duration-500">
+  <h2 class="text-xl font-semibold mb-4 text-black dark:text-white">Secure Your Notes</h2>
+
+  <input type="email" id="signupEmail" placeholder="Email" class="w-full max-w-md mx-auto px-4 py-2 rounded-lg text-black mb-2" />
+  <input type="password" id="signupPassword" placeholder="Password" class="w-full max-w-md mx-auto px-4 py-2 rounded-lg text-black mb-2" />
+  <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" class="w-full max-w-md mx-auto px-4 py-2 rounded-lg text-black mb-4" />
+
+  <button onclick="handleSignUp()" class="bg-[#0B0B1B] text-white px-6 py-2 rounded-full hover:bg-[#1a1a2e] transition">
+    Sign Up & Continue
+  </button>
+
+  <p id="signupError" class="text-red-300 mt-2 text-sm"></p>
+</div>
+        
+        <div id="step4" class="hidden transition-opacity duration-500">
   <h2 class="text-3xl font-bold text-purple-200 mb-4">You're All Set!</h2>
   <p class="text-md text-white mb-6">Welcome, <span id="displayName"></span> 👋<br />Start organizing your thoughts beautifully.</p>
   <img src="https://cdn-icons-png.flaticon.com/512/3039/3039385.png" alt="Success Icon" class="w-20 h-20 mx-auto mb-6 animate-bounce" />
@@ -80,6 +94,52 @@
         
       </div>
     </div>
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+  } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCAnKRiTCTQkCV7T5-pSJdr20ctvy1XzTY",
+    authDomain: "notes-81cd8.firebaseapp.com",
+    projectId: "notes-81cd8",
+    storageBucket: "notes-81cd8.appspot.com",
+    messagingSenderId: "93954393984",
+    appId: "1:93954393984:web:f39d129b6e4bacd1796365",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.handleSignUp = () => {
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
+    const confirmPassword = document.getElementById("signupConfirmPassword").value;
+    const errorElement = document.getElementById("signupError");
+
+    if (!email || !password || !confirmPassword) {
+      errorElement.textContent = "All fields are required.";
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      errorElement.textContent = "Passwords do not match.";
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        // Redirect to indexAlpha after signup
+        nextStep(4);
+        document.getElementById('step3').style.display = 'none';
+      })
+      .catch((error) => {
+        errorElement.textContent = error.message;
+      });
+  };
+</script>
 <script>
   if (localStorage.getItem("onboardingComplete") === "true") {
     window.location.href = "indexAlpha.html";
