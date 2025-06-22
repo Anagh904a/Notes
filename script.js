@@ -13,6 +13,10 @@ let selectionMode = false;
 let selectedNotes = [];
 let notesDirectoryHandle = null;
 
+
+
+
+
 function setupLongPress(element, index) {
   element.addEventListener("mousedown", (e) => {
     holdTimer = setTimeout(() => {
@@ -368,11 +372,11 @@ function applySortFilter() {
   const sortValue = document.getElementById("sortSelect").value;
 
   const notesContainer = document.getElementById("notesContainer");
-  const listsSection = document.getElementById("listContainerContent");
+  const listsContainerContent = document.getElementById("listContainerContent");
 
   if (sortValue === "notes") {
     // Clear lists
-    if (listsSection) listsSection.innerHTML = "";
+    if (listsContainerContent) listsContainerContent.innerHTML = "";
     displayNotes(); // Render only notes
     showSection("combinedContainer");
   } else if (sortValue === "lists") {
@@ -1185,7 +1189,12 @@ function displayNotes() {
 
   </div>
   <span class="note-date">${formattedDate}</span>
- 
+ <button class="summarize-btn" 
+                data-note-content="${note.content}" 
+                data-note-title="${note.title}"
+                onclick="handleSummarizeButtonClick(this); event.stopPropagation();">
+            <i class="fas fa-magic"></i> Summarize Note
+        </button>
   <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
 </div>
     `;
@@ -1204,6 +1213,150 @@ function openNote(index) {
   }
 }
 
+const GEMINI_API_KEY = "AIzaSyD2BMm3Fx16VYcF_tCYcDsEJnuSmW-wG6I"; 
+
+// Base URL for Gemini API (gemini-2.0-flash model)
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+
+
+
+// --- Utility function to make Gemini API calls ---
+async function callGeminiAPI(prompt, featureName = "AI Feature") {
+    try {
+        const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+        const payload = { contents: chatHistory };
+
+        showMessageBox(`Applying ${featureName}...`, 0); // Show loading indefinitely (duration 0)
+
+        const response = await fetch(GEMINI_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        
+        // Hide loading message after response
+        showMessageBox("", 1); // Hide immediately by sending an empty message and small duration
+
+        if (response.ok && result.candidates && result.candidates.length > 0 &&
+            result.candidates[0].content && result.candidates[0].content.parts &&
+            result.candidates[0].content.parts.length > 0) {
+            const text = result.candidates[0].content.parts[0].text;
+            showMessageBox(`${featureName} successful!`, 2000);
+            return text;
+        } else {
+            // Check for specific error messages from the API
+            const errorDetail = result.error ? result.error.message : 'Unknown error or no content.';
+            showMessageBox(`Error with ${featureName}: ${errorDetail}`, 4000);
+            console.error(`Gemini API Error for ${featureName}:`, result);
+            return null;
+        }
+    } catch (error) {
+        showMessageBox(`Network error for ${featureName}: ${error.message}`, 4000);
+        console.error(`Fetch error for ${featureName}:`, error);
+        return null;
+    }
+}
+
+// --- Specific AI Feature Functions ---
+
+async function summarizeNoteWithAI(textToSummarize) {
+    const prompt = `Summarize the following text concisely:\n\n${textToSummarize}`;
+    return await callGeminiAPI(prompt, "Note Summary");
+}
+
+async function getSmartSuggestionsWithAI(textForSuggestions) {
+    const prompt = `Based on the following text, provide 3-5 smart suggestions for improvements, related topics, or action items. Format as a bulleted list:\n\n${textForSuggestions}`;
+    return await callGeminiAPI(prompt, "Smart Suggestions");
+}
+
+async function checkSpellAndGrammarWithAI(textToCheck) {
+    const prompt = `Correct any spelling and grammar errors in the following text. Only return the corrected text, nothing else:\n\n${textToCheck}`;
+    return await callGeminiAPI(prompt, "Spell Check");
+}
+
+// --- Event Listeners for AI Feature Toggles ---
+document.addEventListener('DOMContentLoaded', () => {
+    const noteContentTextarea = document.getElementById('noteContent');
+
+    // Sample text to use if noteContent is empty
+    const defaultSampleText = `Artificial intelligence (AI) is intelligence demonstrated by machines, unlike the natural intelligence displayed by humans and animals. Leading AI textbooks define the field as the study of "intelligent agents": any device that perceives its environment and takes actions that maximize its chance of successfully achieving their goals. Colloquially, the term "artificial intelligence" is often used to describe machines that mimic "cognitive" functions that humans associate with the human mind, such as "learning" and "problem-solving".`;
+
+    // Removed aiSummaryToggle listener as per request - summarization is now button-driven
+    // const aiSummaryToggle = document.getElementById('ai-summary-toggle');
+    // aiSummaryToggle.addEventListener('change', async (event) => { /* ... existing summary toggle logic ... */ });
+
+    const aiSuggestionsToggle = document.getElementById('ai-suggestions-toggle');
+    const aiSpellcheckToggle = document.getElementById('ai-spellcheck-toggle');
+
+    aiSuggestionsToggle.addEventListener('change', async (event) => {
+        const isChecked = event.target.checked;
+        const textToProcess = noteContentTextarea.value.trim() || defaultSampleText;
+
+        if (isChecked) {
+            console.log("Getting smart suggestions...");
+            const suggestions = await getSmartSuggestionsWithAI(textToProcess);
+            if (suggestions) {
+                showMessageBox(`Suggestions: ${suggestions}`, 7000);
+            } else {
+                event.target.checked = false; // Turn toggle off if failed
+            }
+        } else {
+            showMessageBox("Smart Suggestions Disabled.", 2000);
+        }
+    });
+
+    aiSpellcheckToggle.addEventListener('change', async (event) => {
+        const isChecked = event.target.checked;
+        const textToProcess = noteContentTextarea.value.trim() || defaultSampleText;
+
+        if (isChecked) {
+            console.log("Checking spelling and grammar...");
+            const correctedText = await checkSpellAndGrammarWithAI(textToProcess);
+            if (correctedText) {
+                if (noteContentTextarea.value.trim() !== '') {
+                    noteContentTextarea.value = correctedText; 
+                    showMessageBox("Text spell-checked. Check 'Manage Your Note' section.", 3000);
+                } else {
+                    showMessageBox(`Sample Text Corrected: ${correctedText}`, 5000);
+                }
+            } else {
+                event.target.checked = false; // Turn toggle off if failed
+            }
+        } else {
+            showMessageBox("Spell Check Disabled.", 2000);
+        }
+    });
+    setTimeout(() => {
+        displayNotes(); 
+    }, 100); 
+
+});
+
+async function handleSummarizeButtonClick(buttonElement) {
+    const noteContentTextarea = document.getElementById('noteContent');
+    const noteTitle = buttonElement.getAttribute('data-note-title') || "Sample Note"; // Get title from data attribute
+    const contentToSummarize = buttonElement.getAttribute('data-note-content'); 
+            
+    if (contentToSummarize) {
+        showMessageBox("Summarizing this note...", 0); // Show loading
+        const summarizedText = await summarizeNoteWithAI(contentToSummarize); // Pass the note's content
+        showMessageBox("AI is doing it's job!", 1); // Hide loading
+        
+        if (summarizedText) {
+            // Display summarized content in showMessageBox
+            alert(`Summary of "${noteTitle}": ${summarizedText}`, 10000); // Show for longer duration
+        } else {
+            showMessageBox("Failed to summarize note.", 3000);
+        }
+    } else {
+        showMessageBox("No content found to summarize for this note.", 3000);
+    }
+}
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
   // Hide all sections initially
@@ -1212,7 +1365,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Show only the notes section on page load
-  showSection("combinedContainer"); // Show the notes section
+  showSection("homePage"); // Show the notes section
 
   // Load notes and lists from local storage
   displayNotes();
