@@ -1180,6 +1180,24 @@ function displayNotes() {
     const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
     const formattedDate = formatDate(noteDate); // Format the date for display
     const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
+     const noteAIbutton = !note.password || note.password === "" 
+  ? `
+    <button class="summarize-btn" 
+            data-note-content="${note.content}" 
+            data-note-title="${note.title}"
+            onclick="handleSummarizeButtonClick(this); event.stopPropagation();">
+        <i class="fas fa-magic"></i> Summarize Note
+    </button>
+  ` 
+  : "";
+  const noteAIbtn = note.password || note.password !== "" 
+  ? `
+    <button class="summarize-btn" 
+    onclick="alert('Locked notes cannot be summarized due to security reasons'); event.stopPropagation();">
+        <i class="fas fa-magic"></i> Summarize Note
+    </button>
+  ` 
+  : "";
     noteDiv.innerHTML = `
    
  <div class="note" onclick="openNote(${index})">
@@ -1189,12 +1207,8 @@ function displayNotes() {
 
   </div>
   <span class="note-date">${formattedDate}</span>
- <button class="summarize-btn" 
-                data-note-content="${note.content}" 
-                data-note-title="${note.title}"
-                onclick="handleSummarizeButtonClick(this); event.stopPropagation();">
-            <i class="fas fa-magic"></i> Summarize Note
-        </button>
+ ${noteAIbutton}
+  ${noteAIbtn}
   <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
 </div>
     `;
