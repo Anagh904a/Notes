@@ -12,1577 +12,28 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter&amp;display=swap" rel="stylesheet"/>
     <title>Sticky Notes By Anagh</title>
-    <style>
-      .button:disabled {
-        background-color: #888;
-        /* Greyed out button */
-        cursor: not-allowed;
-      }
-
-      .urgent {
-        color: #ff0000;
-        /* Red color for urgent messages */
-        font-weight: bold;
-      }
-
-      body {
-        font-family: 'Inter', sans-serif;
-
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(to bottom, #f3f3f3, #cccccc);
-
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-      }
-
-      h1 {
-        background: linear-gradient(90deg, #000000, #3f3f3f);
-        background-clip: text;
-        color: transparent;
-
-        text-align: center;
-        padding: 10px;
-        margin: 0;
-      }
-
-      h2 {
-        text-align: center;
-        background: linear-gradient(90deg, #000000, #3f3f3f);
-        background-clip: text;
-        color: transparent;
-      }
-
-      * {
-        -webkit-tap-highlight-color: transparent;
-        outline: none;
-      }
-
-      /* Fade-in animation for modals */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* Fade-out animation for modals */
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        to {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-      }
-
-      /* Apply animation to modal content */
-      .modal-content {
-        animation: fadeIn 0.3s ease forwards;
-        color: white;
-      }
-
-     
-
-      #deletePasswordModal {
-        display: none;
-      }
-
-      /* Hide modal with fade-out animation */
-
-      .delete-button {
-        position: relative;
-        margin-left: 94%;
-      }
-
-      textarea {
-        width: 95%;
-        height: calc(100% - 40%);
-        margin: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-      }
-
-      input[type="password"] {
-        padding: 5px;
-        margin: 10px 0;
-        width: 80%;
-      }
-
-      .container {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-       
-      }
-
-     
-
-     
-
-      #noNotesMessage {
-       margin-left: 20px;
-        border-left: #000000 4px solid;
-      }
-
-           #noListsMessage {
-        margin-left: 20px;
-        border-left: #000000 4px solid;
-      }
-
-
-      #addListSection {
-        /* White background */
-        padding: 20px;
-        /* Padding around the content */
-        border-radius: 8px;
-        /* Rounded corners */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        /* Shadow for depth */
-
-        /* Space above the section */
-      }
-
-      /* General modal styling */
-      .modal {
-        display: flex;
-        /* Use flexbox for centering */
-        position: fixed;
-        /* Stay in place */
-        color: white;
-        left: 0;
-        top: 0;
-        width: 100%;
-        /* Full width */
-        height: 100%;
-        /* Full height */
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-      }
-
-      .modal-content {
-        color: rgb(0, 0, 0);
-        padding: 20px;
-        border-radius: 15px;
-        width: 350px;
-        background-color: white;
-      }
-
-      /* Hidden class to hide elements */
-      .modal.hidden {
-        display: none;
-        /* Hide elements with this class */
-      }
-
-      /* Modal Button Styles */
-.modal-button {
-    background: #ffffff; /* Pure white background */
-    color: #000000; /* Black icon color */
-    border: 2px solid #000000; /* Black border */
-    border-radius: 50%; /* Fully rounded buttons */
-    width: 56px; /* Increased width */
-    height: 56px; /* Increased height */
   
-    align-items: center; /* Center icon vertically */
-    justify-content: center; /* Center icon horizontally */
-    font-size: 24px; /* Icon size */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
-}
-/* Modal Button Hover Effect */
-.modal-button:hover {
-    background: #f0f0f0; /* Light gray background on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-      .nav-button {
-        background: none;
-        border: none;
-        color: rgb(58, 57, 57);
-        font-size: 16px;
-        cursor: pointer;
-        margin-right: 20px;
-      }
-
-      .nav-button:hover {
-        background: rgb(167, 167, 167);
-      }
-
-      /* Styling for password input fields */
-      input[type="password"] {
-        width: 100%;
-        /* Full width */
-        padding: 10px;
-        /* Padding inside the input */
-        margin: 10px 0;
-        /* Margin above and below */
-        border: 1px solid #ccc;
-        /* Light gray border */
-        border-radius: 4px;
-        /* Rounded corners */
-      }
-
-      /* Button styling */
-      button {
-        padding: 10px 15px;
-        /* Padding for buttons */
-        margin: 5px 0;
-        /* Margin around buttons */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        border: none;
-        /* No border */
-        background: black;
-        /* Teal */
-        color: white;
-        /* Orange background */
-
-        /* White text */
-        border-radius: 4px;
-        /* Rounded corners */
-        
-        /* Smooth transition for hover effect */
-      }
-
-      button:hover {
-        background: linear-gradient(90deg, #282929, #3f3f3f);
-        /* Darker Blue on hover */
-        
-      }
-
-      .input-field {
-        width: 95%;
-        /* Full width */
-        padding: 12px;
-        /* Padding inside the input */
-        margin: 10px 0;
-        /* Margin above and below */
-        border: 1px solid #ccc;
-        /* Light gray border */
-        border-radius: 4px;
-        /* Rounded corners */
-        transition: border-color 0.3s, box-shadow 0.3s;
-        /* Smooth transition for focus effects */
-      }
-
-      .input-field:focus {
-        border-color: #ffa500;
-        /* Change border color on focus */
-        box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
-        /* Add a subtle shadow effect */
-        outline: none;
-        /* Remove default outline */
-      }
-
-    
-
-      .checklist-container div {
-        display: flex;
-        /* Flexbox for checklist items */
-        align-items: center;
-        /* Center items vertically */
-        margin: 5px 0;
-        /* Space between checklist items */
-      }
-
-      .checklist-container input[type="checkbox"] {
-        margin-right: 10px;
-        /* Space between checkbox and label */
-      }
-
-      .close-button {
-        background: #ff4c4c;
-        /* Red background for close button */
-      }
-
-      .close-button:hover {
-        background: #ff1c1c;
-        /* Darker red on hover */
-      }
-
-      input {
-       
-        /* Space below each input */
-        padding: 12px;
-        /* Increased padding for better touch targets */
-        font-size: 16px;
-        /* Consistent font size */
-        border: 1px solid #ddd;
-        /* Light gray border */
-        border-radius: 5px;
-        /* Rounded corners */
-        transition: border-color 0.3s, box-shadow 0.3s;
-        /* Smooth transition for focus effects */
-      }
-
-      
-
-      input[type="password"] {
-        font-family: Arial, sans-serif;
-        /* Ensure consistent font for password input */
-      }
-
-      .checklist-item {
-        background-color: transparent;
-        /* Orange background */
-        padding: 10px;
-        /* Padding inside the item */
-        border: 1px solid black;
-        border-radius: 5px;
-        /* Rounded corners */
-        margin: 5px 0;
-        /* Space between items */
-        display: flex;
-        /* Flexbox for alignment */
-        align-items: center;
-        /* Center items vertically */
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        /* Subtle shadow for depth */
-      }
-
-      .checklist-item input[type="checkbox"] {
-        margin-right: 10px;
-        /* Space between checkbox and label */
-      }
-
-      .checklist-item button {
-        margin-left: auto;
-        /* Push the button to the right */
-        background: red;
-        /* Darker orange for the button */
-        color: white;
-        /* White text */
-        border: none;
-        /* No border */
-        padding: 5px 10px;
-        /* Padding for the button */
-        border-radius: 4px;
-        /* Rounded corners for the button */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        transition: background-color 0.3s;
-        /* Smooth transition for hover effect */
-      }
-
-      .checklist-item button:hover {
-        background-color: #ff6347;
-        /* Lighter orange on hover */
-      }
-
-      .scan-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 20px 0;
-      }
-
-      .scan-circle {
-        width: 100px;
-        height: 100px;
-        border: 10px solid #4caf50;
-        /* Green color */
-        border-radius: 50%;
-        border-top: 10px solid transparent;
-        /* Create a spinning effect */
-        animation: spin 1s linear infinite;
-        /* Spin animation */
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      .container {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-      }
-
-      #messageBox {
-        display: none;
-        /* Hiddon by default */
-        background-color: #808080;
-        /* Grey color */
-        color: white;
-        padding: 15px;
-        border-radius: 20px;
-        position: fixed;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: opacity 1s ease;
-        /* Fade effect */
-        opacity: 1;
-        /* Fully visible */
-      }
-
-      /* Base Container */
-
-      /* Header */
-      .calculator-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .calculator-header h3 {
-        font-size: 20px;
-        color: #333;
-        margin: 0;
-      }
-
-      .btn-close {
-        background: none;
-        border: none;
-        font-size: 20px;
-        cursor: pointer;
-        color: #888;
-        transition: color 0.3s;
-      }
-
-      .btn-close:hover {
-        color: #ff4d4d;
-      }
-
-      /* Display */
-      .display {
-        width: 95%;
-        height: 60px;
-        font-size: 28px;
-        text-align: right;
-        padding: 10px 15px;
-        margin-bottom: 20px;
-        border: none;
-        border-radius: 15px;
-
-        color: #333;
-      }
-
-      /* Grid layout */
-      .calculator-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 10px;
-      }
-
-      /* Buttons base */
-      .btn {
-        height: 60px;
-        font-size: 22px;
-        border: none;
-        border-radius: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.3s, transform 0.2s;
-      }
-
-      /* Number Buttons */
-      .btn-number {
-        background: #e0e0e0;
-        color: #333;
-      }
-
-      .btn-number:hover {
-        background: #d5d5d5;
-        transform: scale(1.05);
-      }
-
-      /* Operator Buttons */
-      .btn-operator {
-        background: #ffd966;
-        color: #333;
-      }
-
-      .success-msg {
-  color: green;
-  margin: 10px 0;
-  font-weight: bold;
-  padding: 6px;
-}
-
-.alert-msg {
-  color: #c0392b;
-  background: #ffe9e9;
-  border-left: 5px solid red;
-  padding: 6px;
-  margin-bottom: 4px;
-  font-family: "Arial", sans-serif;
-  border-radius: 4px;
-}
-
-
-
-
-
-      .btn-operator:hover {
-        background: #ffcd3c;
-        transform: scale(1.05);
-      }
-
-      /* Clear Button */
-      .btn-clear {
-        background: #f28b82;
-        color: white;
-      }
-
-      .btn-clear:hover {
-        background: #e57373;
-        transform: scale(1.05);
-      }
-
-      /* Equal Button */
-      .btn-equal {
-        background: #4caf50;
-        color: white;
-        grid-row: span 2;
-      }
-
-      .btn-equal:hover {
-        background: #45a049;
-        transform: scale(1.05);
-      }
-
-      /* Zero Button (Big Zero) */
-      .btn-zero {
-        background: #e0e0e0;
-        grid-column: span 2;
-        font-size: 22px;
-        color: #333;
-      }
-
-      .btn-zero:hover {
-        background: #d5d5d5;
-        transform: scale(1.05);
-      }
-
-      .list-date {
-        display: block;
-        /* Ensure the date is on a new line */
-        font-size: 14px;
-        color: #888;
-        margin-top: 5px;
-        text-align: left;
-        /* Align text to the left */
-      }
-
-      /* Style for Undo and Redo Buttons */
-      #undoButton,
-      #redoButton {
-          transition: all 0.3s ease;
-        /* Smooth transition for hover effects */
-      }
-
-      /* Hover effect for undo and redo buttons */
-      #undoButton:hover,
-      #redoButton:hover {
-       
-        /* Light background on hover */
-        color: #ffffff;
-       
-      }
-
-      /* Disabled state (gray color) for undo and redo buttons */
-      #undoButton:disabled,
-      #redoButton:disabled {
-        color: #757575;
-       cursor: not-allowed;
-        /* Shows not-allowed cursor */
-      }
-
-      #addNoteSection {
-        /* White background */
-        padding: 20px;
-        /* Padding around the content */
-        border-radius: 8px;
-        /* Rounded corners */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        /* Shadow for depth */
-
-        /* Space above the section */
-      }
-
-      #undoButton i,
-      #redoButton i {
-        margin-right: 5px;
-      }
-
-      .scan-status-text {
-  font-size: 14px;
-  margin-top: 10px;
-  text-align: center;
-  color: #4CAF50;
-  font-weight: bold;
-}
-
-.progress-bar-container {
-  width: 80%;
-  height: 10px;
-  background-color: #ddd;
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 10px auto;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #4CAF50, #2E7D32);
-  transition: width 0.2s ease;
-}
-
-
-      .feature-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-      }
-
-      .tab-btn {
-  padding: 8px 12px;
-  border: none;
-  background-color: lightgray;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.active-tab {
-  background-color: darkgray;
-  font-weight: bold;
-}
-
-.tab-content {
-  display: block;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-
-      .feature-item {
-        text-align: center;
-        flex: 1 1 200px;
-        /* Flex-grow, flex-shrink, flex-basis */
-        min-width: 150px;
-        /* Minimum width for smaller screens */
-      }
-
-      .feature-button {
-        background: transparent;
-        /* Blue border */
-        border-radius: 5px;
-        padding: 15px;
-        width: 120px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: rgb(0, 0, 0);
-        /* Text color */
-      }
-
-      .feature-button i {
-        font-size: 24px;
-        color: #007bff;
-        /* Blue icon color */
-      }
-
-      .feature-button:hover {
-        background: rgb(143, 143, 143);
-        /* Blue background on hover */
-      }
-
-      .feature-description {
-        margin-top: 5px;
-        color: #777;
-        /* Description text color */
-        font-size: 14px;
-      }
-
-      i {
-        margin-right: 8px;
-        /* Space between icon and text */
-      }
-
-      .scan-circle {
-  width: 80px;
-  height: 80px;
-  border: 8px solid #ccc;
-  border-top: 8px solid #4CAF50;
-  border-radius: 50%;
-  margin: 10px auto;
-  transition: border-color 0.5s ease;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.counters p {
-  font-weight: bold;
-  text-align: center;
-  margin: 5px 0;
-}
-
-
-      /* General styles for the container */
-    /* Container */
-.calendar-container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Header */
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.nav-button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #555;
-  transition: color 0.3s;
-}
-
-.nav-button:hover {
-  color: #000;
-}
-
-.month-year {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-}
-
-/* Weekdays */
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: bold;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-/* Days */
-.calendar-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  gap: 10px;
-}
-
-.calendar-days div {
-  padding: 10px 0;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  color: #333;
-  transition: background-color 0.3s;
-}
-
-.calendar-days div:hover {
-  background-color: #e0e0e0;
-}
-
-.today {
-  background-color: #007aff;
-  color: #fff;
-}
-
-
-
-      #addItemButton {
-        color: rgb(0, 0, 0);
-        /* White text */
-        border: none;
-        /* No border */
-        border-radius: 25px;
-        /* Rounded corners */
-        padding: 10px 20px;
-        /* Padding for the button */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        transition: background-color 0.3s;
-        /* Smooth transition */
-        height: 40px;
-        /* Set height to match the input field */
-        display: flex;
-        /* Flexbox for centering */
-        align-items: center;
-        /* Center vertically */
-        justify-content: center;
-        /* Center horizontally */
-      }
-
-      #checklistContainer {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      #checklistContainer li {
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
-      }
-
-      #checklistContainer li:last-child {
-        border-bottom: none;
-      }
-
-      .modal-content h2 {
-        margin: 0 0 20px;
-        color: #333;
-      }
-
-      .modal-content input {
-        width: 95%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
-
- 
-
-      #changePasswordButton {
-        color: #ffffff;
-      }
-
-      .settings-button {
-        background: transparent;
-        /* Transparent background */
-        border: none;
-        /* No border */
-        color: black;
-        font-size: 24px;
-        /* Size of the icon */
-        cursor: pointer;
-        /* Pointer cursor on hover */
-        position: j;
-        right: 20px;
-        /* Distance from the right */
-        top: 50%;
-        /* Center vertically */
-        transform: translateY(-50%);
-        /* Adjust for vertical centering */
-        transition: color 0.3s ease, background-color 0.3s ease;
-        /* Smooth transition for hover effect */
-      }
-
-      .settings-button:hover {
-        color: #ff6f61;
-        /* Change color on hover */
-        background-color: rgba(255, 255, 255, 0.2);
-        /* Light background on hover with transparency */
-        border-radius: 5px;
-        /* Optional: rounded corners for the hover effect */
-      }
-
-
- .top-bar {
-            display: flex;
-            align-items: center;
-            background-color: #f3f4f6; /* bg-gray-100 */
-            border-radius: 9999px; /* rounded-full */
-            padding: 0.5rem; /* p-2 */
-            margin-bottom: 1rem; /* mb-4 */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
-        }
-
-        .top-bar input {
-            flex-grow: 1; /* flex-grow */
-            padding: 0.5rem; /* p-2 */
-            padding-left: 0.75rem; /* pl-3 */
-            background-color: transparent;
-            outline: none;
-            color: #4b5563; /* text-gray-700 */
-        }
-     
-
-.top-bar button {
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #444;
-  cursor: pointer;
-  margin-right: 10px;
-  transition: color 0.2s ease;
-}
-
-.top-bar button:hover {
-  color: #000;
-}
-
-.top-bar input {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 17px;
-  padding: 8px 10px;
-  background-color: transparent;
-  color: #222;
-}
-
-.top-bar input::placeholder {
-  color: #aaa;
-  justify-content: center;
-  align-items: center;
-}
-
-
-      .note {
-  position: relative;
-  border-left: 4px solid #000000; /* Use theme color instead of black */
-  border-radius: 10px;
-  padding: 16px;
-  margin: 16px 8px;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.note:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-
-.note h4 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-}
-
-.note-date {
-  display: block;
-  font-size: 15px;
-  color: #777;
-  margin-top: 4px;
-  margin-bottom: 10px;
-}
-
-.delete-btn {
-  background: #ff3b3b;
-  color: #fff;
-  border: none;
-  
-  font-size: 14px;
-  
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.delete-btn:hover {
-  background: #d92121;
-}
-
-.note .icon {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  font-size: 18px;
-  color: #4a90e2;
-}
-
-.note .pin-icon {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 18px;
-  color: #f39c12;
-}
-
-.note-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.lock-icon {
-  font-size: 20px;
-  color: #555;
-  margin-left: 10px;
-}
-
-.menu {
-  font-size: 20px;
-  color: #555;
-  background-color: transparent;
-  border: none;
-
-  margin-left: 10px;
-}
-
-.menu:hover {
-  background-color: transparent;
-}
-
-
-      .backup-import {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        /* Space between buttons and input */
-      }
-
-      .action-button {
-        background-color: #007bff;
-        /* Blue background for action buttons */
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      #settingsSection.container {
-  padding: 20px;
-  background: linear-gradient(to bottom right, #f9f9f9, #ffffff);
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  margin: 20px;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Settings Tabs Container */
-#settingsTabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-/* Tab Button Style */
-#settingsTabs button {
-  padding: 10px 16px;
-  background: #eaeaea;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-#settingsTabs button:hover {
-  background: #dcdcdc;
-  color: #000;
-}
-
-#settingsTabs button.active {
-  background-color: #8B5CF6;
-  color: white;
-}
-
-      .action-button:hover {
-        background-color: #0056b3;
-        /* Darker blue on hover */
-      }
-
-      .setting-category {
-  margin-top: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 16px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-}
-
-.setting-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-  color: #333;
-}
-
-.setting-header:hover {
-  color: #000;
-}
-
-.toggle-icon {
-  font-size: 18px;
-  color: #4a90e2;
-  transition: transform 0.3s ease;
-}
-
-.setting-category.open .toggle-icon {
-  transform: rotate(90deg);
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  margin-top: 12px;
-  font-size: 14px;
-  color: #444;
-}
-
-.checkbox-label input {
-  margin-right: 10px;
-}
-
-.file-input {
-  margin-top: 12px;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  background-color: #fff;
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.file-input:focus {
-  border-color: #4a90e2;
-  outline: none;
-}
-
-.hidden {
-  display: none;
-}
-
-.setting-category div {
-  padding: 10px;
-  border: 1px dashed #ccc;
-  border-radius: 6px;
-  background-color: #fff;
-  margin-top: 8px;
-  font-size: 14px;
-  color: #555;
-  transition: background-color 0.2s ease;
-}
-
-.setting-category div:hover {
-  background-color: #f1f1f1;
-}
-
-
-      #ai {
-    animation: fadeIn 0.6s ease forwards;
-    padding: 1rem;
-    max-width: 480px;
-    margin: 1rem auto;
-    background-color: #f7f9fc;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
-    color: #333;
-  }
-
-  .ai-feature {
-    margin-bottom: 0.8rem;
-  }
-
-
-        .home-greeting-card {
-            background: linear-gradient(135deg, #2563eb 0%, #4299e1 100%); /* Blue gradient */
-            color: #ffffff;
-            padding: 2rem 1.5rem;
-            border-radius: 0.75rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 8px 20px -5px rgba(37, 99, 235, 0.3); /* Shadow reflecting gradient color */
-        }
-        .home-greeting-card h2 {
-            color: #ffffff;
-            font-size: 2.5rem; /* Larger for impact */
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-        .home-greeting-card p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            margin-bottom: 0;
-        }
-
-        .home-section-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 1rem;
-            text-align: center; /* Centered section titles */
-        }
-
-
-
-        .home-action-buttons {
-            display: flex;
-            flex-direction: column; /* Stack buttons vertically */
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .home-action-button {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease-in-out;
-        }
-        .home-action-button i {
-            font-size: 1.5rem;
-        }
-        .home-action-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .ai-note-home-btn {
-            background: linear-gradient(45deg, #38b2ac 0%, #48bb78 100%); /* Teal to Green Gradient */
-            color: #ffffff;
-            border: none;
-        }
-        .ai-note-home-btn:hover {
-            background: linear-gradient(45deg, #319795 0%, #38a169 100%);
-        }
-
-        .see-all-features-home-btn {
-            background-color: #cbd5e0; /* Gray for subtle look */
-            color: #4a5568; /* Darker text */
-            border: none;
-        }
-        .see-all-features-home-btn:hover {
-            background-color: #a0aec0;
-            color: #ffffff;
-        }
-
-  label {
-    cursor: pointer;
-    user-select: none;
-  }
-
-  input[type="checkbox"] {
-    margin-right: 0.5rem;
-    cursor: pointer;
-  }
-
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(15px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* For screen readers */
-  .visually-hidden {
-    position: absolute !important;
-    height: 1px; width: 1px;
-    overflow: hidden;
-    clip: rect(1px,1px,1px,1px);
-    white-space: nowrap;
-  }
-
-/* Bottom Navigation Bar */
-.bottom-nav {
-    background-color: #282929;
-  position: fixed; /* Fixed position */
-    bottom: 20px; /* Distance from bottom */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center adjustment */
-   border-radius: 30px;
-    padding: 10px; /* Padding */
-    display: flex; /* Flexbox for layout */
-    justify-content: space-around; /* Space between buttons */
-    width: calc(100% - 85%); /* Full width minus padding */
-    z-index: 10000;
-}
-
-/* Navigation Button Styles */
-.nav-button {
-    background-color: transparent; /* White background */
-    color: #ffffff; /* Black icon color */
-    display: flex; /* Flexbox for centering */
-    align-items: center; /* Center icon vertically */
-    justify-content: center; /* Center icon horizontally */
-    font-size: 20px; /* Icon size */
-    cursor: pointer; /* Pointer cursor on hover */
-    
-}
-
-/* Navigation Button Hover Effect */
-.nav-button:hover {
-    color: #868686; /* Light gray background on hover */
-   background-color: #282929;
-
-}
-
-@media (max-width: 768px) {
-    .bottom-nav {
-        bottom: 10px; /* Adjust distance from bottom */
-       width: calc(100% - 70%); /* Full width minus padding */
-        padding: 8px; /* Adjust padding */
-    }
-    .nav-button {
-        font-size: 18px; /* Slightly smaller icon size */
-    }
-}
-
-@media (max-width: 632px) {
-  .bottom-nav {
-    bottom: 5px; /* Adjust distance from bottom */
-     width: calc(100% - 60%); /* Full width minus padding */
-  }
-}
-@media (max-width: 480px) {
-    .bottom-nav {
-        bottom: 5px; /* Further adjust distance from bottom */
-       width: calc(100% - 50%); /* Full width minus padding */
-       
-        padding: 5px; /* Less padding for mobile */
-    }
-    .nav-button {
-        font-size: 16px; /* Even smaller icon size */
-    }
-}
-
-@media (max-width: 368px) {
-  .bottom-nav {
-    bottom: 5px; /* Adjust distance from bottom */
-    width: calc(100% - 40%); /* Full width minus padding */
-
-  }
-
-}
-
-@media (max-width: 320px) {
-  .bottom-nav {
-    bottom: 5px; /* Adjust distance from bottom */
-    width: calc(100% - 30%); /* Full width minus padding */
-    }
-    }
-
-    @media(max-width: 280px) {
-      .bottom-nav {
-        bottom: 5px; /* Adjust distance from bottom */
-        width: calc(100% - 20%); /* Full width minus padding */
-        }
-      }
-
-#combinedContainer {
-    padding: 20px;
-    font-family: 'Poppins', sans-serif;
-    background: #fafafa;
-  }
-
-  #combinedContainer h2 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: #333;
-    text-align: center;
-  }
-
-  #notesContainer,
-  #listsContainerContent {
-    margin-bottom: 12px;
-  }
-
-  .sch {
-    background: transparent;
-    color: #000;
-    font-size: 16px;
-  }
-
-  .sch:hover {
-    background: transparent;
-    color : #383838;
-  }
-
-.sort-container {
-  padding: 0 16px;
-  margin-top: 10px;
-  
-   position: relative;
-   border-radius: 30px;
-    padding: 10px; /* Padding */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-
-}
-
-.sort-container select {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  width: 100%;
-   display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-}
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .2s;
-            border-radius: 24px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .2s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #4CAF50;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        .toggle-label {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-        }
-
-.summarize-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: auto; /* Adjust width based on content */
-    background-color: #63b3ed; /* Lighter blue */
-    color: #ffffff;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    gap: 0.5rem; /* Space between icon and text */
-    margin-top: 0.5rem;
-}
-.summarize-btn:hover {
-    background-color: #4299e1; /* Darker blue on hover */
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.summarize-btn i {
-    font-size: 1rem; /* Icon size */
-}
-
-
-    </style>
+    <link rel="stylesheet" href="style.css" />
    
   </head>
 
 
   <body>
 <!-- Combined Notes and Lists Section -->
-<!-- NEW: Home Page Section -->
-    <div id="homePage" class="container">
-        <i class="fas fa-arrow-left back-icon hidden" onclick="showSection('combinedContainer')"></i>
-        
-        <div class="home-greeting-card">
-            <h2>Hi there!</h2>
-            <p>Your intelligent note-taking companion.</p>
-        </div>
 
-        
-        <div class="home-action-buttons">
-            <button class="home-action-button ai-note-home-btn" onclick="showSection('combinedContainer'); document.getElementById('noteTitle').value='AI Generated Note'; document.getElementById('noteContent').value='';">
-                <i class="fas fa-magic"></i> Summarize Notes
-            </button>
-            <button class="home-action-button see-all-features-home-btn" onclick="showSection('moreSection')">
-                <i class="fas fa-th-large"></i> See All Features
-            </button>
-        </div>
-
-    </div>    
 <div id="combinedContainer" class="container hidden">
       
 
       <div class="top-bar">
      
-        <i style=" padding: 10px 15px;
-        /* Padding for buttons */
-        margin: 5px 0;;" class="fas fa-search"></i>
+        <i id="bar-btn" class="fas fa-bars" onclick="toggleSidebar()"></i>
      
       <input
       type="text"
       id="searchInput"
       placeholder="Search your data"
       oninput="searchNotes()"
+      style="margin-left: 10px;"
      >
   
       </div>
@@ -1591,7 +42,7 @@
 <div class="sort-container">
   <select id="sortSelect" onchange="applySortFilter()">
     <option value="all">All</option>
-    <option value="notes">Notes</option>
+    <option value="note">Notes</option>
     <option value="lists">Lists</option>
     
   </select>
@@ -1606,18 +57,9 @@
       <div id="noListsMessage" class="hidden">No lists yet.. Add</div>
       <div id="noNotesMessage" class="hidden">This space is lonely. Add a note!</div>
  
-      <nav class="bottom-nav">
-      <button class="nav-button" onclick="showSection('moreSection')">
-         <i class="fas fa-bars"></i>
+    <button class="fab" onclick="showAddOptions()">
+        <span class="fab-icon">+</span>
     </button>
-    <button id="add-button" class="nav-button" onclick="showAddOptions()">
-        <i class="fas fa-plus"></i>
-    </button>
-  
-     <button class="nav-button" onclick="showSection('ai')">
-      <i class="fas fa-magic"></i>
-    </button>
-</nav>
 
     </div>
 
@@ -1659,95 +101,97 @@
     </div>
     
     <div id="messageBox">This is an Android-like message box!</div>
-
-    <!-- Add Note Form -->
-    <!-- Add Note Form -->
-    <div id="addNoteSection" class="container hidden">
-      <button class="modal-button" onclick="cancelNote()">
+  <div id="addItemSection" class="container hidden">
+    <button class="modal-button" onclick="showSection('combinedContainer')">
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
-     
-
-
-
-      <h2 id="manageNoteTitle">Manage Your Note</h2>
-      <input
-        type="text"
-        id="noteTitle"
-        placeholder="Note title..."
-      />
-      <button onclick="saveNote()" style="background: none; color:#000; font-size: 16px;"><i class="fas fa-save"></i> Save</button>
-      <textarea id="noteContent" placeholder="Note.....">
-      </textarea>
-     
-
-   
-     
-      <nav class="bottom-nav" style="display: flex;">
-       <button id="changePasswordButton" onclick="showNotePassword()" class="nav-button">       
-        <i class="fas fa-lock"></i> 
-      </button>
-        <button class="nav-button" id="undoButton" onclick="undo()">
-        <i class="fas fa-undo"></i>
-      </button>
-
-      <button class="nav-button" id="redoButton" onclick="redo()">
-        <i class="fas fa-redo"></i>
-      </button>
-  
+    <div class="header">
+      <h2>Create a new item</h2>
+      <p>Add a new note or checklist to your collection.</p>
+       
+    </div>
     
-</nav>
-     
-      <div id="notePasswordModal" class="modal hidden">
+
+    <form class="form">
+      <div class="tab-container">
+        <button type="button" id="note-tab" onclick="switchTab('note')" class="tab-btn data-active">
+          <i class="fas fa-sticky-note"></i> Note
+        </button>
+        <button type="button" id="checklist-tab" onclick="switchTab('checklist')" class="tab-btn">
+          <i class="fas fa-check"></i> Checklist
+        </button>
+      </div>
+
+      <!-- Note Panel -->
+      <div id="addNoteSection" class="section">
+        <div class="form-group">
+          <label for="noteTitle">Title</label>
+          <input type="text" id="noteTitle" placeholder="Enter a title" />
+        </div>
+        <div class="form-group">
+          <label for="noteContent">Content</label>
+          <textarea id="noteContent" placeholder="Your note content here..."></textarea>
+        </div>
+        <div class="footer-bar">
+     <button type="button" id="changePasswordButton" onclick="showNotePassword()">
+      <i class="fas fa-key"></i>
+      <span>Password</span>
+    </button>
+    <button type="button" onclick="saveNote()">
+      <i class="fas fa-save"></i>
+      <span>Save</span>
+    </button>
+   <button type="button" id="undoButton" onclick="undo()">
+        <i class="fas fa-undo"></i>
+        <span>Undo</span>
+      </button>
+
+      <button type="button" id="redoButton" onclick="redo()">
+        <i class="fas fa-redo"></i>
+        <span>Redo</span>
+      </button>
+  </div>
+  <div id="notePasswordModal" class="modal hidden">
         <div class="modal-content">
             <h3>Enter Password</h3>
             <input type="password" id="notePassword" placeholder="Enter New Password.." style="display: block" />
             
-            <button onclick="closeNotePassword()">Save</button>
+            <button type="button" onclick="closeNotePassword()">Save</button>
         </div>
     </div>
+      </div>
 
+      <!-- Checklist Panel -->
+      <div id="addListSection" class="section" style="display: none;">
+        <div class="form-group">
+          <label for="checklistTitle">Title</label>
+          <input type="text" id="listTitle" placeholder="Enter checklist title" />
+        </div>
+        <div id="checklistContainer"></div>
+          <!-- Dynamic checklist items -->
+        
+        <div class="footer-bar">
+    <button type="button" onclick="showList()">
+      <i class="fas fa-key"></i>
+      <span>Password</span>
+    </button>
+    <button type="button" onclick="saveList()">
+      <i class="fas fa-save"></i>
+      <span>Save</span>
+    </button>
+    <button type="button" onclick="addItemModal()">
+      <i class="fas fa-plus"></i>
+      <span>Add</span>
+    </button>
     </div>
-
-    <!-- Add Lists Section -->
-    <div id="addListSection" class="container hidden">
-      <button class="modal-button" onclick="showSection('combinedContainer')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-<h2 id="manageListTitle" >Manage Your List</h2>
-      <input
-        type="text"
-        id="listTitle"
-        placeholder="List title..."
-       
-      />
-      <br />
-
-      <input id="newItem" type="text" placeholder="Item name..." />
-      <button onclick="addItem()" class="modal-button"> <i class="fas fa-plus"></i></button>
-      <!-- Input for new item -->
- <nav class="bottom-nav" style="display: flex;">
-  <button class="nav-button" onclick="cancelList()">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>      
-  
-        <button id="manageListPassword" onclick="showList()" class="nav-button">
-      <i class="fas fa-lock"></i>
-      </button>
- <button onclick="saveList()" class="nav-button"><i class="fas fa-save"></i></button>
-  
-    
-</nav>
-      
-      <!-- Button to add item -->
-      <br />
-
-     
-      <div id="checklistContainer"></div>
-     
-      <!-- Container for checklist items -->
-           
-             <div id="listPasswordModalr" class="modal hidden">
+<div id="addItemModal" class="modal hidden">
+  <div class="modal-content">
+       <input id="newItem" type="text" placeholder="Item name..." />
+      <button type="button" onclick="addItem()"><i class="fas fa-plus"></i>Add</button>
+ <button type="button" onclick="closeAddItemModal()"><i class="fas fa-times"></i>Close</button>
+    </div>
+</div>
+  <div id="listPasswordModalr" class="modal hidden">
   <div class="modal-content">
       <h3>Enter Password</h3>
       <input
@@ -1757,10 +201,18 @@
        style="display: block;"
       />
       
-      <button onclick="closeListPassword()">Save</button>
+      <button type="button" onclick="closeListPassword()">Save</button>
   </div>
 </div>
     </div>
+    
+  </div>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+    
 
     <!-- Add Options Modal -->
     <div id="addOptionsModal" class="modal hidden">
@@ -1805,90 +257,53 @@
 
    
 
-    <div id="moreSection" class="container hidden">
-      <h2>More Features</h2>
-      <p>
-        Explore the additional features of our app that enhance your experience
-        and productivity. Click on any feature to learn more!
-      </p>
-      <div class="feature-buttons">
-        
-        <div class="feature-item">
-           <button class="feature-button" onclick="showSection('combinedContainer')">
-          <i class="fas fa-home"></i>
-          <br>
-          Home
-        </button>
-       <p class="feature-description">
-        Access your all data in one place by home section.
-       </p>
-        </div>
-        <div class="feature-item">
-          <button class="feature-button" onclick="showSection('aiSection')">
-            <i class="fas fa-shield-alt"></i>
 
-            <br>
-            AI Scan 
-          </button>
-        </button>
-        <p class="feature-description">
-          Protect yourself from vulnerblities and other threats with our AI-powered scan feature.
-        </p>
-        </div>
-    <div class="feature-item">
-          <button
-            onclick="showSection('calculatorSection')"
-            class="feature-button"
-          >
-            <i class="fas fa-calculator"></i>
-            <br />
-            Calculator
-          </button>
-          <p class="feature-description">
-            Use our built-in calculator for quick calculations without leaving
-            the app.
-          </p>
-        </div>
-        <div class="feature-item">
-          <button id="notifyButton" class="feature-button">
-            <i class="fas fa-bell"></i>
-            <br />
-            Notifications
-          </button>
-          <p class="feature-description">
-            Stay updated with real-time notifications for important events.
-          </p>
-        </div>
-        <div class="feature-item">
-          <button
-            onclick="showSection('settingsSection')"
-            class="feature-button"
-          >
-            <i class="fas fa-cog"></i>
-            <br />
-            Settings
-          </button>
-          <p class="feature-description">
-            Customize your app experience through various settings options.
-          </p>
-        </div>
-       
-        <div class="feature-item">
-          <button
-            onclick="showSection('calendarSection')"
-            class="feature-button"
-          >
-            <i class="fa fa-calendar"></i>
-            <br />
-            Calendar
-          </button>
-          <p class="feature-description">
-            Keep track of your events and deadlines with our integrated
-            calendar.
-          </p>
-        </div>
-      </div>
-    </div>
+    <!-- Sidebar -->
+<div id="sidebar" class="sidebar" style="display: none;">
+ 
+ 
+
+  <!-- Top Buttons -->
+  <div class="sidebar-top">
+    <button class="sidebar-button" onclick="showSection('combinedContainer')">
+      <i class="fas fa-home"></i>
+      <span class="label">Home</span>
+    </button>
+    <button class="sidebar-button" onclick="showSection('aiSection')">
+      <i class="fas fa-shield-alt"></i>
+      <span class="label">AI Scan</span>
+    </button>
+    <button class="sidebar-button" onclick="showSection('calculatorSection')">
+      <i class="fas fa-calculator"></i>
+      <span class="label">Calculator</span>
+    </button>
+    <button class="sidebar-button" id="notifyButton">
+      <i class="fas fa-bell"></i>
+      <span class="label">Notifications</span>
+    </button>
+    <button class="sidebar-button" onclick="showSection('calendarSection')">
+      <i class="fa fa-calendar"></i>
+      <span class="label">Calendar</span>
+    </button>
+  </div>
+
+  <!-- Bottom Settings Button -->
+  <div class="sidebar-bottom">
+    <button class="sidebar-button" onclick="showSection('settingsSection')">
+      <i class="fas fa-cog"></i>
+      <span class="label">Settings</span>
+    </button>
+    <button class="sidebar-button" onclick="closeSidebar()">
+      <i class="fas fa-arrow-left"></i>
+      <span class="label">Close</span>
+    </button>
+    
+    
+
+   
+  </div>
+</div>
+
 
 
   
