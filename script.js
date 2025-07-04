@@ -254,7 +254,26 @@ function redo() {
   toggleButtons();
 }
 
+    function switchTab(tab) {
+      const notePanel = document.getElementById('addNoteSection');
+      const listPanel = document.getElementById('addListSection');
+      const noteTab = document.getElementById('note-tab');
+      const checklistTab = document.getElementById('checklist-tab');
 
+      if (tab === 'note') {
+        notePanel.style.display = 'block';
+        listPanel.style.display = 'none';
+        noteTab.classList.add('data-active');
+        checklistTab.classList.remove('data-active');
+      } else {
+        notePanel.style.display = 'none';
+        listPanel.style.display = 'block';
+        noteTab.classList.remove('data-active');
+        checklistTab.classList.add('data-active');
+      }
+    }
+
+    switchTab('note'); // Default to note tab on load
 
 document.getElementById('noteContent').addEventListener('keyup', function (e) {
 if (e.key === " " || e.key === "Enter") {
@@ -372,31 +391,46 @@ function applySortFilter() {
   const sortValue = document.getElementById("sortSelect").value;
 
   const notesContainer = document.getElementById("notesContainer");
-  const listsContainerContent = document.getElementById("listContainerContent");
-
-  if (sortValue === "notes") {
+  const listsContainerContent = document.getElementById("listsContainerContent");
+  
+  if (sortValue === "note") {
     // Clear lists
-    if (listsContainerContent) listsContainerContent.innerHTML = "";
+    listsContainerContent.innerHTML = "";
     displayNotes(); // Render only notes
     showSection("combinedContainer");
+    console.log("Displaying only notes");
   } else if (sortValue === "lists") {
     // Clear notes
     if (notesContainer) notesContainer.innerHTML = "";
     displayLists(); // Render only lists
     showSection("combinedContainer");
+    console.log("Displaying only lists");
   } else if (sortValue === "all") {
    displayNotes();
    displayLists();
     showSection("combinedContainer");
+    console.log("Displaying all notes and lists");
   } else if (sortValue === "date_newest" || sortValue === "date_oldest") {
     alert("Sorting by date is disabled in this mode.");
   }
 }
 
-function showSearch() {
-  const bar = document.getElementById("sch");
-  bar.toggle
-}
+// Add click effect that creates ripples
+        document.querySelector('.fab').addEventListener('click', function(e) {
+            const x = e.clientX - e.target.getBoundingClientRect().left;
+            const y = e.clientY - e.target.getBoundingClientRect().top;
+            
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
 
 
 function deleteSelectedNotes() {
@@ -1014,9 +1048,10 @@ function showMessageBox(message) {
 }
 
 function showAddNote() {
-  showSection("addNoteSection");
+  showSection("addItemSection"); // Show the add item section
   document.getElementById("noteContent").value = ""; // Clear the note content
   document.getElementById("notePassword").value = ""; // Clear the password input
+  switchTab('note'); // Switch to the note tab
 
   if (editingNoteIndex !== null) {
     // Editing an existing note
@@ -1029,15 +1064,51 @@ function showAddNote() {
   } else {
     // Creating a new note
     document.getElementById("noteTitle").value = ""; // Clear the title input
-    document.getElementById("manageNoteTitle").textContent =
-      "Add New Note"; // Set title for new note
+    
   }
   closeAddOptions(); // Close the add options modal
 }
 
+function addItemModal() {
+  const modal = document.getElementById("addItemModal");
+  modal.style.display = "flex"; // Show the modal
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+
+  // Show sidebar and animate in
+  sidebar.style.display = "flex"; // Make visible
+  sidebar.classList.remove("hide-anim"); // Remove any hide state
+  void sidebar.offsetWidth; // Force reflow to restart animation
+  sidebar.classList.add("show-anim"); // Trigger show animation
+
+  console.log("Sidebar shown");
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById("sidebar");
+
+  // Add hide animation
+  sidebar.classList.remove("show-anim");
+  sidebar.classList.add("hide-anim");
+
+  // After animation ends, hide sidebar
+  setTimeout(() => {
+    sidebar.style.display = "none";
+    console.log("Sidebar hidden");
+  }, 300); // Match with CSS transition duration
+}
+
+
+function closeAddItemModal() {
+  const modal = document.getElementById("addItemModal");
+  modal.style.display = "none"; // Hide the modal
+}
+
 // Function to cancel note and reset visibility
 function cancelNote() {
-  const section = document.getElementById("addNoteSection");
+  const section = document.getElementById("addItemSection");
   section.classList.add("hidden");
   showSection("combinedContainer");
   document.getElementById("notePasswordModal").classList.add("hidden");
@@ -1379,7 +1450,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Show only the notes section on page load
-  showSection("homePage"); // Show the notes section
+  showSection("combinedContainer"); // Show the notes section
 
   // Load notes and lists from local storage
   displayNotes();
@@ -1389,7 +1460,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function showListsSection() {
   showSection("combinedContainer"); // Show the lists container
   displayLists(); // Refresh the displayed lists
-  document.getElementById("addListSection").classList.add("hidden"); // Ensure add list section is hidden
+  document.getElementById("addItemSection").classList.add("hidden"); // Ensure add list section is hidden
 }
 
 function verifyPassword() {
@@ -1430,10 +1501,8 @@ function showNoteContent(note) {
   document.getElementById("noteTitle").value = note.title;
   document.getElementById("noteContent").value = note.content;
   document.getElementById("notePassword").value = note.password;
-  document.getElementById(
-    "manageNoteTitle"
-  ).textContent = `Manage Your ${note.title}`; // Update the title to reflect the note being managed
-  showSection("addNoteSection");
+  
+  showSection("addItemSection"); // Show the add item section
   // Set the index of the note being edited
   editingNoteIndex = notes.findIndex(
     (n) => n.title === note.title && n.content === note.content
@@ -1468,7 +1537,7 @@ function closeDeletePasswordModal() {
 }
 
 function closeAddListSection() {
-  document.getElementById("addListSection").classList.add("hidden"); // Hide the add list section
+  document.getElementById("addItemSection").classList.add("hidden"); // Hide the add list section
   showSection("combinedContainer"); // Show the lists section
 }
 
@@ -1495,22 +1564,20 @@ function showAddListSection() {
   });
 
   // Show the add list section
-  document.getElementById("addListSection").classList.remove("hidden"); // Show the add list section
-
-  // Check if we are editing an existing list
+  document.getElementById("addItemSection").classList.remove("hidden"); // Show the add list section
+document.getElementById("addListSection").style.display = "block"; // Show the add list section
+document.getElementById("addNoteSection").style.display = "none"; // Show the add list section
+switchTab('checklist'); // Switch to the add list tab
   if (editingListIndex !== null) {
     const list = lists[editingListIndex]; // Get the list being edited
     document.getElementById("listTitle").value = list.title; // Set the input value to the list title
     currentItems = list.items.slice(); // Copy items to currentItems
     displayChecklist(); // Display the checklist with items
-    document.getElementById(
-      "manageListTitle"
-    ).textContent = `Manage Your ${list.title} List`; // Update title with the actual list title
+    
   } else {
     // Reset for new list
     document.getElementById("listTitle").value = ""; // Clear the title input
-    document.getElementById("manageListTitle").textContent =
-      "Manage Your New List"; // Default title for new list
+   
     currentItems = []; // Reset current items
     displayChecklist(); // Clear the checklist display
   }
@@ -1521,7 +1588,7 @@ function showAddListSection() {
 // Function to cancel adding a list
 function cancelList() {
   // Hide the add list section and show the lists section
-  document.getElementById("addListSection").classList.add("hidden"); // Hide the add list section
+  document.getElementById("addItemSection").classList.add("hidden"); // Hide the add list section
   showSection("combinedContainer"); // Show the lists section
   displayNotes();
   displayLists();
