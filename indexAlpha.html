@@ -126,6 +126,11 @@
     </div>
     
     <div id="messageBox">This is an Android-like message box!</div>
+    <div id="restoreOverlay">
+  <div class="spinner"></div>
+  <p>Restoring backup...</p>
+</div>
+
   <div id="addItemSection" class="container hidden">
     <button class="modal-button" onclick="showSection('combinedContainer')">
         <i class="fas fa-arrow-left back-icon"></i>
@@ -302,6 +307,7 @@
       <i class="fas fa-calculator"></i>
       <span class="label">Calculator</span>
     </button>
+<div id="lastSyncedStatus" class="sync-time-text">🕒 Last Synced: Never</div>
 
   
   </div>
@@ -393,39 +399,56 @@
         <input type="file" id="importFile" onchange="prepareImport(event)" />
         <button onclick="importNotes()">Continue Import</button><br><br>
         <button class="button" disabled>Battery Optimization: On</button>
+
+        <button onclick="restoreFromIndexedDB()">Restore Data from server</button>
+
       </div>
     
      
-        <div id="ecSection" class="container hidden">
-         <button class="modal-button" onclick="showSection('settingsSection')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-          <button onclick="requestBackupFolder()">Grant Storage Access</button>
+       <div id="ecSection" class="container hidden">
+  <button class="modal-button" onclick="showSection('settingsSection')">
+    <i class="fas fa-arrow-left back-icon"></i>
+  </button>
 
-          <button onclick="clearData()">Clear All Data</button>
-          <button onclick="encryptData()">Encrypt Data</button>
-          <button onclick="decryptData()">Decrypt Data</button>
-          <button onclick="showMessageBox('Server-side features like sync are under development. Stay tuned for updates')">Allow data management on Server-side</button>
-          <div id="syncStatus" style="margin-top: 10px;">🔄 Sync is OFF</div>
-        </div>
-    
-       
+  <div class="section-card">
+    <button class="settings-button" onclick="requestBackupFolder()">📁 Grant Storage Access</button>
+    <button class="settings-button" onclick="clearData()">🗑️ Clear All Data</button>
+    <button class="settings-button" onclick="encryptData()">🔐 Encrypt Data</button>
+    <button class="settings-button" onclick="decryptData()">🔓 Decrypt Data</button>
+   <span id="syncStatus">🔄 Sync is OFF</span>
 
-        <div id="pmSection" class="container hidden">
-          <button class="modal-button" onclick="showSection('settingsSection')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-          <p>This is master password will be used to open a 
-            Locked note/list in case you forgot orignal password</p>
-           <h3>Master Password</h3>
-  <input type="password" id="setPasswordInput" placeholder="Set New Password">
-  <button onclick="setMasterPassword()">Save Password</button>
+    <div class="toggle-container">
+      <span class="toggle-label">Enable Sync</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="syncToggle" onchange="toggleSync(this)">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+</div>
 
-  <h4 style="margin-top:20px;">Change Password</h4>
-  <input type="password" id="oldPassword" placeholder="Current Password">
-  <input type="password" id="newPassword" placeholder="New Password">
-  <button onclick="changeMasterPassword()">Change Password</button>
-        </div>
+
+<div id="pmSection" class="container hidden">
+  <button class="modal-button" onclick="showSection('settingsSection')">
+    <i class="fas fa-arrow-left back-icon"></i>
+  </button>
+
+  <div class="section-card">
+    <p>This master password helps unlock notes/lists if their original password is forgotten.</p>
+
+    <h3>Set Master Password</h3>
+    <input type="password" id="setPasswordInput" placeholder="Enter new master password" class="settings-input">
+    <button class="settings-button" onclick="setMasterPassword()">💾 Save Password</button>
+
+    <h4>Change Master Password</h4>
+    <input type="password" id="oldPassword" placeholder="Current Password" class="settings-input">
+    <input type="password" id="newPassword" placeholder="New Password" class="settings-input">
+    <button class="settings-button" onclick="changeMasterPassword()">🔁 Change Password</button>
+  </div>
+</div>
+
+
+
     
      
         <div id="lockNotesSection" class="container hidden">
@@ -579,7 +602,7 @@
    
 
    
-
+ <script src="storage.js"></script>
 
     <script src="script.js"></script>
      
