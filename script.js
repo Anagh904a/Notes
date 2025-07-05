@@ -713,21 +713,7 @@ reader.readAsText(file);
 }
 
 
-document.getElementById("notifyButton").onclick = function () {
-  if (Notification.permission === "granted") {
-    new Notification("Reminder!", {
-      body: "Don't forget to check your notes!",
-    });
-  } else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        new Notification("Reminder!", {
-          body: "Don't forget to check your notes!",
-        });
-      }
-    });
-  }
-};
+
 
 function importNotes() {
   const fileInput = document.getElementById("importFile");
@@ -809,64 +795,110 @@ function formatDate(date) {
   return date.toLocaleDateString("en-US", options);
 }
 
+function highlightSearchTerm(text, searchTerm) {
+    if (!searchTerm) return text; // If no search term, return the text as is
+    const regex = new RegExp(`(${searchTerm})`, 'gi'); // Case insensitive matching
+    return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
+// Function to display filtered notes and lists with highlights
+function displayFilteredNotesAndLists(filteredNotes, filteredLists) {
+    const container = document.getElementById("notesContainer");
+    container.innerHTML = ""; // Clear existing content
+    const noNotesMessage = document.getElementById("noNotesMessage");
+
+    if (filteredNotes.length === 0 && filteredLists.length === 0) {
+        noNotesMessage.classList.remove("hidden");
+    } else {
+        noNotesMessage.classList.add("hidden");
+    }
+
+    // Display notes
+    filteredNotes.forEach((note, index) => {
+        const noteDiv = document.createElement("div");
+        const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
+        const formattedDate = formatDate(noteDate); // Format the date for display
+        const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
+        
+        const noteAIbutton = !note.password || note.password === "" 
+        ? `
+        <button class="summarize-btn" 
+                data-note-content="${note.content}" 
+                data-note-title="${note.title}"
+                onclick="handleSummarizeButtonClick(this); event.stopPropagation();">
+            <i class="fas fa-magic"></i> Summarize Note
+        </button>
+        ` 
+        : "";
+        
+        const noteAIbtn = note.password || note.password !== "" 
+        ? `
+        <button class="summarize-btn" 
+        onclick="alert('Locked notes cannot be summarized due to security reasons'); event.stopPropagation();">
+            <i class="fas fa-magic"></i> Summarize Note
+        </button>
+        ` 
+        : "";
+
+        // Highlight title with search term
+        const highlightedTitle = highlightSearchTerm(note.title, document.getElementById('searchInput').value.toLowerCase());
+
+        noteDiv.innerHTML = `
+        <div class="note" onclick="openNote(${index})">
+            <div class="note-header">
+                <h4>${highlightedTitle}</h4>
+                ${lockIndicator}
+            </div>
+            <span class="note-date">${formattedDate}</span>
+            ${noteAIbutton}
+            ${noteAIbtn}
+            <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
+        </div>
+        `;
+        container.appendChild(noteDiv);
+    });
+
+    // Display lists
+    filteredLists.forEach((list, index) => {
+        const listDiv = document.createElement("div");
+
+        // Highlight list name with search term
+        const highlightedListName = highlightSearchTerm(list.name, document.getElementById('searchInput').value.toLowerCase());
+
+        listDiv.innerHTML = `
+        <div class="note" onclick="openList(${index})">
+            <h4>${highlightedListName}</h4>
+            <span class="note-date">${list.date || "No date"}</span>
+            <button class="delete-btn" onclick="event.stopPropagation(); deleteList(${index})">Delete</button>
+        </div>
+        `;
+        container.appendChild(listDiv);
+    });
+}
+
+// Function to perform search and display highlighted notes and lists
 function searchNotes() {
-const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
-// Filter notes safely
-const filteredNotes = notes.filter(note =>
-note?.title?.toLowerCase().includes(searchTerm)
-);
+    // Filter notes safely
+    const filteredNotes = notes.filter(note =>
+        note?.title?.toLowerCase().includes(searchTerm)
+    );
 
-// Filter lists safely
-const filteredLists = lists.filter(list =>
-list?.name?.toLowerCase().includes(searchTerm)
-);
+    // Filter lists safely
+    const filteredLists = lists.filter(list =>
+        list?.name?.toLowerCase().includes(searchTerm)
+    );
 
-// Display both
-displayFilteredNotesAndLists(filteredNotes, filteredLists);
+    // Display both with highlights
+    displayFilteredNotesAndLists(filteredNotes, filteredLists);
 }
 
 
 
 
 // Function to display filtered notes and lists
-function displayFilteredNotesAndLists(filteredNotes, filteredLists) {
-const container = document.getElementById("notesContainer");
-container.innerHTML = ""; // Clear existing content
-const noNotesMessage = document.getElementById("noNotesMessage");
 
-if (filteredNotes.length === 0 && filteredLists.length === 0) {
-noNotesMessage.classList.remove("hidden");
-} else {
-noNotesMessage.classList.add("hidden");
-}
-
-// Display notes
-filteredNotes.forEach((note, index) => {
-const noteDiv = document.createElement("div");
-noteDiv.innerHTML = `
-<div class="note" onclick="openNote(${index})">
-    <h4>${note.title}</h4>
-    <span class="note-date">${note.date}</span>
-    <button class="delete-btn" onclick="event.stopPropagation(); deleteNote(${index})">Delete</button>
-</div>
-`;
-container.appendChild(noteDiv);
-});
-
-// Display lists
-filteredLists.forEach((list, index) => {
-const listDiv = document.createElement("div");
-listDiv.innerHTML = `
-<div class="note" onclick="openList(${index})">
-    <h4>${list.name}</h4>
-    <span class="note-date">${list.date || "No date"}</span>
-    <button class="delete-btn" onclick="event.stopPropagation(); deleteList(${index})">Delete</button>
-</div>
-`;
-container.appendChild(listDiv);
-});
-}
 
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
@@ -1012,6 +1044,18 @@ function showSection(sectionId) {
   currentSection = sectionId; // Update current section
 }
 
+function navigateTo(sectionId) {
+ document.querySelectorAll(".container").forEach((section) => {
+    section.classList.add("hidden"); // Hide all sections
+  });
+  document.getElementById(sectionId).classList.remove("hidden"); // Show the selected section
+
+  // Manage history stack
+
+  currentSection = sectionId; // Update current section
+ closeSidebar(); // Close sidebar if open
+}
+
 // Event listener for the Android back button functionality
 window.addEventListener("popstate", function (event) {
   if (historyStack.length > 1) {
@@ -1074,31 +1118,35 @@ function addItemModal() {
   modal.style.display = "flex"; // Show the modal
 }
 
-function toggleSidebar() {
-  const sidebar = document.getElementById("sidebar");
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
 
-  // Show sidebar and animate in
-  sidebar.style.display = "flex"; // Make visible
-  sidebar.classList.remove("hide-anim"); // Remove any hide state
-  void sidebar.offsetWidth; // Force reflow to restart animation
-  sidebar.classList.add("show-anim"); // Trigger show animation
+sidebarToggle.addEventListener("click", () => {
+  const isVisible = !sidebar.classList.contains("hide-anim");
 
-  console.log("Sidebar shown");
-}
+  if (isVisible) {
+    sidebar.classList.remove("show-anim");
+    sidebar.classList.add("hide-anim");
+    sidebarToggle.setAttribute("aria-expanded", "false");
+  } else {
+    sidebar.style.display = "flex";
+    sidebar.classList.remove("hide-anim");
+    void sidebar.offsetWidth; // Trigger reflow
+    sidebar.classList.add("show-anim");
+    sidebarToggle.setAttribute("aria-expanded", "true");
+  }
+});
 
+// Close sidebar function for the close button
 function closeSidebar() {
-  const sidebar = document.getElementById("sidebar");
-
-  // Add hide animation
   sidebar.classList.remove("show-anim");
   sidebar.classList.add("hide-anim");
-
-  // After animation ends, hide sidebar
+  sidebarToggle.setAttribute("aria-expanded", "false");
   setTimeout(() => {
     sidebar.style.display = "none";
-    console.log("Sidebar hidden");
-  }, 300); // Match with CSS transition duration
+  }, 300);
 }
+
 
 
 function closeAddItemModal() {
@@ -1352,73 +1400,12 @@ async function summarizeNoteWithAI(textToSummarize) {
     return await callGeminiAPI(prompt, "Note Summary");
 }
 
-async function getSmartSuggestionsWithAI(textForSuggestions) {
-    const prompt = `Based on the following text, provide 3-5 smart suggestions for improvements, related topics, or action items. Format as a bulleted list:\n\n${textForSuggestions}`;
-    return await callGeminiAPI(prompt, "Smart Suggestions");
-}
 
-async function checkSpellAndGrammarWithAI(textToCheck) {
-    const prompt = `Correct any spelling and grammar errors in the following text. Only return the corrected text, nothing else:\n\n${textToCheck}`;
-    return await callGeminiAPI(prompt, "Spell Check");
-}
 
 // --- Event Listeners for AI Feature Toggles ---
-document.addEventListener('DOMContentLoaded', () => {
-    const noteContentTextarea = document.getElementById('noteContent');
 
-    // Sample text to use if noteContent is empty
-    const defaultSampleText = `Artificial intelligence (AI) is intelligence demonstrated by machines, unlike the natural intelligence displayed by humans and animals. Leading AI textbooks define the field as the study of "intelligent agents": any device that perceives its environment and takes actions that maximize its chance of successfully achieving their goals. Colloquially, the term "artificial intelligence" is often used to describe machines that mimic "cognitive" functions that humans associate with the human mind, such as "learning" and "problem-solving".`;
 
-    // Removed aiSummaryToggle listener as per request - summarization is now button-driven
-    // const aiSummaryToggle = document.getElementById('ai-summary-toggle');
-    // aiSummaryToggle.addEventListener('change', async (event) => { /* ... existing summary toggle logic ... */ });
-
-    const aiSuggestionsToggle = document.getElementById('ai-suggestions-toggle');
-    const aiSpellcheckToggle = document.getElementById('ai-spellcheck-toggle');
-
-    aiSuggestionsToggle.addEventListener('change', async (event) => {
-        const isChecked = event.target.checked;
-        const textToProcess = noteContentTextarea.value.trim() || defaultSampleText;
-
-        if (isChecked) {
-            console.log("Getting smart suggestions...");
-            const suggestions = await getSmartSuggestionsWithAI(textToProcess);
-            if (suggestions) {
-                showMessageBox(`Suggestions: ${suggestions}`, 7000);
-            } else {
-                event.target.checked = false; // Turn toggle off if failed
-            }
-        } else {
-            showMessageBox("Smart Suggestions Disabled.", 2000);
-        }
-    });
-
-    aiSpellcheckToggle.addEventListener('change', async (event) => {
-        const isChecked = event.target.checked;
-        const textToProcess = noteContentTextarea.value.trim() || defaultSampleText;
-
-        if (isChecked) {
-            console.log("Checking spelling and grammar...");
-            const correctedText = await checkSpellAndGrammarWithAI(textToProcess);
-            if (correctedText) {
-                if (noteContentTextarea.value.trim() !== '') {
-                    noteContentTextarea.value = correctedText; 
-                    showMessageBox("Text spell-checked. Check 'Manage Your Note' section.", 3000);
-                } else {
-                    showMessageBox(`Sample Text Corrected: ${correctedText}`, 5000);
-                }
-            } else {
-                event.target.checked = false; // Turn toggle off if failed
-            }
-        } else {
-            showMessageBox("Spell Check Disabled.", 2000);
-        }
-    });
-    setTimeout(() => {
-        displayNotes(); 
-    }, 100); 
-
-});
+    
 
 async function handleSummarizeButtonClick(buttonElement) {
     const noteContentTextarea = document.getElementById('noteContent');
