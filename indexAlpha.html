@@ -14,7 +14,8 @@
     <title>Sticky Notes By Anagh</title>
   
     <link rel="stylesheet" href="style.css" />
-   
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   </head>
 
 
@@ -26,7 +27,7 @@
 
       <div class="top-bar">
      
-        <i id="bar-btn" class="fas fa-bars" onclick="toggleSidebar()"></i>
+        <i id="sidebarToggle" class="fas fa-bars" onclick="toggleSidebar()"></i>
      
       <input
       type="text"
@@ -66,7 +67,7 @@
    
 
     <div id="ai" class="container hidden">
-      <button class="modal-button" onclick="showSection('combinedContainer')">
+      <button class="modal-button" onclick="showSection('settingsSection')">
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
       <h2 id="aiTitle" style="display: flex; align-items: center; gap: 0.5em; font-weight: bold;">
@@ -75,27 +76,51 @@
       <p>Manage offline AI-powered helpers for your notes. No internet required.</p>
       <p>For now, these features are always enabled. Checkboxs don't work yet.</p>
     
-     <div class="ai-feature">
-            <label for="ai-summary-toggle">
-                <input type="checkbox" id="ai-summary-toggle" />
-                Enable Offline Note Summary
-            </label>
-        </div>
+       <div class="toggle-container">
+    <label class="toggle-switch">
+      <input type="checkbox">
+      <span class="slider"></span>
+    </label>
+    <div>
+      <span class="toggle-label">Enable Note Summarizer</span>
     
-        <div class="ai-feature">
-            <label for="ai-suggestions-toggle">
-                <input type="checkbox" id="ai-suggestions-toggle" />
-                Enable Smart Suggestions
-            </label>
-        </div>
+  </div>
+  </div>
+    <br>
+          <div class="toggle-container">
+    <label class="toggle-switch">
+      <input type="checkbox">
+      <span class="slider"></span>
+    </label>
+    <div>
+      <span class="toggle-label">Enable Smart Suggestions</span>
     
-        <div class="ai-feature">
-            <label for="ai-spellcheck-toggle">
-                <input type="checkbox" id="ai-spellcheck-toggle" />
-                Enable Spell Check
-            </label>
-        </div>
+  </div>
+  </div>
+    <br>
+       <div class="toggle-container">
+    <label class="toggle-switch">
+      <input type="checkbox">
+      <span class="slider"></span>
+    </label>
+    <div>
+      <span class="toggle-label">Enable Spell check</span>
     
+  </div>
+  </div>
+          <br>
+          <div class="toggle-container">
+    <label class="toggle-switch">
+      <input type="checkbox" id="aiToggle">
+      <span class="slider"></span>
+    </label>
+    <div>
+      <span class="toggle-label">AI Scanner Warning on Start-up</span>
+      <p style="margin: 0; font-size: 12px; color: gray;">Recommended</p>
+    </div>
+  </div>
+
+          </div>
      
    
     </div>
@@ -166,6 +191,10 @@
         <div class="form-group">
           <label for="checklistTitle">Title</label>
           <input type="text" id="listTitle" placeholder="Enter checklist title" />
+           <button type="button" onclick="addItemModal()">
+      <i class="fas fa-plus"></i>
+     Add Item
+    </button>
         </div>
         <div id="checklistContainer"></div>
           <!-- Dynamic checklist items -->
@@ -258,77 +287,105 @@
    
 
 
-    <!-- Sidebar -->
-<div id="sidebar" class="sidebar" style="display: none;">
- 
- 
-
-  <!-- Top Buttons -->
+<!-- Sidebar HTML -->
+<div id="sidebar" class="sidebar hide-anim">
   <div class="sidebar-top">
-    <button class="sidebar-button" onclick="showSection('combinedContainer')">
+    <button class="sidebar-button" onclick="navigateTo('combinedContainer')">
       <i class="fas fa-home"></i>
       <span class="label">Home</span>
     </button>
-    <button class="sidebar-button" onclick="showSection('aiSection')">
+    <button class="sidebar-button" onclick="navigateTo('aiSection')">
       <i class="fas fa-shield-alt"></i>
       <span class="label">AI Scan</span>
     </button>
-    <button class="sidebar-button" onclick="showSection('calculatorSection')">
+    <button class="sidebar-button" onclick="navigateTo('calculatorSection')">
       <i class="fas fa-calculator"></i>
       <span class="label">Calculator</span>
     </button>
-    <button class="sidebar-button" id="notifyButton">
-      <i class="fas fa-bell"></i>
-      <span class="label">Notifications</span>
-    </button>
-    <button class="sidebar-button" onclick="showSection('calendarSection')">
-      <i class="fa fa-calendar"></i>
-      <span class="label">Calendar</span>
-    </button>
+
+  
   </div>
 
-  <!-- Bottom Settings Button -->
   <div class="sidebar-bottom">
-    <button class="sidebar-button" onclick="showSection('settingsSection')">
+    <button class="sidebar-button" onclick="navigateTo('settingsSection')">
       <i class="fas fa-cog"></i>
       <span class="label">Settings</span>
     </button>
     <button class="sidebar-button" onclick="closeSidebar()">
-      <i class="fas fa-arrow-left"></i>
-      <span class="label">Close</span>
+    
+      <span class="label"></span>
     </button>
-    
-    
-
-   
   </div>
 </div>
+</div>
+
+
+
+
+
 
 
 
   
 
     <div id="settingsSection" class="container hidden">
-      <div id="settingsTabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <button onclick="openTab('generalTab')" class="tab-btn active-tab">General</button>
-        <button onclick="openTab('backupTab')" class="tab-btn">Backup</button>
-        <button onclick="openTab('securityTab')" class="tab-btn">Security</button>
-       
-      </div>
+      
     
-      <!-- General Tab -->
-      <div id="generalTab" class="tab-content">
-        <button class="modal-button" onclick="showSection('moreSection')">
+      
+      
+      
+        
+    <button class="modal-button" onclick="showSection('combinedContainer')">
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
-      
-        <h2>Credits</h2>
-        <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
+     <br>
+    <div class="card" onclick="showSection('creditSection')">
+  <div class="icon wifi"><span class="material-icons">workspace_premium</span></div>
+  <div class="text-box">
+    <div class="title">Credits</div>
+    <div class="subtitle">Developer</div>
+  </div>
+</div>
+
+<div class="card" onclick="showSection('backupTab')">
+  <div class="icon device"><span class="material-icons">backup</span></div>
+  <div class="text-box">
+    <div class="title">Backup and Import</div>
+    <div class="subtitle">Backup · Import · Input</div>
+  </div>
+</div>
+
+<div class="card" onclick="showSection('ai')">
+  <div class="icon ai"><span class="material-icons">smart_toy</span></div>
+  <div class="text-box">
+    <div class="title">AI</div>
+    <div class="subtitle">Note assist · Note Summarizer · Note Scanner</div>
+  </div>
+</div>
+
+<div class="card" onclick="showSection('ecSection')">
+  <div class="icon modes"><span class="material-icons">security</span></div>
+  <div class="text-box">
+    <div class="title">Data Management</div>
+    <div class="subtitle">Permission Manager · Data security</div>
+  </div>
+</div>
+
+<div class="card" onclick="showSection('pmSection')">
+  <div class="icon sound"><span class="material-icons">lock</span></div>
+  <div class="text-box">
+    <div class="title">Password Management</div>
+    <div class="subtitle">Set New Password · Change Old Password</div>
+  </div>
+</div>
+
+
+    
       </div>
     
       <!-- Backup Tab -->
-      <div id="backupTab" class="tab-content hidden">
-         <button class="modal-button" onclick="showSection('moreSection')">
+      <div id="backupTab" class="container hidden">
+         <button class="modal-button" onclick="showSection('settingsSection')">
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
         <h3>🔁 Backup / Import</h3>
@@ -338,18 +395,11 @@
         <button class="button" disabled>Battery Optimization: On</button>
       </div>
     
-      <!-- Security Tab -->
-      <div id="securityTab" class="tab-content hidden">
-         <button class="modal-button" onclick="showSection('moreSection')">
+     
+        <div id="ecSection" class="container hidden">
+         <button class="modal-button" onclick="showSection('settingsSection')">
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
-        <h2>🔐 Security Settings</h2>
-    
-        <h3 onclick="toggleSection('encryptionSection')" style="cursor: pointer;">
-          🔒 Data Management <span id="encryptionToggle">+</span>
-        </h3>
-        <div id="encryptionSection" class="hidden">
-          <button onclick="goBack()">Back</button>
           <button onclick="requestBackupFolder()">Grant Storage Access</button>
 
           <button onclick="clearData()">Clear All Data</button>
@@ -359,12 +409,12 @@
           <div id="syncStatus" style="margin-top: 10px;">🔄 Sync is OFF</div>
         </div>
     
-        <h3 onclick="toggleSection('passwordManagementSection')" style="cursor: pointer;">
-          🔑 Password Management <span id="passwordManagementToggle">+</span>
-        </h3>
+       
 
-        <div id="passwordManagementSection" class="hidden">
-          <button onclick="goBack()">Back</button>
+        <div id="pmSection" class="container hidden">
+          <button class="modal-button" onclick="showSection('settingsSection')">
+        <i class="fas fa-arrow-left back-icon"></i>
+      </button>
           <p>This is master password will be used to open a 
             Locked note/list in case you forgot orignal password</p>
            <h3>Master Password</h3>
@@ -377,30 +427,22 @@
   <button onclick="changeMasterPassword()">Change Password</button>
         </div>
     
-        <h3 onclick="toggleSection('lockNotesSection')" style="cursor: pointer;">
-          🔐 Lock Notes <span id="lockNotesToggle">+</span>
-        </h3>
-        <div id="lockNotesSection" class="hidden">
+     
+        <div id="lockNotesSection" class="container hidden">
           <button onclick="goBack()">Back</button>
          <p>Under Planning Phase</p>
         </div>
-        <h3 onclick="toggleSection('aiScanSettings')" style="cursor: pointer;">
-          🔍 AI Scan Settings <span>+</span>
-        </h3>
-        <div id="aiScanSettings" class="hidden">
-          <button onclick="goBack()">Back</button>
-          <div class="toggle-container">
-    <label class="toggle-switch">
-      <input type="checkbox" id="aiToggle">
-      <span class="slider"></span>
-    </label>
-    <div>
-      <span class="toggle-label">AI Scanner Warning on Start-up</span>
-      <p style="margin: 0; font-size: 12px; color: gray;">Recommended</p>
-    </div>
-  </div>
-
-          </div>
+      
+        
+      <div id="creditSection" class="container hidden">
+        <button class="modal-button" onclick="showSection('settingsSection')">
+          <i class="fas fa-arrow-left back-icon"></i>
+        </button>
+        <h2>Credits</h2>
+        <p>Developed by Anagh</p>
+        <p>Version: 1.0.0</p>
+       </div>
+          
       </div>
       </div>
     
