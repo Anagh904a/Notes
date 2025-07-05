@@ -1102,9 +1102,7 @@ function showAddNote() {
     const note = notes[editingNoteIndex]; // Get the note being edited
     document.getElementById("noteTitle").value = note.title; // Set the input value to the note title
     document.getElementById("noteContent").value = note.content; // Set the input value to the note content
-    document.getElementById(
-      "manageNoteTitle"
-    ).textContent = `Manage Your ${note.title} Note`; // Update title with the actual note title
+   
   } else {
     // Creating a new note
     document.getElementById("noteTitle").value = ""; // Clear the title input
@@ -1170,43 +1168,74 @@ document
     showAddNote(); // Show the add note section
   });
 
-  function saveNote() {
-     const title = document.getElementById('noteTitle').value.trim();
-    const content = document.getElementById('noteContent').value.trim();
-    const password = document.getElementById('notePassword').value.trim();
-    const date = new Date(); // Get the current date
-    const formattedDate = formatDate(date); // Format the date
+function saveNote() {
+  const title = document.getElementById('noteTitle').value.trim();
+  const content = document.getElementById('noteContent').value.trim();
+  const password = document.getElementById('notePassword').value.trim();
+  const date = new Date();
+  const formattedDate = formatDate(date);
 
+  if (content === "") {
+    showMessageBox("Note content cannot be empty!");
+    return;
+  }
 
-    if (content === "") {
-        showMessageBox("Note content cannot be empty!");
-        return;
-    }
-
-   if (title === "") {
+  if (title === "") {
     suggestTitle(content);
     return;
-    }
+  }
 
-    if (editingNoteIndex !== null) {
-        // Update existing note
-        notes[editingNoteIndex] = { title, content, password, date }; // Include date
-        showMessageBox("Note updated successfully!");
-    } else {
-        // Add new note
-        const note = { title, content, password, pinned: false, date }; // Include date
-        notes.push(note);
-        showMessageBox("Note saved successfully!");
-    }
+  // ✅ Create the note object here so it's always defined
+  const note = {
+    title,
+    content,
+    password,
+    pinned: false,
+    date: formattedDate
+  };
 
-    localStorage.setItem('notes', JSON.stringify(notes));
-    displayNotes();
-    showSection('combinedContainer');
-    document.getElementById("notePasswordModal").classList.add("hidden");
-autoBackupToFile();
-    // Reset editing state
-    editingNoteIndex = null; // Reset after saving
+  if (editingNoteIndex !== null) {
+    // Update existing note
+    notes[editingNoteIndex] = note;
+    showMessageBox("Note updated successfully!");
+  } else {
+    // Add new note
+    notes.push(note);
+    showMessageBox("Note saved successfully!");
+  }
+
+  // Save to localStorage
+  localStorage.setItem('notes', JSON.stringify(notes));
+
+  // Sync to IndexedDB
+  syncNoteToIndexedDB(note);
+
+  // Update UI
+  displayNotes();
+  showSection('combinedContainer');
+  document.getElementById("notePasswordModal").classList.add("hidden");
+
+  // Reset editing state
+  editingNoteIndex = null;
 }
+
+
+function syncNoteToIndexedDB(note) {
+  if (!db) return;
+  const syncState = localStorage.getItem("syncEnabled");
+  if (syncState !== "true") return;
+
+  if (!note.noteId) {
+    note.noteId = `${note.title}-${Date.now()}`;
+  }
+
+  const tx = db.transaction("notes", "readwrite");
+  tx.objectStore("notes").put(note);
+  localStorage.setItem("lastSynced", new Date().toISOString());
+updateLastSyncedDisplay();
+}
+
+
 
 function suggestTitle(noteContent) {
   const keywords = {
@@ -1276,7 +1305,8 @@ document.addEventListener("DOMContentLoaded", function () {
 async function setMasterPassword(password) {
   const hashed = await hashPassword(password);
   localStorage.setItem("masterPasswordHash", hashed);
-  alert("Master password set successfully!");
+  alert("This Feature Is under Development and don't work properly yet");
+  showMessageBox("Master password set unsuccessfully!"); // Show success message
 }
 
 function isMasterPasswordSet() {
@@ -1294,6 +1324,8 @@ function displayNotes() {
   } else {
     noNotesMessage.classList.add("hidden");
   } // Hide the no notes message
+
+
   notes.forEach((note, index) => {
     const noteDiv = document.createElement("div");
     const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
@@ -1329,7 +1361,9 @@ function displayNotes() {
  ${noteAIbutton}
   ${noteAIbtn}
   <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();">Delete</button>
-</div>
+
+
+  </div>
     `;
     container.appendChild(noteDiv);
   });
@@ -1345,6 +1379,28 @@ function openNote(index) {
       showNoteContent(note);
   }
 }
+
+function formatSyncTime(date) {
+  const now = new Date();
+  const diff = now - date;
+
+  if (diff < 60000) {
+    return "Just now";
+  }
+
+  const options = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  };
+
+  const isToday = now.toDateString() === date.toDateString();
+  return isToday 
+    ? `Today at ${date.toLocaleTimeString([], options)}`
+    : date.toLocaleString([], options);
+}
+
+
 
 const GEMINI_API_KEY = "AIzaSyD2BMm3Fx16VYcF_tCYcDsEJnuSmW-wG6I"; 
 
@@ -1442,6 +1498,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Load notes and lists from local storage
   displayNotes();
   displayLists();
+  syncListToIndexedDB();
+  syncNoteToIndexedDB(); // Sync notes to IndexedDB on load
 });
 
 function showListsSection() {
@@ -1461,7 +1519,7 @@ function verifyPassword() {
     showNoteContent(note);
   } else {
     showMessageBox("Incorrect password!");
-    document.getElementById('resetPass').style.display = 'flex';
+    
   }
 }
 
@@ -1514,6 +1572,7 @@ function deleteNote(index) {
           displayNotes();
       }
   }
+  syncNoteToIndexedDB(note);
 }
 
 
@@ -1617,8 +1676,41 @@ displayLists();
 showSection("combinedContainer");
 editingListIndex = null;
 document.getElementById("listPasswordModalr").classList.add("hidden");
-autoBackupToFile();
+syncListToIndexedDB(listData);
 }
+
+function syncListToIndexedDB(listData) {
+  console.log("Trying to sync list to IndexedDB...");
+
+  if (!db) return;
+  const syncState = localStorage.getItem("syncEnabled");
+  if (syncState !== "true") return;
+
+  if (!listData.listId) {
+    listData.listId = `${listData.title}-${Date.now()}`;
+  }
+
+  const tx = db.transaction("lists", "readwrite");
+  tx.objectStore("lists").put(listData);
+  localStorage.setItem("lastSynced", new Date().toISOString());
+updateLastSyncedDisplay();
+}
+
+function updateLastSyncedDisplay() {
+  const div = document.getElementById("lastSyncedStatus");
+  const lastSynced = localStorage.getItem("lastSynced");
+
+  if (!div) return;
+
+  if (!lastSynced) {
+    div.innerText = "🕒 Last Synced: Never";
+    return;
+  }
+
+  const syncedDate = new Date(lastSynced);
+  div.innerText = "🕒 Last Synced: " + formatSyncTime(syncedDate);
+}
+
 // Function to open a list and pre-fill the add list section
 function openList(index) {
   const list = lists[index];
@@ -1729,6 +1821,52 @@ function openTab(tabId) {
   });
 }
 
+function restoreFromIndexedDB() {
+  const overlay = document.getElementById("restoreOverlay");
+  overlay.style.display = "flex"; // Show overlay
+
+  // Add a delay for realism (simulate restore delay)
+  setTimeout(() => {
+    // === Restore notes ===
+    const tx1 = db.transaction("notes", "readonly");
+    const store1 = tx1.objectStore("notes");
+
+    const notes = [];
+    store1.openCursor().onsuccess = function (e) {
+      const cursor = e.target.result;
+      if (cursor) {
+        notes.push(cursor.value);
+        cursor.continue();
+      } else {
+        localStorage.setItem("notes", JSON.stringify(notes));
+
+        // === Restore lists ===
+        const tx2 = db.transaction("lists", "readonly");
+        const store2 = tx2.objectStore("lists");
+
+        const lists = [];
+        store2.openCursor().onsuccess = function (e) {
+          const cursor = e.target.result;
+          if (cursor) {
+            lists.push(cursor.value);
+            cursor.continue();
+          } else {
+            localStorage.setItem("lists", JSON.stringify(lists));
+
+            // Done restoring
+            overlay.style.display = "none"; // Hide overlay
+            showMessageBox("Notes and Lists restored from Server!");
+          }
+        };
+      }
+    };
+  }, 10000); // Delay of 1 second for visual effect
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateLastSyncedDisplay();
+});
+
 
 // Event listener for closing the password modal with Escape key
 document.addEventListener("keydown", function (event) {
@@ -1816,7 +1954,40 @@ function deleteList(index) {
       displayLists(); // Refresh the displayed lists
     }
   }
+  syncListToIndexedDB(list);
 }
+
+function toggleSync(el) {
+  const isEnabled = el.checked;
+  localStorage.setItem("syncEnabled", isEnabled ? "true" : "false");
+
+  // Optional feedback
+  const status = document.getElementById("syncStatus");
+  if (status) {
+    status.innerText = isEnabled ? "✅ Sync is ON" : "🔄 Sync is OFF";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const syncToggle = document.getElementById("syncToggle");
+  const syncState = localStorage.getItem("syncEnabled");
+
+  if (syncToggle) {
+    if (syncState === null || syncState === "true") {
+      syncToggle.checked = true;
+    } else {
+      syncToggle.checked = false;
+    }
+
+    // Optional: set visual text
+    const status = document.getElementById("syncStatus");
+    if (status) {
+      status.innerText = syncToggle.checked ? "✅ Sync is ON" : "🔄 Sync is OFF";
+    }
+  }
+});
+
+
 
 // Function to cancel adding a list
 
