@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -37,7 +38,7 @@
       id="searchInput"
       placeholder="Search your data"
       oninput="searchNotes()"
-      style="margin-left: 10px; padding: 5px;"
+      style="margin-left: 10px; padding: 5px; font-size: medium;"
 
      >
   
@@ -78,11 +79,12 @@
         <span style="font-size: 1.5em;">🤖</span> AI Features Management
       </h2>
       <p>Manage offline AI-powered helpers for your notes. No internet required.</p>
-      <p>For now, these features are always enabled. Checkboxs don't work yet.</p>
+    <p style="color: red; font-size: larger;">Failed to connect to model, please try again later. </p>
+    <p style="color: green; font-size: larger;">Succesfully Connected to AI scanner Model!</p>
     
        <div class="toggle-container">
     <label class="toggle-switch">
-      <input type="checkbox">
+      <input type="checkbox" onchange="showError()">
       <span class="slider"></span>
     </label>
     <div>
@@ -93,7 +95,7 @@
     <br>
           <div class="toggle-container">
     <label class="toggle-switch">
-      <input type="checkbox">
+      <input type="checkbox" onchange="showError()">
       <span class="slider"></span>
     </label>
     <div>
@@ -104,7 +106,7 @@
     <br>
        <div class="toggle-container">
     <label class="toggle-switch">
-      <input type="checkbox">
+      <input type="checkbox" onchange="showError()">
       <span class="slider"></span>
     </label>
     <div>
@@ -115,7 +117,7 @@
           <br>
           <div class="toggle-container">
     <label class="toggle-switch">
-      <input type="checkbox" id="aiToggle">
+      <input type="checkbox" onchange="showError2()" checked>
       <span class="slider"></span>
     </label>
     <div>
@@ -374,6 +376,14 @@
   </div>
 </div>
 
+<div class="card" onclick="openAntithreat()">
+  <div class="icon wifi"><span class="material-icons">shield</span></div>
+  <div class="text-box">
+    <div class="title">Antithreat Management</div>
+    <div class="subtitle">Database Update • Info</div>
+  </div>
+</div>
+
 <div class="card" onclick="showSection('privacySection')">
   <div class="icon privacy">
     <span class="material-icons">privacy_tip</span>
@@ -454,13 +464,44 @@
   
      
       <button class="settings-button" onclick="restoreFromIndexedDB()">
-        🔄 Restore Data from Secondry Storage
+        🔄 Restore Data from Secondary Storage
       </button>
       
-   <span id="dataInd">No Data is Secondry Storage Storage found.</span>
+   <span id="dataInd">No Data in Secondary Storage Storage found.</span>
   </div>
 </div>
      
+<div id="updateModal" style="
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: white;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+">
+  <div>
+    <div class="loader" style="margin-bottom: 20px;">
+      ⏳ Updating...
+    </div>
+    <div>Preparing your update...</div>
+  </div>
+</div>
+
+<div id="antithreatSection" class="container hidden">
+  <button class="modal-button" onclick="showSection('settingsSection')">
+    <i class="fas fa-arrow-left back-icon"></i> 
+  </button>
+   <div class="section-card">
+  <h2>Antithreat Management</h2>
+  <p>Last Updated: <span id="lastUpdated"></span></p>
+  <p>Version: <span id="currentVersion"></span></p>
+  <button id="updateButton" class="hidden" onclick="startUpdate()">Update Now</button>
+</div>
+</div>
+
        <div id="ecSection" class="container hidden">
   <button class="modal-button" onclick="showSection('settingsSection')">
     <i class="fas fa-arrow-left back-icon"></i>
@@ -510,7 +551,10 @@
  <div class="section-card">
   <h2>Permission Manager</h2>
   <h3>Given Permission to notefull</h3>
-  <p style="color: grey;">None</p>
+<P>-Reading Saved Data</P>
+<p>-System security api</p>
+<p>-Install updates in notefull</p>
+<p>-Notifications</p>
  </div>
 
  <div class="section-card">
