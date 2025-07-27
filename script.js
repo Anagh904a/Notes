@@ -1,4 +1,5 @@
 
+
 //part 1 of total code
 let notes = JSON.parse(localStorage.getItem("notes")) || [];
 let editingNoteIndex = null;
@@ -55,42 +56,9 @@ let backupDirHandle = null;
 
 
 document.addEventListener("DOMContentLoaded", function () {
-  const toggle = document.getElementById("aiToggle");
-
-  // 🔒 Load saved settings or default to enabled = true
-  let scannerSettings = JSON.parse(localStorage.getItem("aiScannerSettings")) || {
-    enabled: true,
-    lastScan: null
-  };
-
-  // ✅ Force default to true if `enabled` is undefined or null
-  if (scannerSettings.enabled === undefined || scannerSettings.enabled === null) {
-    scannerSettings.enabled = true;
-    localStorage.setItem("aiScannerSettings", JSON.stringify(scannerSettings));
-  }
-
-  // Set toggle position on page
-  toggle.checked = scannerSettings.enabled;
-
-  // 🚀 Run AI scan if enabled
-  if (scannerSettings.enabled) {
+  
     startAiScan();
-    scannerSettings.lastScan = new Date().toISOString();
-    localStorage.setItem("aiScannerSettings", JSON.stringify(scannerSettings));
-
     
-  }
-
-  // 🔁 Listen for user toggle changes
-  toggle.addEventListener("change", function () {
-    scannerSettings.enabled = toggle.checked;
-    localStorage.setItem("aiScannerSettings", JSON.stringify(scannerSettings));
-
-    if (toggle.checked) {
-      startAiScan();
-     
-    }
-  });
 });
 
 
@@ -1797,9 +1765,64 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+function showError() {
+  showToast("Failed to connect to model")
+}
 
+function showError2() {
+  showToast("Failed to configure")
+  alert("This is an message from Notefull security system: Due to some errors on API side, the AI toggle will be always enabled. Mantaining your secure experience")
+}
 
+const VERSION = "v1.2"; // Simulate new version
 
+function openAntithreat() {
+showSection('antithreatSection');
+
+  const lastUpdated = localStorage.getItem("lastUpdated");
+  const version = localStorage.getItem("version") || "v1.0";
+
+  document.getElementById("lastUpdated").textContent = lastUpdated || "Never";
+  document.getElementById("currentVersion").textContent = version;
+
+  const now = Date.now();
+  const threeDays = 3 * 24 * 60 * 60 * 1000;
+  if (!lastUpdated || now - parseInt(lastUpdated) > threeDays) {
+    document.getElementById("updateButton").classList.remove("hidden");
+  } else {
+    document.getElementById("updateButton").classList.add("hidden");
+  }
+}
+
+function startUpdateProcess() {
+  // Show the update modal
+  document.getElementById('updateModal').style.display = 'flex';
+
+  // After 75% of the duration (90 sec), show a toast
+  setTimeout(() => {
+    showToast("Installing Updates...");
+  }, 90000); // 75% of 2 minutes
+
+  // After 100% duration (2 min), hide modal & update localStorage
+  setTimeout(() => {
+    document.getElementById('updateModal').style.display = 'none';
+
+    // Store update time and version
+    const now = new Date();
+    localStorage.setItem("lastUpdate", now.toISOString());
+    localStorage.setItem("appVersion", "v1.0.1"); // Change version if needed
+
+    showToast("Update Installed Successfully!");
+    updateLastUpdatedText();
+  }, 120000); // Full 2 minutes
+}
+
+function updateLastUpdatedText() {
+  const last = localStorage.getItem("lastUpdate");
+  if (last) {
+    document.getElementById("lastUpdated").innerText = "Last Updated: " + new Date(last).toLocaleString();
+  }
+}
 
 // Function to cancel adding a list
 
