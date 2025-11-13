@@ -1,12 +1,14 @@
 
 
+
 //part 1 of total code
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
+let notes = JSON.parse(localStorage.getItem("notes")) || []; // This will be our single source of truth
 let editingNoteIndex = null;
 let currentNoteId = null;
 let currentDeleteNoteId = null;
 let currentItems = []; // Will now store objects like { name: 'item name', checked: true/false }
 let editingListIndex = null;
+let currentListId = null;
 let historyStack = [];
 let currentIndex = -1;
 let holdTimer = null;
@@ -16,35 +18,34 @@ let notesDirectoryHandle = null;
 
 
 
-
-
-function handleBack() {
-  // 1. Close modals if any are open
-  if (!document.getElementById("addOptionsModal").classList.contains("hidden")) {
-    closeAddOptions();
-    return;
-  }
-
-  // 2. Check for note editing section
-  if (!document.getElementById("addItemSection").classList.contains("hidden")) {
-    saveNote(); // Custom function you write to close it
-    return;
-  }
-
-
-
-  // 4. If none of the above, maybe confirm exit
-  if (confirm("Do you want to exit the app?")) {
-    window.history.back(); // Or use Kodular block to close screen
-  }
-}
-
-
-
 let backupDirHandle = null;
 
-// Prompt once and store basic reference
+// Prompt once and store basic ref
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const fabContainer = document.querySelector('.fab-container');
+            const mainFab = document.getElementById('mainFab');
+            const optionButtons = document.querySelectorAll('.option-button');
+           
+
+           
+
+            // 1. Toggle the FAB state
+            mainFab.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                fabContainer.classList.toggle('open');
+            });
+
+            // 2. Handle option clicks
+            
+            
+            // 3. Close FAB when clicking anywhere else
+            document.addEventListener('click', (e) => {
+                if (!fabContainer.contains(e.target) && fabContainer.classList.contains('open')) {
+                    fabContainer.classList.remove('open');
+                }
+            });
+        });
 
 // Restore backup folder handle (user must re-select)
 
@@ -56,12 +57,64 @@ let backupDirHandle = null;
 
 
 document.addEventListener("DOMContentLoaded", function () {
-  
+   updateAccountIcon();
     startAiScan();
     
 });
 
+const placeholders = [
+  "Search any data...",
+  "Ask Notefull AI...",
+  "e.g When is my meeting?",
+  "Search with Notefull AI...",
+  "Quickly find your note...",
+  "Find notes by keyword...",
+  "What did I write last week?",
+  "Locate that important file...",
+  "Search through your ideas...",
+  "Ask AI for suggestions...",
+  "Check your upcoming tasks...",
+  "Find meeting notes fast...",
+  "Discover your saved thoughts...",
+  "Quick search your notes...",
+  "Ask Notefull anything...",
+  "Where did I save that note?",
+  "Search by topic or tag...",
+  "Need a reminder? Ask AI...",
+  "Look for ideas in your notes...",
+  "Search your thoughts quickly...",
+  "Find yesterday’s notes...",
+  "What notes did I take today?",
+  "Quickly find that important detail...",
+  "Search for events, tasks, or ideas...",
+  "Ask questions about your notes...",
+  "Find related notes fast...",
+  "Search by keyword or phrase...",
+  "AI can help if note isn’t found...",
+  "Instantly find any note..."
+];
 
+let index = 0; // start from first placeholder
+const debouncedSearch = debounce(searchNotes, 1000);
+
+document.getElementById('searchInput').addEventListener('input', debouncedSearch);
+
+function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+const input = document.getElementById("searchInput");
+
+// Function to update placeholder every second
+setInterval(() => {
+  input.placeholder = placeholders[index];
+  index = (index + 1) % placeholders.length; // loop back to start
+}, 5000); // change every 5000ms (5 second)
 
 function saveState() {
   const noteContent = document.getElementById("noteContent").value;
@@ -77,30 +130,6 @@ function saveState() {
 
   toggleButtons();
 }
-
-function showEmail(emailId) {
-  // Hide all email contents
-  const contents = document.querySelectorAll(".email-content");
-  contents.forEach((content) => (content.style.display = "none"));
-
-  // Show the selected email content
-  document.getElementById(emailId).style.display = "block";
-}
-
-
-function sendAIQuery() {
-  const input = document.getElementById('aiQuery');
-  const response = document.getElementById('aiResponse');
-  const query = input.value.trim();
-
-  if (query === '') return;
-
-  response.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
-  setTimeout(() => {
-    response.innerHTML = `<i class="fas fa-robot"></i> Here’s an explanation for: <strong>${query}</strong>`;
-  }, 1500);
-}
-
 
 
 // Function to handle undo
@@ -184,73 +213,6 @@ return null;
 }
 
 
-
-function goBack() {
-  // Hide all sections when going back
-  const sections = document.querySelectorAll(".setting-category div");
-  sections.forEach((section) => {
-    section.classList.add("hidden");
-  });
-
-  // Reset toggle icons to plus
-  const toggleIcons = document.querySelectorAll(".toggle-icon");
-  toggleIcons.forEach((icon) => {
-    icon.textContent = "+";
-  });
-}
-
-function showTab(tabId) {
-  // Hide all tab contents
-  const tabContents = document.querySelectorAll(".tab-content");
-  tabContents.forEach((content) => {
-    content.classList.remove("active");
-  });
-
-  // Remove active class from all tab buttons
-  const tabButtons = document.querySelectorAll(".tab-button");
-  tabButtons.forEach((button) => {
-    button.classList.remove("active");
-  });
-
-  // Show the selected tab content
-  document.getElementById(tabId).classList.add("active");
-
-  // Set the clicked tab button as active
-  const activeButton = Array.from(tabButtons).find(
-    (button) =>
-      button.textContent === tabId.replace(/([A-Z])/g, " $1").trim()
-  );
-  if (activeButton) {
-    activeButton.classList.add("active");
-  }
-}
-
-// Function to toggle sections within the settings
-function toggleSection(sectionId) {
-  const section = document.getElementById(sectionId);
-  if (section) {
-    section.classList.toggle("hidden");
-    const toggleIcon = document.getElementById(sectionId + "Toggle");
-    if (toggleIcon) {
-      toggleIcon.textContent = toggleIcon.textContent === "+" ? "-" : "+";
-    }
-  }
-}
-
-function toggleSelect(index) {
-  if (selectedNotes.includes(index)) {
-    selectedNotes = selectedNotes.filter(i => i !== index);
-  } else {
-    selectedNotes.push(index);
-  }
-}
-
-function showSelectionActions() {
-  document.getElementById("selectionBar").classList.remove("hidden");
-}
-
-
-
 function applySortFilter() {
   const sortValue = document.getElementById("sortSelect").value;
 
@@ -280,7 +242,7 @@ function applySortFilter() {
 }
 
 // Add click effect that creates ripples
-        document.querySelector('.fab').addEventListener('click', function(e) {
+       document.querySelector('.main-fab-style').addEventListener('click', function(e) {
             const x = e.clientX - e.target.getBoundingClientRect().left;
             const y = e.clientY - e.target.getBoundingClientRect().top;
             
@@ -294,64 +256,50 @@ function applySortFilter() {
             setTimeout(() => {
                 ripple.remove();
             }, 600);
-        });
-
-
-function deleteSelectedNotes() {
-  selectedNotes.sort((a, b) => b - a); // delete from end to avoid reindex
-  selectedNotes.forEach(i => notes.splice(i, 1));
-  localStorage.setItem("notes", JSON.stringify(notes));
-  exitSelectionMode();
-}
-
-
+        }); 
 
 function clearData() {
   if (
     confirm(
-      "Are you sure you want to clear all data? This action cannot be undone."
+      "Are you sure you want factory reset? This action cannot be undone."
     )
   ) {
     localStorage.removeItem("notes");
     localStorage.removeItem("lists");
-    notes = [];
-    lists = [];
+    
     displayNotes();
     displayLists();
-    showToast("All data cleared successfully!");
+    alert("All data cleared successfully! All Settings are also cleared! Next time you would need to complete setup for the app again!");
+    
   }
-}
-
-function encryptData() {
-  showToast("Failed! Fatal Error 3XD");
-  
-}
-
-function decryptData() {
-  const encryptedNotes = localStorage.getItem("encryptedNotes");
-  const encryptedLists = localStorage.getItem("encryptedLists");
-  showToast(
-    "This feature is buggy and may not work as expected. Use with cuation your old data may be deleted"
-  );
-
-  if (encryptedNotes) {
-    notes = JSON.parse(atob(encryptedNotes)); // Base64 decode the notes
-  } else {
-    notes = [];
-  }
-
-  if (encryptedLists) {
-    lists = JSON.parse(atob(encryptedLists)); // Base64 decode the lists
-  } else {
-    lists = [];
-  }
-
-  localStorage.setItem("notes", JSON.stringify(notes)); // Save decrypted notes back to local storage
-  localStorage.setItem("lists", JSON.stringify(lists)); // Save decrypted lists back to local storage
   displayNotes();
-  displayLists();
-  showToast("Data decrypted successfully!");
+    displayLists();
 }
+
+function toggleTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  document.getElementById('themeToggle').checked = theme === 'light';
+  document.getElementById('themeLabel').textContent = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+}
+
+
+
+
+
+// Load saved theme on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  toggleTheme(savedTheme);
+
+  document.getElementById('themeToggle').addEventListener('change', function () {
+    toggleTheme(this.checked ? 'dark' : 'light');
+  });
+});
+
+
+
+
 
 // Function to toggle button states (enable/disable)
 function toggleButtons() {
@@ -379,30 +327,53 @@ document
 toggleButtons();
 
 
+let isPaused = false;
+let scanInterval;
+let aiMessages = [
+  "Scanning for leaked credentials...",
+  "Checking for sensitive keywords...",
+  "Validating security integrity...",
+  "Analyzing note metadata...",
+  "Cross-referencing suspicious terms..."
+];
+let messageIndex = 0;
 
 function startAiScan() {
   const scanStatus = document.getElementById("scanStatus");
   const resultsContainer = document.getElementById("resultsContainer");
   const scanCircle = document.getElementById("scanCircle");
   const notesCountElem = document.getElementById("notesCount");
-  const progressBar = document.getElementById("progressBar");
+  const infoBox = document.getElementById("infoContainer2");
+  const threatsCountElem = document.getElementById("threatsCount");
+
+  // Show Info Box
+  infoBox.style.display = "flex";
+  showInfo("You can safely leave this page while the scan completes.");
 
   // Reset UI
   resultsContainer.innerHTML = "";
-  scanStatus.textContent = "Initializing AI scan...";
-  
+  scanStatus.textContent = "Quick scan in progress... Scanning Notes....";
+  threatsCountElem.textContent = "0";
   scanCircle.style.animation = "spin 1s linear infinite";
   scanCircle.style.border = "";
-scanCircle.style.borderTopColor = "rgb(0, 0, 0)";
+  scanCircle.style.borderTopColor = "rgb(0, 0, 0)";
   notesCountElem.textContent = "0";
-progressBar.style.width = "0"; 
+  const startBtn = document.getElementById("startScanButton");
+  startBtn.textContent = "Scanning...";
+  startBtn.classList.add("scanning");
+  startBtn.disabled = true;
 
   const notes = JSON.parse(localStorage.getItem("notes")) || [];
-  const sensitiveKeywords = [
+let sensitiveKeywords = JSON.parse(localStorage.getItem("sensitiveKeywords") || "null");
+
+if (!Array.isArray(sensitiveKeywords) || sensitiveKeywords.length === 0) {
+  // Fallback to built-in list
+  sensitiveKeywords = [
     "password", "ssn", "credit card", "bank account", "secret", "pin", "bank",
     "policy", "account", "pass", "id", "aadhaar", "card", "security", "key",
     "token", "license", "confidential", "credentials", "auth", "login"
   ];
+}
 
   let foundSensitiveData = [];
   let scannedTitles = new Set(); // prevent duplicate messages for same note
@@ -413,58 +384,77 @@ progressBar.style.width = "0";
   const scanInterval = setInterval(() => {
     if (index >= notes.length) {
       clearInterval(scanInterval);
-
+      infoBox.style.display = "none";
       const endTime = Date.now();
       const duration = ((endTime - startTime) / 1000).toFixed(2);
-     
+      startBtn.textContent = "Start Quick Scan";
+      startBtn.classList.remove("scanning");
+      startBtn.disabled = false;
+
       notesCountElem.textContent = `${notes.length}`;
-       showAiToast();
+      showAiToast();
 
       if (threatsCount === 0) {
         scanCircle.style.borderColor = "#4CAF50";
-      
         scanStatus.textContent = `Scan complete in ${duration}s — No threats found!`;
-        resultsContainer.innerHTML = "<div class='success-msg'>All notes are safe!</div>";
+        resultsContainer.innerHTML = "<div class='success-msg'>✅ All notes are safe!</div>";
       } else {
         scanCircle.style.borderColor = threatsCount === 1 ? "orange" : "red";
-        scanStatus.textContent = `Scan complete in ${duration}s — ${threatsCount} threat${threatsCount > 1 ? "s" : ""} found!`;
-        resultsContainer.innerHTML = foundSensitiveData.join("<br>");
+        scanStatus.textContent = `Scan complete in ${duration}s`;
+        
+        // Add Protect Now button
+        resultsContainer.innerHTML = foundSensitiveData.join("<br>") +
+          `<button class="protect-btn" onclick="redirectProtect()">Protect Now</button>`;
       }
 
       // Auto-scroll to results
       resultsContainer.scrollIntoView({ behavior: "smooth" });
-        scanCircle.style.animation = "none";
+      scanCircle.style.animation = "none";
       return;
-      console.log('AI SCAN CALLED');
     }
 
     const note = notes[index];
-   const currentTitle = note?.title || `Untitled Note`;
-notesCountElem.textContent = `🧠 Scanning: "${currentTitle}"`;
-progressBar.style.width = `${((index + 1) / notes.length) * 100}%`;
-
+    notesCountElem.textContent = index + 1;
 
     if (note && (!note.password || note.password.trim() === "")) {
       const content = (note.content || "").toLowerCase();
       const title = note.title || "Untitled";
 
-      const isSensitive = sensitiveKeywords.some(keyword =>
-        content.includes(keyword.toLowerCase())
-      );
+ const matchedKeyword = sensitiveKeywords.find(keyword => {
+  const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+  return regex.test(content);
+});
 
-      if (isSensitive && !scannedTitles.has(title)) {
+
+      if (matchedKeyword && !scannedTitles.has(title)) {
+        // Determine severity
+        let severity = /password|credit card|ssn|bank account/.test(matchedKeyword) ? "High" : "Medium";
+
         foundSensitiveData.push(
-          `<div class="alert-msg">Sensitive data found in: <strong style="color:red;">${title}</strong></div>`
+          `<div class="alert-msg">Sensitive data found in: 
+             <strong style="color:red;">${title}</strong>
+             <span class="severity ${severity.toLowerCase()}">${severity}</span>
+           </div>`
         );
         scannedTitles.add(title);
         threatsCount++;
-      } 
+        showToast("Threats Found!");
+    const sound = document.getElementById("alertSound");
+  sound.play();
+        threatsCountElem.textContent = threatsCount;
+      }
     }
 
     index++;
-  }, 2500); // Scan delay (ms)
- 
+  }, 100); // Scan delay (ms)
 }
+
+// Redirect to home & alert
+function redirectProtect() {
+  alert("Please add a password to sensitive notes yourself — automatic protection is not available.");
+  
+}
+
 
 
 function showAiToast() {
@@ -473,7 +463,7 @@ function showAiToast() {
 
     setTimeout(() => {
       toast.classList.remove('show');
-    }, 4000); // show for 4 seconds
+    }, 2000); // show for 4 seconds
   }
 
 
@@ -490,6 +480,7 @@ function showList() {
 
 function closeListPassword() {
   document.getElementById("listPasswordModalr").style.display = "none";
+dummySaveList();
 }
 
 
@@ -530,15 +521,26 @@ function highlightSearchTerm(text, searchTerm) {
 }
 
 // Function to display filtered notes and lists with highlights
-function displayFilteredNotesAndLists(filteredNotes, filteredLists) {
+function displayFilteredNotesAndLists(filteredNotes, filteredLists, isAISearching = false) {
     const container = document.getElementById("notesContainer");
     container.innerHTML = ""; // Clear existing content
+    const listsContainer = document.getElementById("listsContainerContent");
+    listsContainer.innerHTML = "";
     const noNotesMessage = document.getElementById("noNotesMessage");
+    noNotesMessage.innerHTML = isAISearching ? "Searching with AI..." : "No matching notes with that title were found.";
+    const noListsMessage = document.getElementById("noListsMessage");
+    noListsMessage.innerHTML = "No matching lists with that title were found.";
 
     if (filteredNotes.length === 0 && filteredLists.length === 0) {
         noNotesMessage.classList.remove("hidden");
     } else {
         noNotesMessage.classList.add("hidden");
+    }
+
+    if (filteredLists.length === 0) {
+        noListsMessage.classList.remove("hidden"); // Show the no lists message
+    } else {
+        noListsMessage.classList.add("hidden");
     }
 
     // Display notes
@@ -547,13 +549,14 @@ function displayFilteredNotesAndLists(filteredNotes, filteredLists) {
         const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
         const formattedDate = formatDate(noteDate); // Format the date for display
         const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
-        
+       
         const noteAIbutton = !note.password || note.password === "" 
         ? `
         <button class="summarize-btn" 
                 data-note-content="${note.content}" 
                 data-note-title="${note.title}"
                 onclick="handleSummarizeButtonClick(this); event.stopPropagation();">
+                  
             <i class="fas fa-magic"></i> Summarize Note
         </button>
         ` 
@@ -589,23 +592,212 @@ function displayFilteredNotesAndLists(filteredNotes, filteredLists) {
     // Display lists
     filteredLists.forEach((list, index) => {
         const listDiv = document.createElement("div");
-
+        const listDate = new Date(list.date); // Convert the stored date string back to a Date object
+        const formattedDate = formatDate(listDate); // Format the date for display
+        const loclIndicator = list.password && list.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
         // Highlight list name with search term
-        const highlightedListName = highlightSearchTerm(list.name, document.getElementById('searchInput').value.toLowerCase());
+        const highlightedListName = highlightSearchTerm(list.title, document.getElementById('searchInput').value.toLowerCase());
 
         listDiv.innerHTML = `
-        <div class="note" onclick="openList(${index})">
-            <h4>${highlightedListName}</h4>
-            <span class="note-date">${list.date || "No date"}</span>
-            <button class="delete-btn" onclick="event.stopPropagation(); deleteList(${index})">Delete</button>
-        </div>
+     <div class="list" onclick="openList(${index})">    
+  <i class="fas fa-list"></i>
+  <div class="note-header">
+     <h4>${highlightedListName}</h4>
+    ${loclIndicator}
+    </div>
+  <span class="list-date">${formattedDate}</span>
+   <button class="delete-btn" onclick="deleteList(${index}); event.stopPropagation();"><i class="fas fa-trash"></i> Delete</button>
+  </div>
         `;
         container.appendChild(listDiv);
     });
 }
 
 // Function to perform search and display highlighted notes and lists
+let aiSearchTimeout;
+
 function searchNotes() {
+    clearTimeout(aiSearchTimeout); // cancel previous call if typing continues
+
+    aiSearchTimeout = setTimeout(() => {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+        if (searchTerm === "") return;
+
+        // Filter notes and lists first
+        const filteredNotes = notes.filter(note =>
+            note?.title?.toLowerCase().includes(searchTerm)
+        );
+        const filteredLists = lists.filter(list =>
+            list?.title?.toLowerCase().includes(searchTerm)
+        );
+
+        // Only call AI if nothing matches locally
+        if (filteredNotes.length === 0 && filteredLists.length === 0) {
+            document.getElementById('searchInput').classList.add('ai-searching');
+            showToast("Searching with AI...");
+            searchWithAI(searchTerm);
+        } else {
+            document.getElementById('searchInput').classList.remove('ai-searching');
+        }
+
+        // Update UI with local matches immediately
+        displayFilteredNotesAndLists(filteredNotes, filteredLists);
+    }, 1200); // wait 700ms after typing stops
+}
+
+// Attach event listener
+document.getElementById('searchInput').addEventListener('input', searchNotes);
+
+async function searchWithAI(searchTerm) {
+    console.log("AI search triggered for:", searchTerm);
+    const searchInput = document.getElementById('searchInput');
+
+    // Get the last 10 notes
+    const notesToSearch = notes.slice(-10);
+
+    // Create the prompt for the AI
+    const prompt = `Based on the following notes, please answer the question: "${searchTerm}". 
+
+Notes:
+${notesToSearch.map(note => `Title: ${note.title}\nContent: ${note.content}`).join('\n\n')}`;
+
+    // Call the Gemini API
+    const aiResponse = await callGeminiAPI(prompt, "AI Search");
+
+    // Stop the animation
+    searchInput.classList.remove('ai-searching');
+
+    if (aiResponse) {
+        // Find the note that contains the answer
+        const relevantNote = notesToSearch.find(note => aiResponse.includes(note.title));
+
+        if (relevantNote) {
+            // Display the AI response and the relevant note
+          
+            alert(`AI Answer:\n\n${aiResponse}`);
+            const noteIndex = notes.findIndex(note => note.title === relevantNote.title);
+            displayFilteredNotesAndLists([notes[noteIndex]], []);
+        } else {
+            // If the AI response doesn't mention a specific note, just show the answer
+            alert(`AI Answer:\n\n${aiResponse}`);
+            
+        }
+    } else {
+        // If the AI fails, show the original "no results" message
+        displayFilteredNotesAndLists([], []);
+        console.log("AI search failed:", aiResponse);
+    }
+
+const filteredNotes = notes.filter(note =>
+            note?.title?.toLowerCase().includes(searchTerm)
+        );
+        const filteredLists = lists.filter(list =>
+            list?.title?.toLowerCase().includes(searchTerm)
+        );
+
+    if (filteredNotes.length === 0 && filteredLists.length === 0) {
+        noNotesMessage.classList.remove("hidden");
+    } else {
+        noNotesMessage.classList.add("hidden");
+    }
+
+    const noListsMessage = document.getElementById("noListsMessage"); // Get
+
+    if (filteredLists.length === 0) {
+noListsMessage.classList.remove("hidden"); // Show the no lists message
+  } else {
+    noListsMessage.classList.add("hidden");
+  }
+
+    // Display notes
+    
+    filteredNotes.forEach((note, index) => {
+        const noteDiv = document.createElement("div");
+        const noteDate = new Date(note.date); // Convert the stored date string back to a Date object
+        const formattedDate = formatDate(noteDate); // Format the date for display
+        const lockIndicator = note.password && note.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
+       
+        const noteAIbutton = !note.password || note.password === "" 
+        ? `
+        <button class="summarize-btn" 
+                data-note-content="${note.content}" 
+                data-note-title="${note.title}"
+                onclick="handleSummarizeButtonClick(this); event.stopPropagation();">
+                  
+            <i class="fas fa-magic"></i> Summarize Note
+        </button>
+        ` 
+        : "";
+        
+        const noteAIbtn = note.password || note.password !== "" 
+        ? `
+        <button class="summarize-btn" 
+        onclick="alert('Locked notes cannot be summarized due to security reasons'); event.stopPropagation();">
+            <i class="fas fa-magic"></i> Summarize Note
+        </button>
+        ` 
+        : "";
+
+        // Highlight title with search term
+        const highlightedTitle = highlightSearchTerm(note.title, document.getElementById('searchInput').value.toLowerCase());
+
+        noteDiv.innerHTML = `
+        <div class="note" onclick="openNote(${index})">
+            <div class="note-header">
+                <h4>${highlightedTitle}</h4>
+                ${lockIndicator}
+            </div>
+            <span class="note-date">${formattedDate}</span>
+            ${noteAIbutton}
+            ${noteAIbtn}
+            <button class="delete-btn" onclick="deleteNote(${index}); event.stopPropagation();"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+        `;
+        container.appendChild(noteDiv);
+    });
+
+    // Display lists
+      
+    filteredLists.forEach((list, index) => {
+     
+      const listDiv = document.createElement("div");
+const listDate = new Date(list.date); // Convert the stored date string back to a Date object
+    const formattedDate = formatDate(listDate); // Format the date for display
+    const loclIndicator = list.password && list.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
+        // Highlight list name with search term
+        const highlightedListName = highlightSearchTerm(list.title, document.getElementById('searchInput').value.toLowerCase());
+
+        listDiv.innerHTML = `
+     <div class="list" onclick="openList(${index})">    
+  <i class="fas fa-list"></i>
+  <div class="note-header">
+     <h4>${highlightedListName}</h4>
+    ${loclIndicator}
+    </div>
+  <span class="list-date">${formattedDate}</span>
+   <button class="delete-btn" onclick="deleteList(${index}); event.stopPropagation();"><i class="fas fa-trash"></i> Delete</button>
+  </div>
+        `;
+        container.appendChild(listDiv);
+    });
+
+  }
+
+  function onInputChanged() {
+  clearTimeout(aiSearchTimeout); // cancel previous call if typing continues
+  aiSearchTimeout = setTimeout(() => {
+    const searchTerm = document.getElementById('searchInput').value;
+    if (searchTerm.trim() !== "") {
+      searchWithAI(searchTerm);
+    }
+  }, 5000); // wait 700ms after typing stops
+}
+
+
+// Attach it to your input
+document.getElementById('searchInput').addEventListener('input', onInputChanged);
+// Function to perform search and display highlighted notes and lists
+/*function searchNotes() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
     // Filter notes safely
@@ -615,12 +807,12 @@ function searchNotes() {
 
     // Filter lists safely
     const filteredLists = lists.filter(list =>
-        list?.name?.toLowerCase().includes(searchTerm)
+        list?.title?.toLowerCase().includes(searchTerm)
     );
 
     // Display both with highlights
     displayFilteredNotesAndLists(filteredNotes, filteredLists);
-}
+}*/
 
 
 
@@ -652,17 +844,14 @@ document.addEventListener('click', function(event) {
   }
 });
 
-// Function to close the list password modal
+function refresh() {
+  displayNotes();
+  displayLists();
+  showToast("Refreshed!");
+  closeSidebar();
 
-
-// Function to close a specific feature section
-
-
-
-function showListPassword() {
-  const listPasswordInput = document.getElementById("listPassword");
-  listPasswordInput.classList.toggle("hidden"); // Toggle visibility of the password input
 }
+
 
 // Function to verify the password for accessing the list
 function verifyListPassword() {
@@ -681,17 +870,14 @@ function verifyListPassword() {
     document.getElementById("listPassword").value = list.password;
   } else {
     showToast("Incorrect password!"); // Show an error message
+         const sound = document.getElementById("errorSound");
+  sound.play();
   }
 }
 
 
 
 
-
-// Function to show alert when a feature is not implemented
-function showAlert(feature) {
-  alert(`${feature} feature is not implemented yet.`);
-}
 // Function to show the delete password modal
 
 // Function to close the delete list password mod
@@ -724,6 +910,8 @@ function deleteListVerifyPassword() {
     displayLists();
   } else {
     showToast("Incorrect password!"); // Show an error message
+         const sound = document.getElementById("errorSound");
+  sound.play();
   }
 }
 
@@ -748,6 +936,13 @@ function showSection(sectionId) {
   }
 
   currentSection = sectionId; // Update current section
+}
+
+function showAddItem() {
+  addItemSection.classList.remove("hidden"); // make visible
+  setTimeout(() => {
+    addItemSection.classList.add("show");   // trigger pop animation
+  }, 10);
 }
 
 function navigateTo(sectionId) {
@@ -799,10 +994,14 @@ let isMessageBoxVisible = false; // Flag to track visibility
 
 
 function showAddNote() {
-  showSection("addItemSection"); // Show the add item section
+  showAddItem() // Show the add item section
   document.getElementById("noteContent").value = ""; // Clear the note content
   document.getElementById("notePassword").value = ""; // Clear the password input
   switchTab('note'); // Switch to the note tab
+  const listButton = document.getElementById('summarize-btn'); 
+
+// 2. Disable the button
+listButton.disabled = false;
 
   if (editingNoteIndex !== null) {
     // Editing an existing note
@@ -813,18 +1012,13 @@ function showAddNote() {
   } else {
     // Creating a new note
     document.getElementById("noteTitle").value = ""; // Clear the title input
-    
+     document.getElementById("noteContent").value = "";
   }
-  document.getElementById('addOptionsModal').classList.add("hidden");
+  
     const itemText = document.getElementById("itemText");
 
   itemText.querySelector("h2").textContent = "Create a new item";
   
-}
-
-function addItemModal() {
-  const modal = document.getElementById("addItemModal");
-  modal.style.display = "flex"; // Show the modal
 }
 
 const sidebar = document.getElementById("sidebar");
@@ -856,17 +1050,9 @@ function closeSidebar() {
   }, 300);
 }
 
-
-
-function closeAddItemModal() {
-  const modal = document.getElementById("addItemModal");
-  modal.style.display = "none"; // Hide the modal
-}
-
 // Function to cancel note and reset visibility
 function cancelNote() {
-  const section = document.getElementById("addItemSection");
-  section.classList.add("hidden");
+hideAddItem();
   showSection("combinedContainer");
   document.getElementById("notePasswordModal").classList.add("hidden");
 }
@@ -925,26 +1111,24 @@ function saveNote() {
   displayNotes();
   showSection('combinedContainer');
   document.getElementById("notePasswordModal").classList.add("hidden");
-document.getElementById("infoContainer").style.display = "none";
+    const sound = document.getElementById("alertSound");
+  sound.play();
   // Reset editing state
   editingNoteIndex = null;
 }
 
-function closeNotePassword() {
-   showInfo("You have unsaved changes.");
-  document.getElementById("notePasswordModal").style.display = "none";
- 
-}
-
-function showInfo(message) {
-    const infoBox = document.getElementById('infoContainer');
-    document.getElementById('infoText').textContent = message;
-    infoBox.style.display = 'flex';
-  }
 function syncNoteToIndexedDB(note) {
-  if (!db) return;
+  
+
+  if (!db) {
+    console.log("No DB");
+    return;
+  }
   const syncState = localStorage.getItem("syncEnabled");
-  if (syncState !== "true") return;
+  if (syncState !== "true") {
+    console.log("Sync disabled");
+    return;
+  }
 
   if (!note.noteId) {
     note.noteId = `${note.title}-${Date.now()}`;
@@ -963,36 +1147,23 @@ function syncNoteToIndexedDB(note) {
 updateLastSyncedDisplay();
 }
 
+/**
+ * This is the auto-save function. It should ONLY update an existing note
+ * or a new note being drafted. It should not add multiple new notes.
+ */
 
+function closeNotePassword() {
 
-function suggestTitle(noteContent) {
-  const keywords = {
-    "grocery": "Grocery List",
-    "buy": "Shopping List",
-    "meeting": "Meeting Notes",
-    "exam": "Study Plan",
-    "todo": "To-Do List",
-    "to do": "To-Do List",
-    "shopping": "Shopping List",
-    "study": "Study Plan",
-    "project": "Project Plan",
-    "task": "To-Do List",
-"work": "Work Notes"
-  };
+  document.getElementById("notePasswordModal").style.display = "none";
 
-  for (const key in keywords) {
-    if (noteContent.toLowerCase().includes(key)) {
-      alert("Suggested title by AI: " + keywords[key]);
-      return keywords[key];
-    }
-  }
-  console.log("Suggest title called");
-  return "Untitled Note";
-  
-  
+ 
 }
 
-
+function showInfo(message) {
+    const infoBox = document.getElementById('infoContainer2');
+    document.getElementById('infoText').textContent = message;
+    infoBox.style.display = 'flex';
+  }
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1027,16 +1198,11 @@ async function setMasterPassword(password) {
   showToast("Master password set unsuccessfully!"); // Show success message
 }
 
-function isMasterPasswordSet() {
-  return localStorage.getItem("masterPasswordHash") !== null;
-}
-
-
-
 function displayNotes() {
   const container = document.getElementById("notesContainer");
   container.innerHTML = "";
   const noNotesMessage = document.getElementById("noNotesMessage"); // Get the no notes message element
+  document.getElementById("noNotesMessage").innerHTML = "This space is lonely. Add a note!";
   if (notes.length === 0) {
     noNotesMessage.classList.remove("hidden"); // Show the no notes message
   } else {
@@ -1055,6 +1221,7 @@ function displayNotes() {
             data-note-content="${note.content}" 
             data-note-title="${note.title}"
             onclick="handleSummarizeButtonClick(this); event.stopPropagation();">
+              
         <i class="fas fa-magic"></i> Summarize Note
     </button>
   ` 
@@ -1126,7 +1293,7 @@ function formatSyncTime(date) {
 
 
 
-const GEMINI_API_KEY = "AIzaSyD2BMm3Fx16VYcF_tCYcDsEJnuSmW-wG6I"; 
+const GEMINI_API_KEY = "AIzaSyC7v3VTvBq0w_5JqgFGNVO9kmWn0zCeOa4"; 
 
 // Base URL for Gemini API (gemini-2.0-flash model)
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -1135,40 +1302,54 @@ const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/
 
 
 // --- Utility function to make Gemini API calls ---
+const aiCache = new Map();
+let aiAbortController;
+
 async function callGeminiAPI(prompt, featureName = "AI Feature") {
+    // Prevent duplicate requests
+    if (aiCache.has(prompt)) {
+        showToast(`${featureName} loaded from cache`, 1000);
+        return aiCache.get(prompt);
+    }
+
+    // Cancel previous request if still pending
+    if (aiAbortController) aiAbortController.abort();
+    aiAbortController = new AbortController();
+
     try {
         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
         const payload = { contents: chatHistory };
 
-        showToast(`Applying ${featureName}...`, 0); // Show loading indefinitely (duration 0)
+        showToast(`Applying ${featureName}...`, 0);
 
         const response = await fetch(GEMINI_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            signal: aiAbortController.signal
         });
 
         const result = await response.json();
-        
-        // Hide loading message after response
-        showToast("", 1); // Hide immediately by sending an empty message and small duration
+        showToast("", 1); // Hide loading
 
-        if (response.ok && result.candidates && result.candidates.length > 0 &&
-            result.candidates[0].content && result.candidates[0].content.parts &&
-            result.candidates[0].content.parts.length > 0) {
+        if (response.ok && result.candidates?.[0]?.content?.parts?.[0]?.text) {
             const text = result.candidates[0].content.parts[0].text;
+            aiCache.set(prompt, text); // cache result
             showToast(`${featureName} successful!`, 2000);
             return text;
         } else {
-            // Check for specific error messages from the API
-            const errorDetail = result.error ? result.error.message : 'Unknown error or no content.';
+            const errorDetail = result.error?.message || 'Unknown error or no content.';
             showToast(`Error with ${featureName}: ${errorDetail}`, 4000);
             console.error(`Gemini API Error for ${featureName}:`, result);
             return null;
         }
     } catch (error) {
-        showToast(`Network error for ${featureName}: ${error.message}`, 4000);
-        console.error(`Fetch error for ${featureName}:`, error);
+        if (error.name === "AbortError") {
+            console.log(`Previous ${featureName} request aborted.`);
+        } else {
+            showToast(`Network error for ${featureName}: ${error.message}`, 4000);
+            console.error(`Fetch error for ${featureName}:`, error);
+        }
         return null;
     }
 }
@@ -1183,6 +1364,28 @@ async function summarizeNoteWithAI(textToSummarize) {
 
 
 // --- Event Listeners for AI Feature Toggles ---
+function handleBack() {
+   closeAddItem();
+}
+
+document.addEventListener('keydown', function(event) {
+    // Check if the pressed key is the 'Escape' key
+    if (event.key === 'Escape') {
+        
+        // Prevent default browser actions (like stopping media playback)
+        event.preventDefault(); 
+        
+        // 1. Call your primary Escape function here
+        closeAddItem();
+    }
+});
+
+
+function closeAddItem() {
+  hideAddItem();
+  showSection("combinedContainer");
+}
+
 
 
     
@@ -1205,6 +1408,8 @@ async function handleSummarizeButtonClick(buttonElement) {
         }
     } else {
         showToast("No content found to summarize for this note.", 3000);
+             const sound = document.getElementById("errorSound");
+  sound.play();
     }
 }
 
@@ -1225,12 +1430,6 @@ document.addEventListener("DOMContentLoaded", function () {
   
 });
 
-function showListsSection() {
-  showSection("combinedContainer"); // Show the lists container
-  displayLists(); // Refresh the displayed lists
-  document.getElementById("addItemSection").classList.add("hidden"); // Ensure add list section is hidden
-}
-
 function verifyPassword() {
   const password = document.getElementById("passwordInput").value;
   const index =
@@ -1242,7 +1441,8 @@ function verifyPassword() {
     showNoteContent(note);
   } else {
     showToast("Incorrect password!");
-    
+         const sound = document.getElementById("errorSound");
+  sound.play();
   }
 }
 
@@ -1262,6 +1462,8 @@ function deleteVerifyPassword() {
     closeDeletePasswordModal(); // Close the modal
   } else {
     showToast("Incorrect password!"); // Show an error message
+         const sound = document.getElementById("errorSound");
+  sound.play();
   }
 }
 
@@ -1270,13 +1472,17 @@ function showNoteContent(note) {
   document.getElementById("noteContent").value = note.content;
   document.getElementById("notePassword").value = note.password;
   
-  showSection("addItemSection"); // Show the add item section
+  showAddItem() // Show the add item section
   // Set the index of the note being edited
   editingNoteIndex = notes.findIndex(
     (n) => n.title === note.title && n.content === note.content
   );
-  closeAddOptions();
+
   switchTab('note');
+const listButton = document.getElementById('checklist-tab'); 
+
+// 2. Disable the button
+listButton.disabled = true;
 }
 
 // Modify the deleteNote function to include password verification
@@ -1297,6 +1503,7 @@ function deleteNote(index) {
       }
   }
   syncNoteToIndexedDB(note);
+  displayNotes();
 }
 
 
@@ -1307,18 +1514,11 @@ function closeDeletePasswordModal() {
 }
 
 function closeAddListSection() {
-  document.getElementById("addItemSection").classList.add("hidden"); // Hide the add list section
+hideAddItem();
+    section.classList.remove("show"); // Hide the add list section
   showSection("combinedContainer"); // Show the lists section
 }
 
-// Function to show the add options modal
-function showAddOptions() {
-  document.getElementById('addOptionsModal').classList.toggle("hidden");
-}
-
-function closeAddOptions() {
-  
-}
 
 // Function to open a list and pre-fill the add list section
 
@@ -1328,14 +1528,19 @@ function showAddListSection() {
   // Hide all sections first
 
   document.querySelectorAll(".container").forEach((section) => {
-    section.classList.add("hidden"); // Hide all sections
+    
   });
 
   // Show the add list section
-  document.getElementById("addItemSection").classList.remove("hidden"); // Show the add list section
+showAddItem();
+   
 document.getElementById("addListSection").style.display = "block"; // Show the add list section
 document.getElementById("addNoteSection").style.display = "none"; // Show the add list section
-switchTab('checklist'); // Switch to the add list tab
+switchTab('checklist');
+const noteButton = document.getElementById('summarize-btn'); 
+
+// 2. Disable the button
+noteButton.disabled = true; // Switch to the add list tab
   if (editingListIndex !== null) {
     const list = lists[editingListIndex]; // Get the list being edited
     document.getElementById("listTitle").value = list.title; // Set the input value to the list title
@@ -1350,7 +1555,7 @@ switchTab('checklist'); // Switch to the add list tab
     displayChecklist(); // Clear the checklist display
   }
 
- document.getElementById('addOptionsModal').classList.add("hidden");
+ 
     const itemText = document.getElementById("itemText");
 
   itemText.querySelector("h2").textContent = "Create a new item";
@@ -1360,12 +1565,21 @@ switchTab('checklist'); // Switch to the add list tab
 // Function to cancel adding a list
 function cancelList() {
   // Hide the add list section and show the lists section
-  document.getElementById("addItemSection").classList.add("hidden"); // Hide the add list section
+  currentListId = null; // Also clear the draft list ID on cancel
+hideAddItem();
+    
   showSection("combinedContainer"); // Show the lists section
   displayNotes();
   displayLists();
   document.getElementById("listPasswordModalr").classList.add("hidden");
 
+}
+
+function hideAddItem() {
+  addItemSection.classList.remove("show");  // start hide animation
+  setTimeout(() => {
+    addItemSection.classList.add("hidden"); // hide completely
+  }, 500); // match transition duration
 }
 
 // Function to show a specific section
@@ -1379,6 +1593,8 @@ const formattedDate = formatDate(date);
 
 if (title === "" || currentItems.length === 0) {
 showToast("Enter Data!");
+     const sound = document.getElementById("errorSound");
+  sound.play();
 return;
 }
 
@@ -1391,18 +1607,72 @@ date: formattedDate,
 
 if (editingListIndex !== null) {
 lists[editingListIndex] = listData;
-showToast("Saved");
+    showToast("Saved");
+    const sound = document.getElementById("alertSound");
+  sound.play();
+} else if (currentListId) {
+    // This is a new list that was being auto-saved. Find and finalize it.
+    const draftListIndex = lists.findIndex(l => l.listId === currentListId);
+    if (draftListIndex !== -1) {
+      lists[draftListIndex] = listData; // Overwrite the draft
+    } else {
+      lists.push(listData); // Fallback
+    }
+    showToast("Saved");
+    const sound = document.getElementById("alertSound");
+  sound.play();
 } else {
 lists.push(listData);
-showToast("Saved");
+    showToast("Saved");
+    const sound = document.getElementById("alertSound");
+  sound.play();
 }
 
 localStorage.setItem("lists", JSON.stringify(lists));
 displayLists();
 showSection("combinedContainer");
 editingListIndex = null;
+currentListId = null; // Clear the temporary ID
 document.getElementById("listPasswordModalr").classList.add("hidden");
 syncListToIndexedDB(listData);
+cancelNote();
+}
+
+function dummySaveList() {
+const title = document.getElementById("listTitle").value.trim();
+const password = document.getElementById("listPassword").value.trim();
+const date = new Date();
+const formattedDate = formatDate(date);
+
+  
+if (editingListIndex !== null) {
+    lists[editingListIndex].title = title;
+    lists[editingListIndex].items = JSON.parse(JSON.stringify(currentItems));
+    lists[editingListIndex].password = password;
+} else {
+    // This is a NEW list. We need to handle it carefully to avoid duplicates.
+    if (!currentListId) {
+      // This is the VERY FIRST input for a new list. Create it and assign a temp ID.
+      currentListId = `draft-list-${Date.now()}`;
+      const newList = {
+        listId: currentListId, // Use a temporary ID
+        title,
+        items: JSON.parse(JSON.stringify(currentItems)),
+        password,
+        date: formattedDate,
+      };
+      lists.push(newList);
+    } else {
+      // This is a subsequent input for the same new list. Find and update it.
+      const draftList = lists.find(l => l.listId === currentListId);
+      if (draftList) {
+        draftList.title = title;
+        draftList.items = JSON.parse(JSON.stringify(currentItems));
+      }
+    }
+}
+
+localStorage.setItem("lists", JSON.stringify(lists));
 }
 
 function syncListToIndexedDB(listData) {
@@ -1429,17 +1699,19 @@ function updateLastSyncedDisplay() {
   if (!div) return;
 
   if (!lastSynced) {
-    div.innerText = "🕒 Last Synced: Never";
+    div.innerText = `<i class="fas fa-clock"></i> Last Synced: Never`;
     return;
   }
 
   const syncedDate = new Date(lastSynced);
-  div.innerText = "🕒 Last Synced: " + formatSyncTime(syncedDate);
+  div.innerHTML = `<i class="fas fa-clock"></i> Last Synced: ${formatSyncTime(syncedDate)}`;
+
 }
 
 // Function to open a list and pre-fill the add list section
 function openList(index) {
   const list = lists[index];
+
 
   // Check if the list has a password
   if (list.password) {
@@ -1447,6 +1719,7 @@ function openList(index) {
     document.getElementById("listPasswordModal").dataset.listIndex =
       index;
     document.getElementById("listPasswordModal").style.display = "flex";
+    document.getElementById("listPasswordInput").value = "";
   } else {
     // If no password is required, proceed to open the list
     document.getElementById("listTitle").value = list.title;
@@ -1458,6 +1731,10 @@ function openList(index) {
   }
   const itemText = document.getElementById("itemText");
   switchTab('checklist');
+ const noteButton = document.getElementById('note-tab'); 
+
+// 2. Disable the button
+noteButton.disabled = true;
 
   // Change the heading and paragraph
   itemText.querySelector("h2").textContent = "Manage your item";
@@ -1481,54 +1758,29 @@ function showListsSection() {
   displayLists(); // Refresh the displayed lists
 }
 
-function showListContent(list) {
-  // Implement the logic to display the list content
-  // For example, you might want to show the items in the list
-  const checklistContainer =
-    document.getElementById("checklistContainer");
-  checklistContainer.innerHTML = ""; // Clear previous items
-
-  list.items.forEach((item) => {
-    const itemDiv = document.createElement("div");
-    itemDiv.textContent = item; // Display each item
-    checklistContainer.appendChild(itemDiv);
-  });
-
-  // Show the section that contains the list content
-  showSection("checklistContainer"); // Assuming you have a section to show the checklist
-}
-
 // Function to add an item to the checklist
 function addItem() {
 const newItemInput = document.getElementById("newItem");
 const newItemValue = newItemInput.value.trim();
 
 if (newItemValue === "") {
-showToast("Item cannot be empty!");
+showToast("Item cannot be empty");
+     const sound = document.getElementById("errorSound");
+  sound.play();
 return;
 }
 
 currentItems.push({ name: newItemValue, checked: false });
 newItemInput.value = "";
 displayChecklist();
+dummySaveList();
 }
 // Event listener for adding item with Enter key
-document
-  .getElementById("newItem")
-  .addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-      addItem();
-    }
-  });
 
-// Event listener for switching to note content with Enter key
-document
-  .getElementById("noteTitle")
-  .addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-      document.getElementById("noteContent").focus(); // Switch focus to note content
-    }
-  });
+
+  
+
+
 
 // Event listener for submitting password with Enter key
 
@@ -1609,7 +1861,9 @@ if (!result) {
 
             // Done restoring
             overlay.style.display = "none";
-            showToast("Notes and Lists restored from Secondry Storage!");
+            showToast("Data restored from Secondory Storage!");
+            const sound = document.getElementById("alertSound");
+  sound.play();
           }
         };
       }
@@ -1621,18 +1875,8 @@ if (!result) {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  updateLastSyncedDisplay();
-  displayNotes(); // Display notes on page load
-  displayLists(); // Display lists on page load
-  localStorage.setItem("lastSynced", new Date().toISOString()); // Initialize last synced time
-  const syncState = localStorage.getItem("syncEnabled");
-  if (syncState === null || syncState === "true") {
-    document.getElementById("syncToggle").checked = true;
-  } else {
-    document.getElementById("syncToggle").checked = false;
-  }
-});
+
+
 
 
 // Event listener for closing the password modal with Escape key
@@ -1652,7 +1896,7 @@ const itemDiv = document.createElement("div");
 itemDiv.innerHTML = `
 
 <div class="checklist-item">
-  <input type="checkbox" id="item-${index}" ${item.checked ? "checked" : ""} onchange="toggleCheck(${index})">
+  -><input type="checkbox" id="item-${index}" ${item.checked ? "checked" : ""} onchange="toggleCheck(${index})">
   <label for="item-${index}">${item.name}</label>
   <button onclick="removeItem(${index})"><i class="fas fa-trash"></i> Remove</button>
 </div>
@@ -1679,6 +1923,7 @@ function displayLists() {
   const container = document.getElementById("listsContainerContent");
   container.innerHTML = ""; // Clear existing lists
   const noListsMessage = document.getElementById("noListsMessage"); // Get
+  document.getElementById("noListsMessage").innerHTML = "No lists yet.. Add";
   if (lists.length === 0) {
     noListsMessage.classList.remove("hidden"); // Show the no lists message
   } else {
@@ -1689,15 +1934,29 @@ function displayLists() {
     const listDate = new Date(list.date); // Convert the stored date string back to a Date object
     const formattedDate = formatDate(listDate); // Format the date for display
     const loclIndicator = list.password && list.password !== "" ? ' <i class="fas fa-lock"></i>' : "";
+    let progressHTML = "";
+    if (list.items && list.items.length > 0) {
+      const total = list.items.length;
+const checked = list.items.filter(item => item.checked).length;
+const percent = (checked / total) * 100;
+      progressHTML = `
+        <div class="list-progress">
+   <small>${Math.round(percent)}% Completed</small>
+        <progress value="${percent}" max="100" id="list-bar"></progress>
+ </div>
+      `;
+    }
+
     listDiv.innerHTML = `
-  <div class="note" onclick="openList(${index})">    
+  <div class="list" onclick="openList(${index})">    
   <i class="fas fa-list"></i>
   <div class="note-header">
     <h4>${list.title}</h4>
     ${loclIndicator}
     </div>
   <span class="list-date">${formattedDate}</span>
-   <button class="delete-btn" onclick="deleteList(${index}); event.stopPropagation();"><i class="fas fa-trash"></i> Delete</button>
+  ${progressHTML} 
+  <button class="delete-btn" onclick="deleteList(${index}); event.stopPropagation();"><i class="fas fa-trash"></i> Delete</button>
   </div>
   `;
     container.appendChild(listDiv);
@@ -1724,6 +1983,7 @@ function deleteList(index) {
     }
   }
   syncListToIndexedDB(list);
+  displayLists();
 }
 
 function toggleSync(el) {
@@ -1742,10 +2002,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const syncState = localStorage.getItem("syncEnabled");
 
   if (syncToggle) {
-    if (syncState === null || syncState === "true") {
-      syncToggle.checked = true;
-    } else {
+    if (syncState === null || syncState === "false") {
       syncToggle.checked = false;
+    } else {
+      syncToggle.checked = true;
     }
 
     // Optional: set visual text
@@ -1755,24 +2015,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
 
-    const dataInd = document.getElementById("dataInd");
-    if (dataInd) {
-      dataInd.innerText = syncToggle.checked
-        ? "📡 Data found in Secondry Storage"
-        : "No Data in Secondry Storage Storage found.";
-    }
+   
   }
 });
 
-
-function showError() {
-  showToast("Failed to connect to model")
-}
-
-function showError2() {
-  showToast("Failed to configure")
-  alert("This is an message from Notefull security system: Due to some errors on API side, the AI toggle will be always enabled. Mantaining your secure experience")
-}
 
 const VERSION = "v1.2"; // Simulate new version
 
@@ -1782,7 +2028,7 @@ showSection('antithreatSection');
   const lastUpdated = localStorage.getItem("lastUpdated");
   const version = localStorage.getItem("version") || "v1.0";
 
-  document.getElementById("lastUpdated").textContent = lastUpdated || "Never";
+  document.getElementById("lastUpdated").textContent = lastUpdated || "Outdated";
   document.getElementById("currentVersion").textContent = version;
 
   const now = Date.now();
@@ -1794,35 +2040,180 @@ showSection('antithreatSection');
   }
 }
 
-function startUpdateProcess() {
-  // Show the update modal
-  document.getElementById('updateModal').style.display = 'flex';
+// Update the account icon
+function updateAccountIcon() {
+  const username = localStorage.getItem('notesAppUser');
+  const accountIcon = document.getElementById('account-icon');
 
-  // After 75% of the duration (90 sec), show a toast
-  setTimeout(() => {
-    showToast("Installing Updates...");
-  }, 90000); // 75% of 2 minutes
+  if (username && accountIcon) {
+    const firstLetter = username.trim().charAt(0).toUpperCase();
+    accountIcon.textContent = firstLetter;
 
-  // After 100% duration (2 min), hide modal & update localStorage
-  setTimeout(() => {
-    document.getElementById('updateModal').style.display = 'none';
+    accountIcon.onclick = () => {
+      alert(`Account: ${username}\n`);
+    };
 
-    // Store update time and version
-    const now = new Date();
-    localStorage.setItem("lastUpdate", now.toISOString());
-    localStorage.setItem("appVersion", "v1.0.1"); // Change version if needed
-
-    showToast("Update Installed Successfully!");
-    updateLastUpdatedText();
-  }, 120000); // Full 2 minutes
-}
-
-function updateLastUpdatedText() {
-  const last = localStorage.getItem("lastUpdate");
-  if (last) {
-    document.getElementById("lastUpdated").innerText = "Last Updated: " + new Date(last).toLocaleString();
+    // Fill the input with current username
+    const usernameInput = document.getElementById('usernameInput');
+    if (usernameInput) usernameInput.value = username;
   }
 }
+
+// Save updated profile
+function saveProfile() {
+  const usernameInput = document.getElementById('usernameInput');
+  const profileMsg = document.getElementById('profile-msg');
+
+  if (usernameInput && usernameInput.value.trim() !== '') {
+    const newName = usernameInput.value.trim();
+    localStorage.setItem('notesAppUser', newName);
+    updateAccountIcon();
+    profileMsg.textContent = 'Profile updated successfully!';
+    setTimeout(() => profileMsg.textContent = '', 3000);
+  } else {
+    profileMsg.textContent = 'Please enter a valid name.';
+  }
+}
+
+// Show section helper (like in your credits section)
+
+
+// Initialize profile on load
+document.addEventListener('DOMContentLoaded', updateAccountIcon);
+
+
+function openAntithreat() {
+showSection('antithreatSection');
+
+  const lastUpdated = localStorage.getItem("lastUpdated");
+  const version = localStorage.getItem("version") || "v1.0";
+
+  document.getElementById("lastUpdated").textContent = lastUpdated || "Outdated";
+  document.getElementById("currentVersion").textContent = version;
+
+  const now = Date.now();
+  const threeDays = 3 * 24 * 60 * 60 * 1000;
+  if (!lastUpdated || now - parseInt(lastUpdated) > threeDays) {
+    document.getElementById("updateButton").classList.remove("hidden");
+  } else {
+    document.getElementById("updateButton").classList.add("hidden");
+  }
+}
+
+async function startUpdate() {
+  const modal = document.getElementById("updateModal");
+  const statusEl = document.getElementById("updateStatus");
+  const updateBtn = document.getElementById("updateButton");
+
+  modal.style.display = "flex";
+  updateBtn.disabled = true;
+
+  let baseText = "Preparing updates";
+  let dotCount = 0;
+  const dotsInterval = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;
+    statusEl.textContent = baseText + ".".repeat(dotCount);
+  }, 500);
+
+  // Timed transitions for visual feedback
+  setTimeout(() => baseText = "Downloading update", 5000);
+  setTimeout(() => baseText = "Installing update", 20000);
+
+  try {
+    // Simulate long installation
+    await new Promise(resolve => setTimeout(resolve, 45000));
+
+    clearInterval(dotsInterval);
+    statusEl.textContent = "Finalizing...";
+
+    // Fetch latest keywords from GitHub
+    const response = await fetch(
+      "https://raw.githubusercontent.com/Anagh904a/notefull/refs/heads/main/sensitiveKeywords.json"
+    );
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+
+    localStorage.setItem("sensitiveKeywords", JSON.stringify(data));
+    console.log("✅ Keywords updated:", data);
+
+    // Update version info
+    const curVersion = localStorage.getItem("version") || "v1.0";
+    const nextVersion = getNextVersion(curVersion);
+    localStorage.setItem("version", nextVersion);
+    localStorage.setItem("lastUpdated", Date.now());
+
+    statusEl.textContent = "Update completed successfully!";
+    setTimeout(() => {
+      modal.style.display = "none";
+      openAntithreat();
+      alert("Database Updated — Now running a quick scan...");
+      startAiScan();
+    }, 2000);
+
+  } catch (err) {
+    clearInterval(dotsInterval);
+    statusEl.textContent = "Update failed. Please try again.";
+    console.error("❌ Update error:", err);
+    alert("Failed to fetch update. Please check your internet connection.");
+  } finally {
+    updateBtn.disabled = false;
+  }
+}
+
+function getNextVersion(currentVersion) {
+  // Remove 'v' prefix if present
+  let num = currentVersion.replace(/^v/i, "");
+
+  // Split into major.minor
+  let [major, minor] = num.split(".").map(Number);
+
+  // Increment minor version
+  minor++;
+
+  // If minor reaches 10, roll over to next major
+  if (minor >= 10) {
+    major++;
+    minor = 0;
+  }
+
+  return `v${major}.${minor}`;
+}
+
+
+async function fixNote() {
+    const noteContent = document.getElementById("noteContent");
+    const originalContent = noteContent.value;
+
+    if (originalContent.trim() === "") {
+        showToast("There is no content to fix.");
+        return;
+    }
+
+    const prompt = `Please fix the grammar and spelling of the following text and don't not share any explaination just in your answer the corrected text as you are being used as a summarizer feature:\n\n${originalContent}`;
+    const fixedContent = await callGeminiAPI(prompt, "Note Fixer");
+
+    if (fixedContent) {
+        noteContent.value = fixedContent;
+        showToast("Note content has been fixed!");
+    } else {
+        showToast("Failed to fix the note content.");
+    }
+}
+
+window.onload = function () {
+  const lastUpdated = parseInt(localStorage.getItem("lastUpdated"), 10);
+  const now = Date.now();
+  const UPDATE_INTERVAL = 3 * 24 * 60 * 60 * 1000; // 3 days in ms
+
+  // Show toast if update is due or never updated
+  if (!lastUpdated || now - lastUpdated > UPDATE_INTERVAL) {
+    showToast("New Definitions Available!");
+
+  }
+};
+
+
 
 // Function to cancel adding a list
 
