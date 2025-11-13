@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width">
 
     <meta name="description" content="This is a notes app built by anagh , its completely free" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+
     <link rel="manifest" href="manifest.json">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter&amp;display=swap" rel="stylesheet"/>
+   
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <title>Notefull - Home</title>
   
     <link rel="stylesheet" href="style.css" />
@@ -24,25 +22,25 @@
 
   <body>
 <!-- Combined Notes and Lists Section -->
-
+<!-- Add this somewhere in your HTML -->
+<audio id="alertSound" src="t.mp3" preload="auto"></audio>
+<audio id="errorSound" src="e.mp3" preload="auto"></audio>
 
 <div id="combinedContainer" class="container hidden">
       
-
-      <div class="top-bar">
+<div class="top-bar">
      
         <i id="sidebarToggle" class="fas fa-bars" onclick="toggleSidebar()"></i>
      
       <input
       type="text"
       id="searchInput"
-      placeholder="Search your data"
+      placeholder="Ask Notefull AI..."
       oninput="searchNotes()"
-      style="margin-left: 10px; padding: 5px; font-size: medium;"
-
-     >
-  
+>
+  <div id="account-icon" class="account-icon">A</div>
       </div>
+      
       
       
 <div class="sort-container">
@@ -63,70 +61,29 @@
       <div id="noListsMessage" class="hidden">No lists yet.. Add</div>
       <div id="noNotesMessage" class="hidden">This space is lonely. Add a note!</div>
  
-    <button class="fab" onclick="showAddOptions()">
-        <span class="fab-icon">+</span>
-    </button>
+    <div class="fab-container">
+        
+        <button class="main-fab-style" id="mainFab">
+            <i class="fas fa-plus fab-icon"></i> 
+        </button>
+        
+        <div class="fab-options">
+            
+            <button class="modal-btn note-option" id="addNoteButton" onclick="showAddNote()">
+                <i class="fas fa-sticky-note" style="margin-right: 8px;"></i> Note
+            </button>
+            
+            <button class="modal-btn list-option" id="addListButton" onclick="showAddListSection()"">
+                <i class="fas fa-list-check" style="margin-right: 8px;"></i> List
+            </button>
+            
+        </div>
+    </div>
 
     </div>
 
    
 
-    <div id="ai" class="container hidden">
-      <button class="modal-button" onclick="showSection('settingsSection')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
-      <h2 id="aiTitle" style="display: flex; align-items: center; gap: 0.5em; font-weight: bold;">
-        <span style="font-size: 1.5em;">🤖</span> AI Features Management
-      </h2>
-      <p>Manage offline AI-powered helpers for your notes. No internet required.</p>
-    <p style="color: red; font-size: larger;">Failed to connect to model, please try again later. </p>
-    <p style="color: green; font-size: larger;">Succesfully Connected to AI scanner Model!</p>
-    
-       <div class="toggle-container">
-    <label class="toggle-switch">
-      <input type="checkbox" onchange="showError()">
-      <span class="slider"></span>
-    </label>
-    <div>
-      <span class="toggle-label">Enable Note Summarizer</span>
-    
-  </div>
-  </div>
-    <br>
-          <div class="toggle-container">
-    <label class="toggle-switch">
-      <input type="checkbox" onchange="showError()">
-      <span class="slider"></span>
-    </label>
-    <div>
-      <span class="toggle-label">Enable Smart Suggestions</span>
-    
-  </div>
-  </div>
-    <br>
-       <div class="toggle-container">
-    <label class="toggle-switch">
-      <input type="checkbox" onchange="showError()">
-      <span class="slider"></span>
-    </label>
-    <div>
-      <span class="toggle-label">Enable Spell check</span>
-    
-  </div>
-  </div>
-          <br>
-          <div class="toggle-container">
-    <label class="toggle-switch">
-      <input type="checkbox" onchange="showError2()" checked>
-      <span class="slider"></span>
-    </label>
-    <div>
-      <span class="toggle-label">AI Scanner Warning on Start-up</span>
-      <p style="margin: 0; font-size: 12px; color: gray;">Recommended</p>
-    </div>
-  </div>
-
-          </div>
      
    
     </div>
@@ -138,20 +95,16 @@
 </div>
 
   <div id="addItemSection" class="container hidden">
-    <button class="modal-button" onclick="showSection('combinedContainer')">
-        <i class="fas fa-arrow-left back-icon"></i>
-      </button>
+ 
+
     <div id="itemText">
       <h2>Create a new item</h2>
      
        
     </div>
-    <div id="infoContainer">
-  <div class="info-box">
-    <div class="info-icon">i</div>
-    <div class="info-text" id="infoText">Default message</div>
-  </div>
-</div>
+  
+    
+    
 
     <form class="form">
       <div class="tab-container">
@@ -165,25 +118,27 @@
 
       <!-- Note Panel -->
       <div id="addNoteSection" class="section">
-                  
-        <div class="form-group">
+                
+        <div class="form-group-title">
 
-          <label for="noteTitle">Title</label>
-          <input type="text" id="noteTitle" placeholder="Enter a title" />
+         
+          <input type="text" class="title" id="noteTitle" placeholder="Enter a title" />
         </div>
-        <div class="form-group">
-          <label for="noteContent">Content</label>
-          <textarea id="noteContent" placeholder="Your note content here..."></textarea>
+        <div class="form-group"> 
+           
+         
+          <textarea id="noteContent" placeholder="note content here..."></textarea>
         </div>
         <div class="footer-bar">
-     <button type="button" id="changePasswordButton" onclick="showNotePassword()">
-      <i class="fas fa-key"></i>
-      <span>Password</span>
-    </button>
-    <button type="button" onclick="saveNote()">
+     <button type="button" class="save-btn" onclick="saveNote()">
       <i class="fas fa-save"></i>
       <span>Save</span>
     </button>
+          <button type="button" id="changePasswordButton" onclick="showNotePassword()">
+      <i class="fas fa-key"></i>
+      <span>Key</span>
+    </button>
+   
    <button type="button" id="undoButton" onclick="undo()">
         <i class="fas fa-undo"></i>
         <span>Undo</span>
@@ -193,6 +148,12 @@
         <i class="fas fa-redo"></i>
         <span>Redo</span>
       </button>
+
+       <button type="button" id="summarize-btn" onclick="fixNote()">
+        <i class="fas fa-magic"></i> 
+<span>Fix</span>
+      </button>
+   
   </div>
   <div id="notePasswordModal" class="modal hidden">
         <div class="modal-content">
@@ -207,38 +168,31 @@
       <!-- Checklist Panel -->
       <div id="addListSection" class="section" style="display: none;">
         <div class="form-group">
-          <label for="checklistTitle">Title</label>
-          <input type="text" id="listTitle" placeholder="Enter checklist title" />
-           
+          
+          <input type="text" id="listTitle" class="title" placeholder="Enter checklist title" /><br>
+          <br><label for="inputforitem">Item Name</label> 
+          <input id="newItem" type="text" placeholder="Item name..." /> 
         </div>
-        <div id="checklistContainer"></div>
-        <button type="button" onclick="addItemModal()">
+                <button type="button" onclick="addItem()">
       <i class="fas fa-plus"></i>
      Add Item
     </button>
+        <div id="checklistContainer"></div>
+
           <!-- Dynamic checklist items -->
         
-        <div class="footer-bar">
+        <div class="footer-bar" style="align-items: center;">
     <button type="button" onclick="showList()">
       <i class="fas fa-key"></i>
-      <span>Password</span>
+      <span>Key</span>
     </button>
-    <button type="button" onclick="saveList()">
+    <button type="button" class="save-btn" onclick="saveList()">
       <i class="fas fa-save"></i>
       <span>Save</span>
     </button>
-    <button type="button" onclick="addItemModal()">
-      <i class="fas fa-plus"></i>
-      <span>Add</span>
-    </button>
+
     </div>
-<div id="addItemModal" class="modal hidden">
-  <div class="modal-content">
-       <input id="newItem" type="text" placeholder="Item name..." />
-      <button type="button" onclick="addItem()"><i class="fas fa-plus"></i>Add</button>
- <button type="button" class="modal-close-btn" onclick="closeAddItemModal()"><i class="fas fa-times"></i>Close</button>
-    </div>
-</div>
+
   <div id="listPasswordModalr" class="modal hidden">
   <div class="modal-content">
       <h3>Enter Password</h3>
@@ -263,19 +217,7 @@
     
 
     <!-- Add Options Modal -->
-    <div id="addOptionsModal" class="modal hidden">
-      <div class="modal-content2">
-        <h3>What to add?</h3>
-       
-       <button class="modal-btn" id="addNoteButton" onclick="showAddNote()">
-          <i class="fas fa-sticky-note"></i> Notes
-        </button>
-        <button class="modal-btn" id="addListButton" onclick="showAddListSection()">
-          <i class="fas fa-list"></i> Lists
-        </button>
-       
-      </div>
-    </div>
+   
 
     <div id="passwordModal" class="modal hidden">
       <div class="modal-content">
@@ -304,9 +246,9 @@
 
    <div class="modal " id="modal">
   <div class="modal-content">
-    <h2>Welcome to Notes App!</h2>
-    <p class="important" style="color: red;">This is an ALPHA TESTING VERSION. It is not recommended to save important data.</p>
-    <p>For the meantime, you can use an alternative app, but you are free to explore and test out the app and report bugs to me.</p>
+    <h2>Welcome to Notefull</h2>
+    <p class="important" style="color: rgb(255, 222, 222);"> Welcome to Notefull 8 (Early Acess). This is a stable Release! </p>
+    <p>What's new <br>->Bug Fixes <br>->UI/UFX Major and Minor Improvements </p>
 
     
       
@@ -320,33 +262,47 @@
 
 <!-- Sidebar HTML -->
 <div id="sidebar" class="sidebar hide-anim">
+  
+    
   <div class="sidebar-top">
+         <button class="modal-bn" onclick="closeSidebar()">
+ 
+
+ 
+
+<i class="fa-solid fa-xmark"></i>
+    </button>
+    <label class="brand-l">
+    <img class="brand" src="icon.png"> <div class="brand-t">Notefull</div>
+
+    </label>  
+    <br>
     <button class="sidebar-button" onclick="navigateTo('combinedContainer')">
       <i class="fas fa-home"></i>
       <span class="label">Home</span>
     </button>
     <button class="sidebar-button" onclick="navigateTo('aiSection')">
       <i class="fas fa-shield-alt"></i>
-      <span class="label">AI Scan</span>
+      <span class="label">Quick Scan</span>
     </button>
-   
-<div id="lastSyncedStatus" class="sync-time-text"><i class="fas fa-clock"></i> Last Synced: Never</div>
-
-
-  </div>
-<hr id="sidebar-divider">
-  <div class="sidebar-bottom">
+    
     <button class="sidebar-button" onclick="navigateTo('settingsSection')">
       <i class="fas fa-cog"></i>
       <span class="label">Settings</span>
     </button>
-    <button class="sidebar-button" onclick="closeSidebar()">
-    
-      <span class="label"></span>
+    <button class="sidebar-button" onclick="refresh()">
+     <i class="fa-solid fa-arrows-rotate"></i>
+      <span class="label">Refresh Data</span>
     </button>
+ <br>
+
+    <div id="lastSyncedStatus" class="sync-time-text"><i class="fas fa-clock"></i> Sync: Never</div>
+
+
   </div>
+
 </div>
-</div>
+
 
 
 
@@ -371,50 +327,49 @@
     <div class="card" onclick="showSection('creditSection')">
   <div class="icon wifi"><span class="material-icons">workspace_premium</span></div>
   <div class="text-box">
-    <div class="title">Credits</div>
-    <div class="subtitle">Developer</div>
+    <div class="title2">Credits</div>
+    <div class="subtitle">Developer · About Dev</div>
   </div>
 </div>
 
-<div class="card" onclick="openAntithreat()">
-  <div class="icon wifi"><span class="material-icons">shield</span></div>
+    <div class="card" onclick="showSection('profileSection')">
+  <div class="icon wifi"><span class="material-icons">manage_accounts</span></div>
   <div class="text-box">
-    <div class="title">Antithreat Management</div>
-    <div class="subtitle">Database Update • Info</div>
+    <div class="title2">Profile</div>
+    <div class="subtitle">Account Management · Profile info</div>
   </div>
 </div>
+
+
+
+
+
 
 <div class="card" onclick="showSection('privacySection')">
   <div class="icon privacy">
-    <span class="material-icons">privacy_tip</span>
+    <div class="icon privacy"><span class="material-icons">privacy_tip</span></div>
   </div>
   <div class="text-box">
-    <div class="title">Privacy</div>
-    <div class="subtitle">Policy · Permissions Manager · Session Management</div>
+    <div class="title2">Privacy</div>
+    <div class="subtitle">Policy · Permissions Manager</div>
   </div>
 </div>
 
 <div class="card" onclick="showSection('backupTab')">
   <div class="icon device"><span class="material-icons">backup</span></div>
   <div class="text-box">
-    <div class="title">Backup and Import</div>
-    <div class="subtitle">Backup · Import · Input</div>
+    <div class="title2">Secondary Storage</div>
+    <div class="subtitle">Restore · Status · Sync</div>
   </div>
 </div>
 
-<div class="card" onclick="showSection('ai')">
-  <div class="icon ai"><span class="material-icons">smart_toy</span></div>
-  <div class="text-box">
-    <div class="title">AI</div>
-    <div class="subtitle">Note assist · Note Summarizer · Note Scanner</div>
-  </div>
-</div>
+
 
 <div class="card" onclick="showSection('ecSection')">
   <div class="icon modes"><span class="material-icons">security</span></div>
   <div class="text-box">
-    <div class="title">Data Management</div>
-    <div class="subtitle">Permission Manager · Data security</div>
+    <div class="title2">Data Management</div>
+    <div class="subtitle">Factory Reset</div>
   </div>
 </div>
 
@@ -423,8 +378,18 @@
   <span class="material-icons">mail</span>
 </div>
   <div class="text-box">
-    <div class="title">Bug Report</div>
-    <div class="subtitle">Bug Report</div>
+    <div class="title2">Developer Email</div>
+    <div class="subtitle">Bug Report · Feedback · Bugs</div>
+  </div>
+</div>
+
+<div class="card" onclick="openAntithreat()">
+<div class="icon modes">
+  <span class="material-icons">info</span>
+</div>
+  <div class="text-box">
+    <div class="title2">About</div>
+    <div class="subtitle">Version · Shield· Updates</div>
   </div>
 </div>
 
@@ -439,80 +404,13 @@
   </button>
 
   <div class="section-card">
-   
 
-    <!-- 🔒 Backup Notes -->
-   
-     
-      <button class="settings-button" onclick="backupNotes()">
-        💾 Backup Notes
-      </button>
-    
-  
-
-    <!-- 📂 Import Notes -->
-  
-      
-     
-      <button class="settings-button" onclick="prepareImport(event)">
-        ▶️  Import
-      </button>
-  
-    
-
-    <!-- 🌐 Restore from IndexedDB -->
-  
-     
+<h2>Secondary Storage Settings</h2>
+<p>Manage your secondary storage which prevents data loss</p><br>
       <button class="settings-button" onclick="restoreFromIndexedDB()">
-        🔄 Restore Data from Secondary Storage
+        🔄 Restore 
       </button>
-      
-   <span id="dataInd">No Data in Secondary Storage Storage found.</span>
-  </div>
-</div>
-     
-<div id="updateModal" style="
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: white;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  font-weight: bold;
-">
-  <div>
-    <div class="loader" style="margin-bottom: 20px;">
-      ⏳ Updating...
-    </div>
-    <div>Preparing your update...</div>
-  </div>
-</div>
-
-<div id="antithreatSection" class="container hidden">
-  <button class="modal-button" onclick="showSection('settingsSection')">
-    <i class="fas fa-arrow-left back-icon"></i> 
-  </button>
-   <div class="section-card">
-  <h2>Antithreat Management</h2>
-  <p>Last Updated: <span id="lastUpdated"></span></p>
-  <p>Version: <span id="currentVersion"></span></p>
-  <button id="updateButton" class="hidden" onclick="startUpdate()">Update Now</button>
-</div>
-</div>
-
-       <div id="ecSection" class="container hidden">
-  <button class="modal-button" onclick="showSection('settingsSection')">
-    <i class="fas fa-arrow-left back-icon"></i>
-  </button>
-
-  <div class="section-card">
-    <button class="settings-button" onclick="requestBackupFolder()">📁 Grant Storage Access</button>
-    <button class="settings-button" onclick="clearData()">🗑️ Clear All Data</button>
-    <button class="settings-button" onclick="encryptData()">🔐 Encrypt Data</button>
-    <button class="settings-button" onclick="decryptData()">🔓 Decrypt Data</button>
-   <span id="syncStatus">🔄 Sync is OFF</span>
+      <span id="syncStatus">🔄 Sync is OFF</span>
 
     <div class="toggle-container">
       <span class="toggle-label">Enable Sync</span>
@@ -521,7 +419,101 @@
         <span class="toggle-slider"></span>
       </label>
     </div>
+    <br> 
+   
+   <br> 
+   
   </div>
+</div>
+
+<div id="profileSection" class="container hidden">
+  <!-- Back button -->
+  <button class="modal-button" onclick="showSection('settingsSection')">
+    <i class="fas fa-arrow-left back-icon"></i>
+  </button>
+
+  <!-- Profile card -->
+  <div class="section-card">
+    <h2>My Profile</h2>
+
+    <!-- Account Icon and Username -->
+    <div class="profile-header">
+   
+      <input type="text" id="usernameInput" placeholder="Enter your name" />
+    </div>
+
+    <!-- Buttons for saving/updating -->
+    <button onclick="saveProfile()" class="save-btn">Save Profile</button>
+    <p id="profile-msg" class="profile-msg"></p>
+  </div>
+</div>
+     
+<div id="updateModal" class="hidden full-update-modal">
+  <div class="loading-circle"></div>
+  <p style="color: #000;">Updating Notefull Security Definitions...</p>
+  <p id="updateStatus" style="color: #000;">Preparing updates...</p>
+</div>
+
+ <div id="antithreatSection" class="container hidden">
+  <button class="modal-button" onclick="showSection('settingsSection')">
+    <i class="fas fa-arrow-left back-icon"></i> 
+  </button>
+  <div class="section-card">
+  <h4>App Version: 8</h4>
+<a href="https://play.google.com/store/apps/details?id=app.notefull.com&hl=en">
+  <button>App Updates</button>
+</a> 
+
+  </div>
+  <div class="section-card">
+  <h2>Notefull Shield Updater</h2>
+  <p>Protect yourself against threats and vulnerabilities in Notefull</p>
+  <h3>Release Code: <span id="lastUpdated"></span></h3>
+  <h3>Shield Version: <span id="currentVersion"></span></h3>
+  <button id="updateButton" class="hidden" onclick="startUpdate()">Update Now</button>
+</div>
+
+
+  </div>
+<div id="tSection" class="container hidden">
+    <button class="modal-button" onclick="showSection('settingsSection')">
+    <i class="fas fa-arrow-left back-icon"></i> 
+  </button>
+  <div class="section-card">
+<h3>Personalize your experience!</h3>
+      <span class="toggle-label" id="themeLabel"> </span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="toggle-slider"></span>
+      </label> <br>
+
+<span>Current Theme: ☀️ Light Mode</span>
+<p>Dark Theme has been put under maintaince. Sorry for the inconvenience.</p>
+    
+    </div>
+
+      
+
+</div>
+</div>
+  
+   
+
+
+    
+
+
+
+       <div id="ecSection" class="container hidden">
+  <button class="modal-button" onclick="showSection('settingsSection')">
+    <i class="fas fa-arrow-left back-icon"></i>
+  </button>
+
+  <div class="section-card">
+   <h2>Data Management</h2>
+   <p>Manage Your Data</p><br>
+    <button class="settings-button" onclick="clearData()">🗑️ Factory Reset</button>
+    </div>
 </div>
 
 <div id="cSection" class="container hidden">
@@ -534,6 +526,7 @@
     <br>
 
     <p>mastiwithanagh@gmail.com</p>
+    <p>Any data related bugs? Report them to this email ID given above:</p>
    </div>
 </div>
 
@@ -544,25 +537,21 @@
 
   <div class="section-card">
     <h2>Our Privacy Policy</h2>
-    <a href="https://docs.google.com/document/d/1cAsN4hexlf5bXj6hRMURkGX9vYadIkCA9axixYQjswY/edit?addon_store&tab=t.0#heading=h.4o4shqu4d9pj">VIEW</a>
+    <a href="https://docs.google.com/document/d/1cAsN4hexlf5bXj6hRMURkGX9vYadIkCA9axixYQjswY/edit?addon_store&tab=t.0#heading=h.4o4shqu4d9pj">Click Me To View</a>
   </div>
 
 
  <div class="section-card">
-  <h2>Permission Manager</h2>
-  <h3>Given Permission to notefull</h3>
-<P>-Reading Saved Data</P>
-<p>-System security api</p>
-<p>-Install updates in notefull</p>
-<p>-Notifications</p>
+  <h2>Permission Manager for Notefull</h2>
+
+<div class="toggle-container">
+  <p>Access network connections</p> 
+<button onclick="alert('This permission cannot be disabled as it was given by system and disabling it may cause app to malfunction.')">Disable</button>
+</div>
+<h4>1 system permission given to Notefull</h4>
  </div>
 
- <div class="section-card">
-  <h2>Data Privacy</h2>
-  <h3>Sessions</h3>
-<div class="toggle-container">
-  Current Session
-</div>
+
 
 
  </div>
@@ -577,8 +566,8 @@
         </button>
           <div class="section-card">
         <h2>Credits</h2>
-        <p>Developed by Anagh</p>
-        <p>Version: 4.2.1</p>
+        <p>Developed by <strong>Anagh Manglick</strong></p>
+      <p>I am a school student developer. Development is my hobby.</p>
        </div>
           </div>
       </div>
@@ -594,11 +583,16 @@
         <button class="modal-button" onclick="showSection('combinedContainer')">
         <i class="fas fa-arrow-left back-icon"></i>
       </button>
-        <h2>AI Scan for Sensitive Data</h2>
-        <P>List Support Coming soon...</P>
+      <div id="infoContainer2">
+  <div class="info-box">
+    <div class="info-icon">i</div>
+    <div class="info-text" id="infoText">You can safely leave this page while the scan is done</div>
+  </div>
+</div>
+        <h2>Quick Shield Scan</h2>
         <div class="scan-container">
           <div class="scan-circle" id="scanCircle"></div>
-          <p id="scanStatus">Click the button to start scanning...</p>
+          <p id="scanStatus" class="toggle-container">Click the button to start scanning...</p>
         </div>
         
         <div class="counters">
@@ -606,26 +600,18 @@
          
         </div>
 
-        <div class="progress-bar-container">
-  <div id="progressBar" class="progress-bar"></div>
-</div>
+     <div class="stat-box red">
+      <p>Threats Found</p>
+      <span id="threatsCount">0</span>
+    </div>
+
+  
         
-        <button onclick="startAiScan()" id="startScanButton">Start AI Scan</button>
+        <button onclick="startAiScan()" id="startScanButton">Start Quick Scan</button>
         <div id="resultsContainer"></div>
       </div>
       
-<div class="spinner-container" class="hidden">
-    <!-- Windows 11 Logo -->
-   <div class="logo"></div>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    <div class="cursor" aria-label="Windows 11 cursor animation"></div>
-
-    <!-- Text under cursor -->
-    <div class="message">
-      Recovering your PC...
-    </div>
-  </div>
    
 
    
@@ -634,7 +620,7 @@
       <div class="modal-content">
         <h3>Enter Password</h3>
         <input type="password" id="listPasswordInput" placeholder="Password" />
-        <button onclick="verifyListPassword()">Go</button>
+        <button onclick="verifyListPassword()">Go <i class="fas fa-arrow-right"></i></button>
         <button onclick="closeListPasswordModal()">Close</button>
       </div>
     </div>
@@ -648,7 +634,7 @@
           id="deleteListPasswordInput"
           placeholder="Password"
         />
-        <button onclick="deleteListVerifyPassword()">Go</button>
+        <button onclick="deleteListVerifyPassword()">Go <i class="fas fa-arrow-right"></i></button>
         <button onclick="closeDeleteListPasswordModal()">Close</button>
       </div>
     </div>
@@ -657,23 +643,11 @@
 <!-- TOAST HTML -->
 <div id="aiToast" class="toast">
   <div class="toast-content">
-    <strong>Auto AI scan completed!</strong>
+    <strong>Quick Scan has Completed!</strong>
     <span>Please check the results.</span>
   </div>
 </div>
-
-   
-
-   
-    
-    
-    
-
-   
-
-   
- <script src="storage.js"></script>
-
+<script src="storage.js"></script>
     <script src="script.js"></script>
      
    </body>
